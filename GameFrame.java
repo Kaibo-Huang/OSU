@@ -8,7 +8,7 @@ public class GameFrame extends JFrame{
   public GameFrame(){
     panel = new GamePanel(); //run GamePanel constructor
     this.add(panel);
-    this.setTitle("Maru"); //set title for frame
+    this.setTitle("Maru!"); //set title for frame
     this.setResizable(false); //frame can't change size
     this.setBackground(Color.white);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //X button will stop program execution

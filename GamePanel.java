@@ -1,13 +1,3 @@
-/* GamePanel class acts as the main "game loop" - continuously runs the game and calls whatever needs to be called
-
-Child of JPanel because JPanel contains methods for drawing to the screen
-
-Implements KeyListener interface to listen for keyboard input
-
-Implements Runnable interface to use "threading" - let the game do two things at once
-
-*/
-
 //Don Tran and Kaibo Huang
 
 import java.awt.*;

@@ -13,12 +13,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
   public Thread gameThread;
   public Image image;
   public Graphics graphics;
+  private Slider s1;
   
 
   public GamePanel(){
    
     this.setFocusable(true); //make everything in this class appear on the screen
     this.addKeyListener(this); //start listening for keyboard input
+    
+    s1 = new Slider(500, 400);
 
     //add the MousePressed method from the MouseAdapter - by doing this we can listen for mouse input. We do this differently from the KeyListener because MouseAdapter has SEVEN mandatory methods - we only need one of them, and we don't want to make 6 empty methods
     addMouseListener(new MouseAdapter() {
@@ -45,19 +48,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
   //call the draw methods in each class to update positions as things move
   public void draw(Graphics g){
-   
+	  s1.draw(g);
   }
 
-  //call the move methods in other classes to update positions
-  //this method is constantly called from run(). By doing this, movements appear fluid and natural. If we take this out the movements appear sluggish and laggy
-  public void move(){
-   
-  }
 
   //handles all collision detection and responds accordingly
   public void checkCollision(){
     
     
+  }
+  
+  public void move() {
+	  
   }
 
   //run() method is what makes the game continue running without end. It calls other methods to move objects,  check for collision, and update the screen

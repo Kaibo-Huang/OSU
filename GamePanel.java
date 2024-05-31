@@ -7,6 +7,9 @@ Implements KeyListener interface to listen for keyboard input
 Implements Runnable interface to use "threading" - let the game do two things at once
 
 */
+
+//Don Tran and Kaibo Huang
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

@@ -1,3 +1,3 @@
-public class Spin {
+public class Spin extends Circle {
 
 }

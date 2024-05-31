@@ -7,14 +7,13 @@ import javax.swing.*;
 public class GamePanel extends JPanel implements Runnable, KeyListener{
 
   //dimensions of window
-  public static final int GAME_WIDTH = 250;
-  public static final int GAME_HEIGHT = 250;
+  public static final int GAME_WIDTH = 1280;
+  public static final int GAME_HEIGHT = 780;
 
   public Thread gameThread;
   public Image image;
   public Graphics graphics;
   
-
 
   public GamePanel(){
    

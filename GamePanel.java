@@ -13,18 +13,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
   public Thread gameThread;
   public Image image;
   public Graphics graphics;
-  public PlayerBall ball;
+  
 
 
   public GamePanel(){
-    ball = new PlayerBall(GAME_WIDTH/2, GAME_HEIGHT/2); //create a player controlled ball, set start location to middle of screen
+   
     this.setFocusable(true); //make everything in this class appear on the screen
     this.addKeyListener(this); //start listening for keyboard input
 
     //add the MousePressed method from the MouseAdapter - by doing this we can listen for mouse input. We do this differently from the KeyListener because MouseAdapter has SEVEN mandatory methods - we only need one of them, and we don't want to make 6 empty methods
     addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				ball.mousePressed(e);
+				
 			}
 		});
     this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
@@ -46,31 +46,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
   //call the draw methods in each class to update positions as things move
   public void draw(Graphics g){
-    ball.draw(g);
+   
   }
 
   //call the move methods in other classes to update positions
   //this method is constantly called from run(). By doing this, movements appear fluid and natural. If we take this out the movements appear sluggish and laggy
   public void move(){
-    ball.move();
+   
   }
 
   //handles all collision detection and responds accordingly
   public void checkCollision(){
     
-    //force player to remain on screen
-    if(ball.y<= 0){
-      ball.y = 0;
-    }
-    if(ball.y >= GAME_HEIGHT - PlayerBall.BALL_DIAMETER){
-      ball.y = GAME_HEIGHT-PlayerBall.BALL_DIAMETER;
-    }
-    if(ball.x <= 0){
-      ball.x = 0;
-    }
-    if(ball.x + PlayerBall.BALL_DIAMETER >= GAME_WIDTH){
-      ball.x = GAME_WIDTH-PlayerBall.BALL_DIAMETER;
-    }
+    
   }
 
   //run() method is what makes the game continue running without end. It calls other methods to move objects,  check for collision, and update the screen
@@ -99,12 +87,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
   //if a key is pressed, we'll send it over to the PlayerBall class for processing
   public void keyPressed(KeyEvent e){
-    ball.keyPressed(e);
+ 
   }
 
   //if a key is released, we'll send it over to the PlayerBall class for processing
   public void keyReleased(KeyEvent e){
-    ball.keyReleased(e);
+    
   }
 
   //left empty because we don't need it; must be here because it is required to be overridded by the KeyListener interface

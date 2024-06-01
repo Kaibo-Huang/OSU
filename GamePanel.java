@@ -30,6 +30,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		s1 = new Slider(500, 400);
 
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+		playSound("Music/Menu.wav");
 
 		// add MARU! button
 		maruButton = new JButton("MARU!");

@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.event.*;
+import javax.sound.sampled.*;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
@@ -18,6 +21,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private JButton exitButton;
 
 	private boolean isTitleScreen = true;
+	static Clip menu;
 
 	public GamePanel() {
 		this.setFocusable(true); // make everything in this class appear on the screen
@@ -33,6 +37,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		maruButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				playSound("Music/MARUClick.wav");
 				showGameOptions(); // calls showGameOptions when pressed
 			}
 		});
@@ -43,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		playButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				playSound("Music/PlayClick.wav");
 				startGame(); // calls startGame when pressed
 			}
 		});
@@ -126,10 +132,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			lastTime = now;
 
 			if (delta >= 1) {
-				if (!isTitleScreen) {
-					move();
-					checkCollision();
-				}
+				move();
+				checkCollision();
 				repaint();
 				delta--;
 			}
@@ -146,5 +150,51 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	public void keyTyped(KeyEvent e) {
 
+	}
+
+	private void playSound(String soundFile) {
+		try {
+			// open theme song file
+			File file = new File(soundFile);
+
+			// Get audio input stream
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+			// Open and play the theme song
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioStream);
+			clip.start(); // Start playing the sound
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Method to play menu music
+	public static void playMenu() {
+		try {
+			File file = new File("Music/MainMenu.wav"); // Open menu music file
+			AudioInputStream audio = AudioSystem.getAudioInputStream(file); // Get audio input stream
+			menu = AudioSystem.getClip(); // Get a clip for playing audio
+
+			menu.open(audio); // Open the audio clip
+			menu.addLineListener(event -> {
+				// Restart the music if it stops
+				if (event.getType() == javax.sound.sampled.LineEvent.Type.STOP) {
+					menu.setMicrosecondPosition(0);
+					menu.start();
+				}
+			});
+			menu.start(); // Start playing menu music
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Method to stop playing the menu music
+	public static void stopMenu() {
+		if (menu != null && menu.isOpen()) {
+			menu.stop(); // Stop the menu music
+			menu.setMicrosecondPosition(0); // Reset its position to the beginning
+			menu.close(); // Close the clip
+		}
 	}
 }

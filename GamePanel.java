@@ -1,103 +1,150 @@
-//Don Tran and Kaibo Huang
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class GamePanel extends JPanel implements Runnable, KeyListener{
+public class GamePanel extends JPanel implements Runnable, KeyListener {
 
-  //dimensions of window
-  public static final int GAME_WIDTH = 1280;
-  public static final int GAME_HEIGHT = 780;
+	// dimensions of window
+	public static final int GAME_WIDTH = 1280;
+	public static final int GAME_HEIGHT = 780;
 
-  public Thread gameThread;
-  public Image image;
-  public Graphics graphics;
-  private Slider s1;
-  
+	private Thread gameThread;
+	private Image image;
+	private Graphics graphics;
+	private Slider s1;
 
-  public GamePanel(){
-   
-    this.setFocusable(true); //make everything in this class appear on the screen
-    this.addKeyListener(this); //start listening for keyboard input
-    
-    s1 = new Slider(500, 400);
+	private JButton maruButton;
+	private JButton playButton;
+	private JButton exitButton;
 
-    //add the MousePressed method from the MouseAdapter - by doing this we can listen for mouse input. We do this differently from the KeyListener because MouseAdapter has SEVEN mandatory methods - we only need one of them, and we don't want to make 6 empty methods
-    addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				
+	private boolean isTitleScreen = true;
+
+	public GamePanel() {
+		this.setFocusable(true); // make everything in this class appear on the screen
+		this.addKeyListener(this); // start listening for keyboard input
+
+		s1 = new Slider(500, 400);
+
+		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+
+		// add MARU! button
+		maruButton = new JButton("MARU!");
+		maruButton.setFont(new Font("Arial", Font.PLAIN, 24));
+		maruButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showGameOptions(); // calls showGameOptions when pressed
 			}
 		});
-    this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
-    //make this class run at the same time as other classes (without this each class would "pause" while another class runs). By using threading we can remove lag, and also allows us to do features like display timers in real time!
-    gameThread = new Thread(this);
-    gameThread.start();
-  }
+		// add PLAY button
+		playButton = new JButton("PLAY");
+		playButton.setFont(new Font("Arial", Font.PLAIN, 24));
+		playButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startGame(); // calls startGame when pressed
+			}
+		});
 
-  //paint is a method in java.awt library that we are overriding. It is a special method - it is called automatically in the background in order to update what appears in the window. You NEVER call paint() yourself
-  public void paint(Graphics g){
-    //we are using "double buffering here" - if we draw images directly onto the screen, it takes time and the human eye can actually notice flashes of lag as each pixel on the screen is drawn one at a time. Instead, we are going to draw images OFF the screen, then simply move the image on screen as needed. 
-    image = createImage(GAME_WIDTH, GAME_HEIGHT); //draw off screen
-    graphics = image.getGraphics();
-    draw(graphics);//update the positions of everything on the screen 
-    g.drawImage(image, 0, 0, this); //move the image on the screen
+		// add EXIT button
+		exitButton = new JButton("EXIT");
+		exitButton.setFont(new Font("Arial", Font.PLAIN, 24));
+		exitButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0); // exits when pressed
+			}
+		});
 
-  }
+		// Add MARU! button initially in middle of the screen
+		this.setLayout(null);
+		maruButton.setBounds(GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2 - 25, 200, 50);
+		this.add(maruButton);
 
-  //call the draw methods in each class to update positions as things move
-  public void draw(Graphics g){
-	  s1.draw(g);
-  }
+		// Start game thread
+		gameThread = new Thread(this);
+		gameThread.start();
+	}
 
+	private void showGameOptions() {
 
-  //handles all collision detection and responds accordingly
-  public void checkCollision(){
-    
-    
-  }
-  
-  public void move() {
-	  
-  }
+		// shifts the MARU! button and adds PLAY and EXIT buttons
+		maruButton.setBounds(GAME_WIDTH / 2 - 200, GAME_HEIGHT / 2 - 50, 200, 50);
+		playButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 - 100, 200, 50);
+		exitButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2, 200, 50);
 
-  //run() method is what makes the game continue running without end. It calls other methods to move objects,  check for collision, and update the screen
-  public void run(){
-    //the CPU runs our game code too quickly - we need to slow it down! The following lines of code "force" the computer to get stuck in a loop for short intervals between calling other methods to update the screen. 
-    long lastTime = System.nanoTime();
-    double amountOfTicks = 60;
-    double ns = 1000000000/amountOfTicks;
-    double delta = 0;
-    long now;
+		this.add(playButton);
+		this.add(exitButton);
 
-    while(true){ //this is the infinite game loop
-      now = System.nanoTime();
-      delta = delta + (now-lastTime)/ns;
-      lastTime = now;
+		this.repaint();
+	}
 
-      //only move objects around and update screen if enough time has passed
-      if(delta >= 1){
-        move();
-        checkCollision();
-        repaint();
-        delta--;
-      }
-    }
-  }
+	private void startGame() {
+		// Remove buttons and switch to game view
+		this.remove(maruButton);
+		this.remove(playButton);
+		this.remove(exitButton);
+		isTitleScreen = false;
+		this.repaint();
+	}
 
-  //if a key is pressed, we'll send it over to the PlayerBall class for processing
-  public void keyPressed(KeyEvent e){
- 
-  }
+	public void paint(Graphics g) {
+		if (isTitleScreen) {
+			super.paint(g);
+		} else {
+			// We are using "double buffering here"
+			image = createImage(GAME_WIDTH, GAME_HEIGHT); // draw off screen
+			graphics = image.getGraphics();
+			draw(graphics); // update the positions of everything on the screen
+			g.drawImage(image, 0, 0, this); // move the image on the screen
+		}
+	}
 
-  //if a key is released, we'll send it over to the PlayerBall class for processing
-  public void keyReleased(KeyEvent e){
-    
-  }
+	public void draw(Graphics g) {
+		s1.draw(g);
+	}
 
-  //left empty because we don't need it; must be here because it is required to be overridded by the KeyListener interface
-  public void keyTyped(KeyEvent e){
+	public void checkCollision() {
 
-  }
+	}
+
+	public void move() {
+
+	}
+
+	public void run() {
+		long lastTime = System.nanoTime();
+		double amountOfTicks = 60;
+		double ns = 1000000000 / amountOfTicks;
+		double delta = 0;
+		long now;
+
+		while (true) { // this is the infinite game loop
+			now = System.nanoTime();
+			delta = delta + (now - lastTime) / ns;
+			lastTime = now;
+
+			if (delta >= 1) {
+				if (!isTitleScreen) {
+					move();
+					checkCollision();
+				}
+				repaint();
+				delta--;
+			}
+		}
+	}
+
+	public void keyPressed(KeyEvent e) {
+
+	}
+
+	public void keyReleased(KeyEvent e) {
+
+	}
+
+	public void keyTyped(KeyEvent e) {
+
+	}
 }

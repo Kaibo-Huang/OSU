@@ -16,9 +16,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Graphics graphics;
 	private Slider s1;
 
-	private JButton maruButton;
-	private JButton playButton;
-	private JButton exitButton;
+	private JButton maruButton, playButton, exitButton; // menu buttons
+	private JButton tutorial, easy, medium, hard, backButton; // level buttons
 
 	private boolean isTitleScreen = true;
 	static Clip menu;
@@ -30,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		s1 = new Slider(500, 400);
 
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
-		playSound("Music/Menu.wav");
+		playMenu();
 
 		// add MARU! button
 		maruButton = new JButton("MARU!");
@@ -50,7 +49,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				playSound("Music/PlayClick.wav");
-				startGame(); // calls startGame when pressed
+				showLevels(); // calls startGame when pressed
 			}
 		});
 
@@ -61,6 +60,65 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0); // exits when pressed
+			}
+		});
+
+		// add PLAY button
+		tutorial = new JButton("Tutorial");
+		tutorial.setFont(new Font("Arial", Font.PLAIN, 24));
+		tutorial.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				playSound("Music/PlayClick.wav");
+				isTitleScreen = false;
+				stopMenu();
+				tutorial(); // calls startGame when pressed
+			}
+		});
+
+		easy = new JButton("Easy");
+		easy.setFont(new Font("Arial", Font.PLAIN, 24));
+		easy.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				playSound("Music/PlayClick.wav");
+				isTitleScreen = false;
+				stopMenu();
+				easy(); // calls startGame when pressed
+			}
+		});
+
+		medium = new JButton("Medium");
+		medium.setFont(new Font("Arial", Font.PLAIN, 24));
+		medium.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				playSound("Music/PlayClick.wav");
+				isTitleScreen = false;
+				stopMenu();
+				medium(); // calls startGame when pressed
+			}
+		});
+
+		hard = new JButton("Hard");
+		hard.setFont(new Font("Arial", Font.PLAIN, 24));
+		hard.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				playSound("Music/PlayClick.wav");
+				isTitleScreen = false;
+				stopMenu();
+				hard(); // calls startGame when pressed
+			}
+		});
+
+		backButton = new JButton("BACK");
+		backButton.setFont(new Font("Arial", Font.PLAIN, 24));
+		backButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				playSound("Music/PlayClick.wav");
+				showGameOptions(); // calls startGame when pressed
 			}
 		});
 
@@ -75,24 +133,36 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	private void showGameOptions() {
+		this.removeAll();
 
 		// shifts the MARU! button and adds PLAY and EXIT buttons
 		maruButton.setBounds(GAME_WIDTH / 2 - 200, GAME_HEIGHT / 2 - 50, 200, 50);
 		playButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 - 100, 200, 50);
 		exitButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2, 200, 50);
 
+		this.add(maruButton);
 		this.add(playButton);
 		this.add(exitButton);
 
 		this.repaint();
 	}
 
-	private void startGame() {
-		// Remove buttons and switch to game view
-		this.remove(maruButton);
-		this.remove(playButton);
-		this.remove(exitButton);
-		isTitleScreen = false;
+	public void showLevels() {
+
+		this.removeAll();
+
+		tutorial.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 - 50, 200, 50);
+		easy.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 + 50, 200, 50);
+		medium.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 - 50, 200, 50);
+		hard.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 + 50, 200, 50);
+		backButton.setBounds(50, GAME_HEIGHT - 100, 200, 50);
+
+		this.add(tutorial);
+		this.add(easy);
+		this.add(medium);
+		this.add(hard);
+		this.add(backButton);
+
 		this.repaint();
 	}
 
@@ -169,10 +239,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 	}
 
+	// Method to stop playing the game music
+	public static void stopGame() {
+		menu.stop();
+		menu.close();
+	}
+
 	// Method to play menu music
 	public static void playMenu() {
 		try {
-			File file = new File("Music/MainMenu.wav"); // Open menu music file
+			File file = new File("Music/Menu.wav"); // Open menu music file
 			AudioInputStream audio = AudioSystem.getAudioInputStream(file); // Get audio input stream
 			menu = AudioSystem.getClip(); // Get a clip for playing audio
 
@@ -198,4 +274,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			menu.close(); // Close the clip
 		}
 	}
+
+	public static void tutorial() {
+
+	}
+
+	public static void easy() {
+
+	}
+
+	public static void medium() {
+
+	}
+
+	public static void hard() {
+
+	}
+
 }

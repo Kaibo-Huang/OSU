@@ -14,7 +14,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private Thread gameThread;
     private Image image;
     private Graphics graphics;
-
+    
+    Score score;
     private MouseCircle mc1;
     private Circle c1;
 
@@ -28,6 +29,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         this.setFocusable(true); // make everything in this class appear on the screen
         this.addKeyListener(this); // start listening for keyboard input
         
+        score = new Score();
         mc1 = new MouseCircle(500, 400);
         c1 = new Circle(500, 400);
 
@@ -42,6 +44,26 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             public void actionPerformed(ActionEvent e) {
                 playSound("Music/MARUClick.wav");
                 showGameOptions(); // calls showGameOptions when pressed
+            }
+        });
+        
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Get the coordinates of the click
+                int mouseX = e.getX();
+                int mouseY = e.getY();
+
+                // Check if the click falls inside the circle
+                if (c1.isMouseClickedInside(mouseX, mouseY)) {
+                    
+                	if(mc1.radius <= 100) {
+                		Score.score++;
+                	}else {
+                		mc1.radius = MouseCircle.MAX_RADIUS;
+                		Score.score--;
+                	}
+                }
             }
         });
 
@@ -187,6 +209,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     public void draw(Graphics g) {
         mc1.draw(g);
         c1.draw(g);
+        score.draw(g);
     }
 
     public void checkCollision() {

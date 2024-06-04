@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.*;
 
 public class Circle extends Rectangle {
     private int radius = 100; // initial size of the circle
@@ -20,8 +21,6 @@ public class Circle extends Rectangle {
     // method to set the radius and update the rectangle bounds
     public void setRadius(int r) {
         radius = r;
-       
-        
     }
 
     // method to get the radius
@@ -32,6 +31,14 @@ public class Circle extends Rectangle {
     // method to update the position based on the center
     public void setPosition(int centerX, int centerY) {
         this.x = centerX;
-        this.y = centerY ;
+        this.y = centerY;
+    }
+
+    // method to check if the mouse click is within the circle
+    public boolean isMouseClickedInside(int mouseX, int mouseY) {
+        int circleCenterX = x + radius / 2;
+        int circleCenterY = y + radius / 2;
+        double distance = Math.sqrt(Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2));
+        return distance <= radius / 2;
     }
 }

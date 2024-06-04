@@ -7,223 +7,249 @@ import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
-	// dimensions of window
-	public static final int GAME_WIDTH = 1280;
-	public static final int GAME_HEIGHT = 780;
+    // dimensions of window
+    public static final int GAME_WIDTH = 1280;
+    public static final int GAME_HEIGHT = 780;
 
-	private Thread gameThread;
-	private Image image;
-	private Graphics graphics;
-	private Slider s1;
+    private Thread gameThread;
+    private Image image;
+    private Graphics graphics;
 
-	private JButton maruButton, playButton, exitButton; // menu buttons
-	private JButton tutorial, easy, medium, hard, backButton; // level buttons
+    private MouseCircle mc1;
+    private Circle c1;
 
-	private boolean isTitleScreen = true;
-	static Clip menu;
+    private JButton maruButton, playButton, exitButton; // menu buttons
+    private JButton tutorial, easy, medium, hard, backButton; // level buttons
 
-	public GamePanel() {
-		this.setFocusable(true); // make everything in this class appear on the screen
-		this.addKeyListener(this); // start listening for keyboard input
+    private boolean isTitleScreen = true;
+    static Clip menu;
 
-		s1 = new Slider(500, 400);
+    public GamePanel() {
+        this.setFocusable(true); // make everything in this class appear on the screen
+        this.addKeyListener(this); // start listening for keyboard input
+        
+        mc1 = new MouseCircle(500 - 200/2, 400- 200/2);
+        c1 = new Circle(500 - 100 / 2, 400 - 100/2);
 
-		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
-		playMenu();
+        this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+        playMenu();
 
-		// add MARU! button
-		maruButton = new JButton("MARU!");
-		maruButton.setFont(new Font("Arial", Font.PLAIN, 24));
-		maruButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playSound("Music/MARUClick.wav");
-				showGameOptions(); // calls showGameOptions when pressed
-			}
-		});
+        // add MARU! button
+        maruButton = new JButton("MARU!");
+        maruButton.setFont(new Font("Arial", Font.PLAIN, 24));
+        maruButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playSound("Music/MARUClick.wav");
+                showGameOptions(); // calls showGameOptions when pressed
+            }
+        });
 
-		// add PLAY button
-		playButton = new JButton("PLAY");
-		playButton.setFont(new Font("Arial", Font.PLAIN, 24));
-		playButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
-				showLevels(); // calls startGame when pressed
-			}
-		});
+        // add PLAY button
+        playButton = new JButton("PLAY");
+        playButton.setFont(new Font("Arial", Font.PLAIN, 24));
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playSound("Music/PlayClick.wav");
+                showLevels(); // calls startGame when pressed
+            }
+        });
 
-		// add EXIT button
-		exitButton = new JButton("EXIT");
-		exitButton.setFont(new Font("Arial", Font.PLAIN, 24));
-		exitButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0); // exits when pressed
-			}
-		});
+        // add EXIT button
+        exitButton = new JButton("EXIT");
+        exitButton.setFont(new Font("Arial", Font.PLAIN, 24));
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0); // exits when pressed
+            }
+        });
 
-		// add PLAY button
-		tutorial = new JButton("Tutorial");
-		tutorial.setFont(new Font("Arial", Font.PLAIN, 24));
-		tutorial.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
-				isTitleScreen = false;
-				stopMenu();
-				tutorial(); // calls startGame when pressed
-			}
-		});
+        // add Tutorial button
+        tutorial = new JButton("Tutorial");
+        tutorial.setFont(new Font("Arial", Font.PLAIN, 24));
+        tutorial.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playSound("Music/PlayClick.wav");
+                isTitleScreen = false;
+                stopMenu();
+                tutorial(); // calls startGame when pressed
+            }
+        });
 
-		easy = new JButton("Easy");
-		easy.setFont(new Font("Arial", Font.PLAIN, 24));
-		easy.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
-				isTitleScreen = false;
-				stopMenu();
-				easy(); // calls startGame when pressed
-			}
-		});
+        // add Easy button
+        easy = new JButton("Easy");
+        easy.setFont(new Font("Arial", Font.PLAIN, 24));
+        easy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playSound("Music/PlayClick.wav");
+                isTitleScreen = false;
+                stopMenu();
+                easy(); // calls startGame when pressed
+            }
+        });
 
-		medium = new JButton("Medium");
-		medium.setFont(new Font("Arial", Font.PLAIN, 24));
-		medium.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
-				isTitleScreen = false;
-				stopMenu();
-				medium(); // calls startGame when pressed
-			}
-		});
+        // add Medium button
+        medium = new JButton("Medium");
+        medium.setFont(new Font("Arial", Font.PLAIN, 24));
+        medium.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playSound("Music/PlayClick.wav");
+                isTitleScreen = false;
+                stopMenu();
+                medium(); // calls startGame when pressed
+            }
+        });
 
-		hard = new JButton("Hard");
-		hard.setFont(new Font("Arial", Font.PLAIN, 24));
-		hard.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
-				isTitleScreen = false;
-				stopMenu();
-				hard(); // calls startGame when pressed
-			}
-		});
+        // add Hard button
+        hard = new JButton("Hard");
+        hard.setFont(new Font("Arial", Font.PLAIN, 24));
+        hard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playSound("Music/PlayClick.wav");
+                isTitleScreen = false;
+                stopMenu();
+                hard(); // calls startGame when pressed
+            }
+        });
 
-		backButton = new JButton("BACK");
-		backButton.setFont(new Font("Arial", Font.PLAIN, 24));
-		backButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
-				showGameOptions(); // calls startGame when pressed
-			}
-		});
+        // add Back button
+        backButton = new JButton("BACK");
+        backButton.setFont(new Font("Arial", Font.PLAIN, 24));
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playSound("Music/PlayClick.wav");
+                showGameOptions(); // calls startGame when pressed
+            }
+        });
 
-		// Add MARU! button initially in middle of the screen
-		this.setLayout(null);
-		maruButton.setBounds(GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2 - 25, 200, 50);
-		this.add(maruButton);
+        // Add MARU! button initially in middle of the screen
+        this.setLayout(null);
+        maruButton.setBounds(GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2 - 25, 200, 50);
+        this.add(maruButton);
 
-		// Start game thread
-		gameThread = new Thread(this);
-		gameThread.start();
-	}
+        // Start game thread
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
 
-	private void showGameOptions() {
-		this.removeAll();
+    private void showGameOptions() {
+        this.removeAll();
 
-		// shifts the MARU! button and adds PLAY and EXIT buttons
-		maruButton.setBounds(GAME_WIDTH / 2 - 200, GAME_HEIGHT / 2 - 50, 200, 50);
-		playButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 - 100, 200, 50);
-		exitButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2, 200, 50);
+        // shifts the MARU! button and adds PLAY and EXIT buttons
+        maruButton.setBounds(GAME_WIDTH / 2 - 200, GAME_HEIGHT / 2 - 50, 200, 50);
+        playButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 - 100, 200, 50);
+        exitButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2, 200, 50);
 
-		this.add(maruButton);
-		this.add(playButton);
-		this.add(exitButton);
+        this.add(maruButton);
+        this.add(playButton);
+        this.add(exitButton);
 
-		this.repaint();
-	}
+        this.repaint();
+    }
 
-	public void showLevels() {
+    public void showLevels() {
+        this.removeAll();
 
-		this.removeAll();
+        tutorial.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 - 50, 200, 50);
+        easy.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 + 50, 200, 50);
+        medium.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 - 50, 200, 50);
+        hard.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 + 50, 200, 50);
+        backButton.setBounds(50, GAME_HEIGHT - 100, 200, 50);
 
-		tutorial.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 - 50, 200, 50);
-		easy.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 + 50, 200, 50);
-		medium.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 - 50, 200, 50);
-		hard.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 + 50, 200, 50);
-		backButton.setBounds(50, GAME_HEIGHT - 100, 200, 50);
+        this.add(tutorial);
+        this.add(easy);
+        this.add(medium);
+        this.add(hard);
+        this.add(backButton);
 
-		this.add(tutorial);
-		this.add(easy);
-		this.add(medium);
-		this.add(hard);
-		this.add(backButton);
+        this.repaint();
+    }
 
-		this.repaint();
-	}
+    public void paint(Graphics g) {
+        if (isTitleScreen) {
+            super.paint(g);
+        } else {
+            // We are using "double buffering here"
+            image = createImage(GAME_WIDTH, GAME_HEIGHT); // draw off screen
+            graphics = image.getGraphics();
+            draw(graphics); // update the positions of everything on the screen
+            g.drawImage(image, 0, 0, this); // move the image on the screen
+        }
+    }
 
-	public void paint(Graphics g) {
-		if (isTitleScreen) {
-			super.paint(g);
-		} else {
-			// We are using "double buffering here"
-			image = createImage(GAME_WIDTH, GAME_HEIGHT); // draw off screen
-			graphics = image.getGraphics();
-			draw(graphics); // update the positions of everything on the screen
-			g.drawImage(image, 0, 0, this); // move the image on the screen
-		}
-	}
+    public void draw(Graphics g) {
+        mc1.draw(g);
+        c1.draw(g);
+    }
 
-	public void draw(Graphics g) {
-		s1.draw(g);
-	}
+    public void checkCollision() {
+        // Add collision logic here if needed
+    }
 
-	public void checkCollision() {
+    public void move() {
+        // Decrease the radius of the mouse circle
+        int currentRadius = mc1.getRadius();
+        if (currentRadius > MouseCircle.MIN_RADIUS) {
+            mc1.setRadius(currentRadius - 1);
+            
+            mc1.setPosition(500 - mc1.radius/2, 400- mc1.radius/2);
+            
+        } else {
+            mc1.setRadius(MouseCircle.MAX_RADIUS);
+           
+            mc1.setPosition(500 - mc1.radius/2, 400- mc1.radius/2);
+           
+        }
+        
+     
+    }
 
-	}
+    public void run() {
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        long now;
 
-	public void move() {
+        while (true) { // this is the infinite game loop
+            now = System.nanoTime();
+            delta = delta + (now - lastTime) / ns;
+            lastTime = now;
 
-	}
+            if (delta >= 1) {
+                move();
+                checkCollision();
+                repaint();
+                delta--;
+            }
+        }
+    }
 
-	public void run() {
-		long lastTime = System.nanoTime();
-		double amountOfTicks = 60;
-		double ns = 1000000000 / amountOfTicks;
-		double delta = 0;
-		long now;
+   
+    private void tutorial() {
+        // Implementation for tutorial
+    }
 
-		while (true) { // this is the infinite game loop
-			now = System.nanoTime();
-			delta = delta + (now - lastTime) / ns;
-			lastTime = now;
+    private void easy() {
+        // Implementation for easy
+    }
 
-			if (delta >= 1) {
-				move();
-				checkCollision();
-				repaint();
-				delta--;
-			}
-		}
-	}
+    private void medium() {
+        // Implementation for medium
+    }
 
-	public void keyPressed(KeyEvent e) {
+    private void hard() {
+        // Implementation for hard
+    }
 
-	}
-
-	public void keyReleased(KeyEvent e) {
-
-	}
-
-	public void keyTyped(KeyEvent e) {
-
-	}
-
-	private void playSound(String soundFile) {
+    private void playSound(String soundFile) {
 		try {
 			// open theme song file
 			File file = new File(soundFile);
@@ -275,20 +301,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 	}
 
-	public static void tutorial() {
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // Implementation for keyTyped
+    }
 
-	}
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // Implementation for keyPressed
+    }
 
-	public static void easy() {
-
-	}
-
-	public static void medium() {
-
-	}
-
-	public static void hard() {
-
-	}
-
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // Implementation for keyReleased
+    }
 }

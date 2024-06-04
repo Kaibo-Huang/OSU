@@ -28,8 +28,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         this.setFocusable(true); // make everything in this class appear on the screen
         this.addKeyListener(this); // start listening for keyboard input
         
-        mc1 = new MouseCircle(500 - 200/2, 400- 200/2);
-        c1 = new Circle(500 - 100 / 2, 400 - 100/2);
+        mc1 = new MouseCircle(500, 400);
+        c1 = new Circle(500, 400);
 
         this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
         playMenu();

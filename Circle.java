@@ -14,7 +14,7 @@ public class Circle extends Rectangle {
         g.setColor(Color.red);
         g.fillOval(x, y, radius, radius);
 
-        g.setColor(Color.pink);
+        g.setColor(Color.gray);
         g.fillOval(x + 10, y + 10, radius - 20, radius - 20);
     }
 

@@ -1,3 +1,7 @@
+//Don Tran and Kaibo Huang
+//June 11, 2024
+//This class creates a window with specific properties for the game.
+
 import java.awt.*;
 import javax.swing.*;
 

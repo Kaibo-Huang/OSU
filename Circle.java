@@ -1,12 +1,9 @@
-//Don Tran and Kaibo Huang
-//June 11, 2024
-//This class will create circle objects and draw them onscreen, given a radius and x and y coordinates.
-
 import java.awt.*;
 import java.awt.event.*;
 
 public class Circle extends Rectangle {
     private int radius = 100; // initial size of the circle
+    
 
     // constructor creates circle at given location with given dimensions
     public Circle(int centerX, int centerY) {
@@ -15,11 +12,19 @@ public class Circle extends Rectangle {
 
     // draws the current location of the circle to the screen
     public void draw(Graphics g) {
-        g.setColor(Color.red);
-        g.fillOval(x, y, radius, radius);
-
+       
         g.setColor(Color.gray);
         g.fillOval(x + 10, y + 10, radius - 20, radius - 20);
+        
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.black);
+        Stroke oldStroke = g2d.getStroke(); // Save the old stroke
+        // Set the thickness of the outline
+        g2d.setStroke(new BasicStroke(3)); // Change the thickness as needed
+        g2d.drawOval(x, y, radius, radius);
+        g2d.setStroke(oldStroke); // Restore the old stroke
+        
+        
     }
 
     // method to set the radius and update the rectangle bounds

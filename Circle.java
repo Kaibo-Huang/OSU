@@ -5,12 +5,14 @@
 import java.awt.*;
 import java.awt.event.*;
 
-public class Circle extends Rectangle {
+public class Circle extends Rectangle{
     private int radius = 100; // initial size of the circle
     public int moveRadius = 200; // initial size of the circle
     public static final int MAX_RADIUS = 200; // Maximum radius size
     public static final int MIN_RADIUS = 80;  // Minimum radius size
     int initialX, initialY;
+    
+    boolean isClicked = false;
 
     // constructor creates circle at given location with given dimensions
     public Circle(int centerX, int centerY) {
@@ -21,7 +23,7 @@ public class Circle extends Rectangle {
 
     // draws the current location of the circle to the screen
     public void draw(Graphics g) {
-       
+    	isClicked = false;
         g.setColor(Color.gray);
         g.fillOval(initialX + 10, initialY + 10, radius - 20, radius - 20);
         
@@ -63,4 +65,6 @@ public class Circle extends Rectangle {
         double distance = Math.sqrt(Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2));
         return distance <= radius / 2;
     }
+    
+
 }

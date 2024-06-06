@@ -1,3 +1,7 @@
+//Don Tran and Kaibo Huang
+//June 11, 2024
+//This class will create circle objects and draw them onscreen, given a radius and x and y coordinates.
+
 import java.awt.*;
 import java.awt.event.*;
 

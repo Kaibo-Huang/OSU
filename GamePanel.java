@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private Graphics graphics;
     
     Score score;
-    private MouseCircle mc1;
+  
     private Circle c1;
 
     private JButton maruButton, playButton, exitButton; // menu buttons
@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         this.addKeyListener(this); // start listening for keyboard input
         
         score = new Score();
-        mc1 = new MouseCircle(500, 400);
+       
         c1 = new Circle(500, 400);
 
         this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
@@ -61,10 +61,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 // Check if the click falls inside the circle
                 if (c1.isMouseClickedInside(mouseX, mouseY)) {
                     
-                	if(mc1.radius <= 100) {
+                	if(c1.moveRadius <= 100) {
                 		Score.score++;
                 	}else {
-                		mc1.radius = MouseCircle.MAX_RADIUS;
+                		c1.moveRadius = Circle.MAX_RADIUS;
                 		Score.score--;
                 	}
                 }
@@ -211,7 +211,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     public void draw(Graphics g) {
-        mc1.draw(g);
+       
         c1.draw(g);
         score.draw(g);
     }
@@ -222,16 +222,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     public void move() {
         // Decrease the radius of the mouse circle
-        int currentRadius = mc1.getRadius();
-        if (currentRadius > MouseCircle.MIN_RADIUS) {
-            mc1.setRadius(currentRadius - 1);
+        int currentRadius = c1.getRadius();
+        if (currentRadius > Circle.MIN_RADIUS) {
+            c1.setRadius(currentRadius - 1);
             
-            mc1.setPosition(500 - mc1.radius/2, 400- mc1.radius/2);
+            c1.setPosition(500 - c1.moveRadius/2, 400- c1.moveRadius/2);
             
         } else {
-            mc1.setRadius(MouseCircle.MAX_RADIUS);
+            c1.setRadius(Circle.MAX_RADIUS);
            
-            mc1.setPosition(500 - mc1.radius/2, 400- mc1.radius/2);
+            c1.setPosition(500 - c1.moveRadius/2, 400- c1.moveRadius/2);
            
         }
         

@@ -222,9 +222,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     public void move() {
         // Decrease the radius of the mouse circle
-        int currentRadius = c1.getRadius();
-        if (currentRadius > Circle.MIN_RADIUS) {
-            c1.setRadius(currentRadius - 1);
+         
+        if (c1.getRadius() > Circle.MIN_RADIUS) {
+            c1.setRadius(c1.getRadius() - 1);
             
             c1.setPosition(500 - c1.moveRadius/2, 400- c1.moveRadius/2);
             

@@ -50,26 +50,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                 showGameOptions(); // calls showGameOptions when pressed
             }
         });
-        
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Get the coordinates of the click
-                int mouseX = e.getX();
-                int mouseY = e.getY();
-
-                // Check if the click falls inside the circle
-                if (c1.isMouseClickedInside(mouseX, mouseY)) {
-                    
-                	if(c1.moveRadius <= 100) {
-                		Score.score++;
-                	}else {
-                		c1.moveRadius = Circle.MAX_RADIUS;
-                		Score.score--;
-                	}
-                }
-            }
-        });
 
         // add PLAY button
         playButton = new JButton("PLAY");
@@ -211,31 +191,52 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     public void draw(Graphics g) {
-       
         c1.draw(g);
         score.draw(g);
     }
+    
+    public void moveCircle(Circle c) {
+    	  if (c.getRadius() > Circle.MIN_RADIUS) {
+              c.setRadius(c.getRadius() - 1);
+              
+              c.setPosition(500 - c.moveRadius/2, 400- c.moveRadius/2);
+              
+          } else {
+              c.setRadius(Circle.MAX_RADIUS);
+             
+              c.setPosition(500 - c.moveRadius/2, 400- c.moveRadius/2);
+             
+          }
+    }
+    
+    public void collision() {
+    	checkCollision(c1);
+    }
 
-    public void checkCollision() {
-        // Add collision logic here if needed
+    public void checkCollision(Circle c) {
+    	 addMouseListener(new MouseAdapter() {
+             @Override
+             public void mouseClicked(MouseEvent e) {
+                 // Get the coordinates of the click
+                 int mouseX = e.getX();
+                 int mouseY = e.getY();
+                 
+                 // Check if the click falls inside the circle
+                 if (c.isMouseClickedInside(mouseX, mouseY) && c.isClicked == false) {
+                     c.isClicked = true;
+                 	if(c.moveRadius <= 100) {
+                 		Score.score++;
+                 	}else {
+                 		c.moveRadius = Circle.MAX_RADIUS;
+                 		Score.score--;
+                 	}
+                 }
+             }
+         });
     }
 
     public void move() {
-        // Decrease the radius of the mouse circle
-         
-        if (c1.getRadius() > Circle.MIN_RADIUS) {
-            c1.setRadius(c1.getRadius() - 1);
-            
-            c1.setPosition(500 - c1.moveRadius/2, 400- c1.moveRadius/2);
-            
-        } else {
-            c1.setRadius(Circle.MAX_RADIUS);
-           
-            c1.setPosition(500 - c1.moveRadius/2, 400- c1.moveRadius/2);
-           
-        }
-        
-     
+        moveCircle(c1);
     }
 
     public void run() {
@@ -252,7 +253,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
             if (delta >= 1) {
                 move();
-                checkCollision();
+                collision();
                 repaint();
                 delta--;
             }
@@ -325,6 +326,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			menu.stop(); // Stop the menu music
 			menu.setMicrosecondPosition(0); // Reset its position to the beginning
 			menu.close(); // Close the clip
+		}
+	}
+	
+	public void stall(long deltaTime, Circle c) {
+		long currentTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - currentTime < deltaTime) {
+			System.out.println();
 		}
 	}
 

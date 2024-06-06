@@ -1,7 +1,3 @@
-//Don Tran and Kaibo Huang
-//June 11, 2024
-//This class creates an "approach circle" around the note or slider, in order to provide a "countdown" for the user to click the note or slider with a perfect timing. 
-
 import java.awt.*;
 
 public class MouseCircle extends Rectangle {
@@ -16,11 +12,13 @@ public class MouseCircle extends Rectangle {
 
     // draws the current location of the circle to the screen
     public void draw(Graphics g) {
-        g.setColor(Color.black);
-        g.fillOval(x, y, radius, radius);
-        
-        g.setColor(Color.white);
-        g.fillOval(x + 5, y + 5, radius - 10, radius - 10);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.black);
+        Stroke oldStroke = g2d.getStroke(); // Save the old stroke
+        // Set the thickness of the outline
+        g2d.setStroke(new BasicStroke(5)); // Change the thickness as needed
+        g2d.drawOval(x, y, radius, radius);
+        g2d.setStroke(oldStroke); // Restore the old stroke
     }
 
     // method to set the radius and update the rectangle bounds

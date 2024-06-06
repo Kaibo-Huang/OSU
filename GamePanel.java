@@ -1,7 +1,3 @@
-//Don Tran and Kaibo Huang
-//June 11, 2024
-//This class contains important components for the game such as the menu buttons, sound, song-maps and a method to run the game smoothly.
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.sound.sampled.*;

@@ -7,25 +7,34 @@ import java.awt.event.*;
 
 public class Circle extends Rectangle {
     private int radius = 100; // initial size of the circle
-    
+    public int moveRadius = 200; // initial size of the circle
+    public static final int MAX_RADIUS = 200; // Maximum radius size
+    public static final int MIN_RADIUS = 80;  // Minimum radius size
+    int initialX, initialY;
 
     // constructor creates circle at given location with given dimensions
     public Circle(int centerX, int centerY) {
         super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
+        initialX = centerX- 100 / 2;
+        initialY = centerY- 100 / 2;
     }
 
     // draws the current location of the circle to the screen
     public void draw(Graphics g) {
        
         g.setColor(Color.gray);
-        g.fillOval(x + 10, y + 10, radius - 20, radius - 20);
+        g.fillOval(initialX + 10, initialY + 10, radius - 20, radius - 20);
         
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.black);
         Stroke oldStroke = g2d.getStroke(); // Save the old stroke
         // Set the thickness of the outline
         g2d.setStroke(new BasicStroke(3)); // Change the thickness as needed
-        g2d.drawOval(x, y, radius, radius);
+        g2d.drawOval(initialX, initialY, radius, radius);
+        
+        
+        g2d.setStroke(new BasicStroke(5)); // Change the thickness as needed
+        g2d.drawOval(x, y, moveRadius, moveRadius);
         g2d.setStroke(oldStroke); // Restore the old stroke
         
         
@@ -33,12 +42,12 @@ public class Circle extends Rectangle {
 
     // method to set the radius and update the rectangle bounds
     public void setRadius(int r) {
-        radius = r;
+    	moveRadius = r;
     }
 
     // method to get the radius
     public int getRadius() {
-        return radius;
+        return moveRadius;
     }
 
     // method to update the position based on the center

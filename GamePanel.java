@@ -1,3 +1,7 @@
+//Don Tran and Kaibo Huang
+//June 11, 2024
+//This class runs the game, including periodically updating the screen so that it runs smoothly, running the title page, and running the sound effects/music.
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.sound.sampled.*;

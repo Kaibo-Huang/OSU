@@ -1,3 +1,7 @@
+//Don Tran and Kaibo Huang
+//June 11, 2024
+//This class creates an "approach circle", which will close in on a note or slider, helping the user click on each note or slider with the correct timing. 
+
 import java.awt.*;
 
 public class MouseCircle extends Rectangle {

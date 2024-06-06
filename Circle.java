@@ -1,3 +1,7 @@
+//Don Tran and Kaibo Huang
+//June 11, 2024
+//This class creates circle shapes called "notes", which will be the target area for the user to click them with the correct timing. 
+
 import java.awt.*;
 import java.awt.event.*;
 

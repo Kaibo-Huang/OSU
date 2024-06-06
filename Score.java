@@ -1,3 +1,7 @@
+//Don Tran and Kaibo Huang
+//June 11, 2024
+//This class keeps track of score, accuracy, and combo.
+
 import java.awt.*;
 
 public class Score {

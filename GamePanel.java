@@ -14,8 +14,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Thread gameThread;
 	private Image image;
 	private Graphics graphics;
+	private static Clip menu;
 
-	Score score;
+	private Score score;
 
 	static boolean[] appearC = new boolean[10];
 
@@ -33,7 +34,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private JButton tutorial, easy, medium, hard, backButton; // level buttons
 
 	private boolean isTitleScreen = true;
-	static Clip menu;
 
 	private int[][] easyCoordinates = {
 			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,

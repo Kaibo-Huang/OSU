@@ -346,18 +346,50 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	private void tutorial() {
 		// Implementation for tutorial
+		this.remove(maruButton);
+		this.remove(playButton);
+		this.remove(exitButton);
+		this.remove(tutorial);
+		this.remove(easy);
+		this.remove(medium);
+		this.remove(hard);
+		this.remove(backButton);
 	}
 
 	private void easy() {
 		// Implementation for easy
+		this.remove(maruButton);
+		this.remove(playButton);
+		this.remove(exitButton);
+		this.remove(tutorial);
+		this.remove(easy);
+		this.remove(medium);
+		this.remove(hard);
+		this.remove(backButton);
 	}
 
 	private void medium() {
 		// Implementation for medium
+		this.remove(maruButton);
+		this.remove(playButton);
+		this.remove(exitButton);
+		this.remove(tutorial);
+		this.remove(easy);
+		this.remove(medium);
+		this.remove(hard);
+		this.remove(backButton);
 	}
 
 	private void hard() {
 		// Implementation for hard
+		this.remove(maruButton);
+		this.remove(playButton);
+		this.remove(exitButton);
+		this.remove(tutorial);
+		this.remove(easy);
+		this.remove(medium);
+		this.remove(hard);
+		this.remove(backButton);
 	}
 
 	private void playSound(String soundFile) {

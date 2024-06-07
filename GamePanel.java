@@ -1,7 +1,3 @@
-//Don Tran and Kaibo Huang
-//June 11, 2024
-//This class runs the game, including periodically updating the screen so that it runs smoothly, running the title page, and running the sound effects/music.
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.sound.sampled.*;
@@ -20,7 +16,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private Graphics graphics;
     
     Score score;
+  
     private Circle c1;
+    private Circle c2;
+    private Circle c3;
+    private Circle c4;
+    private Circle c5;
+    private Circle c6;
+    private Circle c7;
+    private Circle c8;
+    private Circle c9;
+    
 
     private JButton maruButton, playButton, exitButton; // menu buttons
     private JButton tutorial, easy, medium, hard, backButton; // level buttons
@@ -28,13 +34,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private boolean isTitleScreen = true;
     static Clip menu;
 
-    private int[][] easyCoordinates = {
-			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,
-					478, 253, 113, 293, 524, 644, 867, 1172, 867, 723, 804 },
-			{ 319, 405, 251, 148, 513, 359, 537, 233, 395, 339, 419, 687, 616, 509, 615, 509, 387, 158, 457, 337, 201,
-					48, 371, 397, 537, 738, 469, 622, 612, 431, 251, 391, 559 } };
-    
-	
     public GamePanel() {
         this.setFocusable(true); // make everything in this class appear on the screen
         this.addKeyListener(this); // start listening for keyboard input
@@ -202,15 +201,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
     
     public void moveCircle(Circle c) {
+    	System.out.println(c.getRadius());
     	  if (c.getRadius() > Circle.MIN_RADIUS) {
               c.setRadius(c.getRadius() - 1);
               
               c.setPosition(500 - c.moveRadius/2, 400- c.moveRadius/2);
               
           } else {
-              c.setRadius(Circle.MAX_RADIUS);
+        	 
+        	  c.setRadius(Circle.MAX_RADIUS);
              
-              c.setPosition(500 - c.moveRadius/2, 400- c.moveRadius/2);
+              c.setPosition(c.x0 - c.moveRadius/2, c.y0- c.moveRadius/2);
              
           }
     }
@@ -233,7 +234,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                  	if(c.moveRadius <= 100) {
                  		Score.score++;
                  	}else {
-                 		c.moveRadius = Circle.MAX_RADIUS;
+                 		
                  		Score.score--;
                  	}
                  }

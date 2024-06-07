@@ -11,14 +11,20 @@ public class Circle extends Rectangle{
     public static final int MAX_RADIUS = 200; // Maximum radius size
     public static final int MIN_RADIUS = 80;  // Minimum radius size
     int initialX, initialY;
+    int x0, y0;
+    int id;
     
     boolean isClicked = false;
 
     // constructor creates circle at given location with given dimensions
-    public Circle(int centerX, int centerY) {
+    public Circle(int centerX, int centerY, int i) {
         super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
-        initialX = centerX- 100 / 2;
-        initialY = centerY- 100 / 2;
+        x0 =centerX; 
+        y0 = centerY;
+        initialX = x0- 100 / 2;
+        initialY = y0- 100 / 2;
+        id = i;
+       
     }
 
     // draws the current location of the circle to the screen

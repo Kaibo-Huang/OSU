@@ -35,6 +35,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private boolean isTitleScreen = true;
 	static Clip menu;
 
+	private int[][] easyCoordinates = {
+			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,
+					478, 253, 113, 293, 524, 644, 867, 1172, 867, 723, 804 },
+			{ 319, 405, 251, 148, 513, 359, 537, 233, 395, 339, 419, 687, 616, 509, 615, 509, 387, 158, 457, 337, 201,
+					48, 371, 397, 537, 738, 469, 622, 612, 431, 251, 391, 559 } };
+
 	public GamePanel() {
 		this.setFocusable(true); // make everything in this class appear on the screen
 		this.addKeyListener(this); // start listening for keyboard input

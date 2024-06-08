@@ -283,14 +283,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// Method to move the slider
 	public void moveSlider(Slider s) {
 		if (!s.movingAlongPath) {
-			
+
 			if (s.getRadius() > Slider.MIN_RADIUS) {
 				s.setRadius(s.getRadius() - 1);
 				s.setPosition(s.moveX - s.moveRadius / 2, s.moveY - s.moveRadius / 2);
 			} else {
 				s.movingAlongPath = true; // Start moving along the path
 			}
-			
+
 		} else {
 			// Move along the path of the rounded rectangle
 			int steps = 100; // Number of steps to reach the right circle
@@ -300,42 +300,46 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			// Update the position of the circle along the path
 			s.moveX += dx;
 			s.moveY += dy;
-		
 
 			// Check if the circle has reached the right circle
 
-			if (s.moveX >= s.initialX + s.length ) {
+			if (s.moveX >= s.initialX + s.length) {
 				s.moveX = s.initialX + s.length;
 
 				s.moveY = s.initialY;
 				s.movingAlongPath = false; // Reset the state for next move
 			}
-			
 
 		}
-		
-		
+
 	}
 
 	public void checkCollision(Slider s) {
-	   
-		
-	    addMouseListener(new MouseAdapter() {
-	        @Override
-	        public void mouseClicked(MouseEvent e) {
-	            // Get the coordinates of the click
-	            int mouseX = e.getX();
-	            int mouseY = e.getY();
 
-	            // Check if the click falls inside the circle
-	            if (s.isMouseClickedInside(mouseX, mouseY) ) {
-	                s.isClicked = true;
-	                Score.score++;
-	            }
-	        }
-	    });
+		if (!s.movingAlongPath) {
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// Get the coordinates of the click
+					int mouseX = e.getX();
+					int mouseY = e.getY();
+
+					// Check if the click falls inside the circle
+					if (s.isMouseClickedInside(mouseX, mouseY) && s.isClicked == false) {
+						s.isClicked = true;
+						if (s.moveRadius <= 100) {
+							Score.score++;
+						} else {
+							
+							Score.score--;
+						}
+					}
+				}
+			});
+		} else {
+
+		}
 	}
-
 
 	public void checkCollision(Circle c) {
 		addMouseListener(new MouseAdapter() {
@@ -381,81 +385,80 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	public void move() {
-	    if (appearC[1]) {
-	        moveCircle(c1);
-	        checkCollision(c1);
-	    }
-	    if (appearC[2]) {
-	        moveCircle(c2);
-	        checkCollision(c2);
-	    }
-	    if (appearC[3]) {
-	        moveCircle(c3);
-	        checkCollision(c3);
-	    }
-	    if (appearC[4]) {
-	        moveCircle(c4);
-	        checkCollision(c4);
-	    }
-	    if (appearC[5]) {
-	        moveCircle(c5);
-	        checkCollision(c5);
-	    }
-	    if (appearC[6]) {
-	        moveCircle(c6);
-	        checkCollision(c6);
-	    }
-	    if (appearC[7]) {
-	        moveCircle(c7);
-	        checkCollision(c7);
-	    }
-	    if (appearC[8]) {
-	        moveCircle(c8);
-	        checkCollision(c8);
-	    }
-	    if (appearC[9]) {
-	        moveCircle(c9);
-	        checkCollision(c9);
-	    }
+		if (appearC[1]) {
+			moveCircle(c1);
+			checkCollision(c1);
+		}
+		if (appearC[2]) {
+			moveCircle(c2);
+			checkCollision(c2);
+		}
+		if (appearC[3]) {
+			moveCircle(c3);
+			checkCollision(c3);
+		}
+		if (appearC[4]) {
+			moveCircle(c4);
+			checkCollision(c4);
+		}
+		if (appearC[5]) {
+			moveCircle(c5);
+			checkCollision(c5);
+		}
+		if (appearC[6]) {
+			moveCircle(c6);
+			checkCollision(c6);
+		}
+		if (appearC[7]) {
+			moveCircle(c7);
+			checkCollision(c7);
+		}
+		if (appearC[8]) {
+			moveCircle(c8);
+			checkCollision(c8);
+		}
+		if (appearC[9]) {
+			moveCircle(c9);
+			checkCollision(c9);
+		}
 
-	    if (appearS[1]) {
-	        moveSlider(s1);
-	        checkCollision(s1);
-	    }
-	    if (appearS[2]) {
-	        moveSlider(s2);
-	        checkCollision(s2);
-	    }
-	    if (appearS[3]) {
-	        moveSlider(s3);
-	        checkCollision(s3);
-	    }
-	    if (appearS[4]) {
-	        moveSlider(s4);
-	        checkCollision(s4);
-	    }
-	    if (appearS[5]) {
-	        moveSlider(s5);
-	        checkCollision(s5);
-	    }
-	    if (appearS[6]) {
-	        moveSlider(s6);
-	        checkCollision(s6);
-	    }
-	    if (appearS[7]) {
-	        moveSlider(s7);
-	        checkCollision(s7);
-	    }
-	    if (appearS[8]) {
-	        moveSlider(s8);
-	        checkCollision(s8);
-	    }
-	    if (appearS[9]) {
-	        moveSlider(s9);
-	        checkCollision(s9);
-	    }
+		if (appearS[1]) {
+			moveSlider(s1);
+			checkCollision(s1);
+		}
+		if (appearS[2]) {
+			moveSlider(s2);
+			checkCollision(s2);
+		}
+		if (appearS[3]) {
+			moveSlider(s3);
+			checkCollision(s3);
+		}
+		if (appearS[4]) {
+			moveSlider(s4);
+			checkCollision(s4);
+		}
+		if (appearS[5]) {
+			moveSlider(s5);
+			checkCollision(s5);
+		}
+		if (appearS[6]) {
+			moveSlider(s6);
+			checkCollision(s6);
+		}
+		if (appearS[7]) {
+			moveSlider(s7);
+			checkCollision(s7);
+		}
+		if (appearS[8]) {
+			moveSlider(s8);
+			checkCollision(s8);
+		}
+		if (appearS[9]) {
+			moveSlider(s9);
+			checkCollision(s9);
+		}
 	}
-
 
 	public void run() {
 		long lastTime = System.nanoTime();
@@ -471,7 +474,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 			if (delta >= 1) {
 				move();
-				
+
 				repaint();
 				delta--;
 			}

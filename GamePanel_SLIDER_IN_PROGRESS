@@ -374,12 +374,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	public void add(Slider s, int x, int y, int l, int a) {
+		
 		s.length = l;
 		s.initialX = x;
 		s.initialY = y;
 		s.angle = a;
 		s.moveX = x;
 		s.moveY = y;
+		s.moveRadius = Slider.MAX_RADIUS;
 
 		appearS[s.id] = true;
 	}

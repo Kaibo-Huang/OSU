@@ -237,7 +237,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	public void moveCircle(Circle c) {
-		System.out.println(c.getRadius());
+		
 		if (c.getRadius() > Circle.MIN_RADIUS) {
 			c.setRadius(c.getRadius() - 1);
 
@@ -288,6 +288,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
+				c.moveRadius = Circle.MAX_RADIUS;
 				c.x0 = x;
 				c.y0 = y;
 

@@ -4,6 +4,8 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
+import java.util.Timer;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
@@ -15,7 +17,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Image image;
 	private Graphics graphics;
 	private static Clip menu;
-
+	
 	private Score score;
 
 	static boolean[] appearC = new boolean[10];
@@ -35,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	private boolean isTitleScreen = true;
 
-	private int[][] easyCoordinates = {
+	private int[][] easyMap = {
 			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,
 					478, 253, 113, 293, 524, 644, 867, 1172, 867, 723, 804 },
 			{ 319, 405, 251, 148, 513, 359, 537, 233, 395, 339, 419, 687, 616, 509, 615, 509, 387, 158, 457, 337, 201,
@@ -44,6 +46,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					15793, 16753, 17713, 19153, 20593, 21553, 22513, 23953, 24433, 25393, 26353, 27793, 28273, 29233,
 					30193, 31633, 32133 } };
 
+	// constructor to initialize variables and add initial JButtons
 	public GamePanel() {
 		this.setFocusable(true); // make everything in this class appear on the screen
 		this.addKeyListener(this); // start listening for keyboard input
@@ -119,7 +122,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				stopMenu();
 				easy(); // calls startGame when pressed
 
-				add(c1, 600, 300);
 			}
 		});
 
@@ -170,6 +172,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		gameThread.start();
 	}
 
+	// move around JButtons to show PLAY and EXIT buttons
 	private void showGameOptions() {
 		this.removeAll();
 
@@ -185,6 +188,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.repaint();
 	}
 
+	// adds the buttons to show the level
 	public void showLevels() {
 		this.removeAll();
 
@@ -203,6 +207,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.repaint();
 	}
 
+	// paints images off the screen and moves them onto the screen to prevent lag
 	public void paint(Graphics g) {
 		if (isTitleScreen) {
 			super.paint(g);
@@ -215,6 +220,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 	}
 
+	// draws each of the individual circles, sliders and spinners as well as the
+	// score
 	public void draw(Graphics g) {
 		c1.draw(g);
 		c2.draw(g);
@@ -226,7 +233,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		c8.draw(g);
 		c9.draw(g);
 
-		score.draw(g);
+		Score.draw(g);
 	}
 
 	public void moveCircle(Circle c) {
@@ -262,6 +269,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 				// Check if the click falls inside the circle
 				if (c.isMouseClickedInside(mouseX, mouseY) && c.isClicked == false) {
+					playSound("Music/hitSound.wav");
 					c.isClicked = true;
 					if (c.moveRadius <= 100) {
 						Score.score++;
@@ -274,16 +282,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		});
 	}
 
-	public void add(Circle c, int x, int y) {
-		c.x0 = x;
-		c.y0 = y;
-		
-		 c.initialX = c.x0- 100 / 2;
-	        c.initialY = c.y0- 100 / 2;
+	// adds the Circles to the screen and the coordinates when needed
+	public void add(Circle c, int x, int y, long addCircleCooldownMs) {
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				c.x0 = x;
+				c.y0 = y;
 
-		appearC[c.id] = true;
+				c.initialX = c.x0 - 100 / 2;
+				c.initialY = c.y0 - 100 / 2;
+
+				appearC[c.id] = true;
+			}
+		};
+		timer.schedule(task, addCircleCooldownMs);
 	}
 
+	// ensures smooth movement of the approaching circle
 	public void move() {
 		if (appearC[1] == true) {
 			moveCircle(c1);
@@ -323,6 +340,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 	}
 
+	// infinite game loop
 	public void run() {
 		long lastTime = System.nanoTime();
 		double amountOfTicks = 60;
@@ -330,7 +348,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		double delta = 0;
 		long now;
 
-		while (true) { // this is the infinite game loop
+		while (true) {
 			now = System.nanoTime();
 			delta = delta + (now - lastTime) / ns;
 			lastTime = now;
@@ -356,8 +374,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(backButton);
 	}
 
+	// code to run the Easy game mode
 	private void easy() {
-		// Implementation for easy
 		this.remove(maruButton);
 		this.remove(playButton);
 		this.remove(exitButton);
@@ -366,8 +384,27 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(medium);
 		this.remove(hard);
 		this.remove(backButton);
+
+		playSound("Music/easy.wav");
+
+		add(c1, easyMap[0][0], easyMap[1][0], easyMap[2][0]);
+		add(c2, easyMap[0][1], easyMap[1][1], easyMap[2][1]);
+		add(c3, easyMap[0][2], easyMap[1][2], easyMap[2][2]);
+		add(c4, easyMap[0][3], easyMap[1][3], easyMap[2][3]);
+		add(c5, easyMap[0][4], easyMap[1][4], easyMap[2][4]);
+		add(c6, easyMap[0][5], easyMap[1][5], easyMap[2][5]);
+		add(c7, easyMap[0][6], easyMap[1][6], easyMap[2][6]);
+		add(c8, easyMap[0][7], easyMap[1][7], easyMap[2][7]);
+		add(c9, easyMap[0][8], easyMap[1][8], easyMap[2][8]);
+		
+		add(c1, easyMap[0][9], easyMap[1][9], easyMap[2][9]);
+		add(c2, easyMap[0][10], easyMap[1][10], easyMap[2][10]);
+		add(c3, easyMap[0][11], easyMap[1][11], easyMap[2][11]);
+		add(c4, easyMap[0][12], easyMap[1][12], easyMap[2][12]);
+
 	}
 
+	// code to run the Medium game mode
 	private void medium() {
 		// Implementation for medium
 		this.remove(maruButton);
@@ -380,6 +417,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(backButton);
 	}
 
+	// code to run the Hard game mode
 	private void hard() {
 		// Implementation for hard
 		this.remove(maruButton);
@@ -392,15 +430,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(backButton);
 	}
 
+	// plays sound given a file name
 	private void playSound(String soundFile) {
+		File file;
+		AudioInputStream audioStream;
+		Clip clip;
+
 		try {
 			// open theme song file
-			File file = new File(soundFile);
+			file = new File(soundFile);
 
 			// Get audio input stream
-			AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+			audioStream = AudioSystem.getAudioInputStream(file);
 			// Open and play the theme song
-			Clip clip = AudioSystem.getClip();
+			clip = AudioSystem.getClip();
 			clip.open(audioStream);
 			clip.start(); // Start playing the sound
 		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
@@ -441,13 +484,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			menu.stop(); // Stop the menu music
 			menu.setMicrosecondPosition(0); // Reset its position to the beginning
 			menu.close(); // Close the clip
-		}
-	}
-
-	public void stall(long deltaTime, Circle c) {
-		long currentTime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - currentTime < deltaTime) {
-			System.out.println();
 		}
 	}
 

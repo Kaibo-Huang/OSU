@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
@@ -287,24 +289,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			if (s.getRadius() > Slider.MIN_RADIUS) {
 				s.setRadius(s.getRadius() - 1);
 				s.setPosition(s.moveX - s.moveRadius / 2, s.moveY - s.moveRadius / 2);
-				
+
 			} else {
 				s.movingAlongPath = true; // Start moving along the path
-				
+
 			}
 
 		} else {
 			// Move along the path of the rounded rectangle
 			int steps = 100; // Number of steps to reach the right circle
 			double dx = (s.finalX - s.initialX) / (double) steps;
-			double dy = (double)(s.ghostY - s.initialX) / (double) steps;
-			
 
 			// Update the position of the circle along the path
+
 			s.moveX += dx;
-			s.ghostD += dy;
-		
-			
+
 			// Check if the circle has reached the right circle
 			// System.out.println(s.moveX + " " + s.moveY);
 			if (s.moveX >= s.initialX + s.length) {
@@ -314,8 +313,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				s.movingAlongPath = false; // Reset the state for next move
 				appearS[s.id] = false;
 			}
-			
-			
 
 		}
 
@@ -350,25 +347,30 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			});
 		} else {
-
 			addMouseMotionListener(new MouseMotionAdapter() {
-				@Override
-				public void mouseMoved(MouseEvent e) {
-					// Get the coordinates of the mouse
-					int mouseX = e.getX();
-					int mouseY = e.getY();
-					//System.out.println(mouseX + " " + mouseY + " " + (s.moveX  +  s.initialY - s.moveRadius / 2)+ " " + s.ghostD +" " + Math.sqrt(Math.pow(mouseX - s.moveX, 2) + Math.pow(mouseY - (s.ghostD + s.initialY - s.moveRadius / 2), 2)));
-					// Check if the mouse is inside the moving circle
-					if(Math.sqrt(Math.pow(mouseX - s.moveX, 2) + Math.pow(mouseY - (s.ghostD + s.initialY - s.moveRadius / 2), 2)) <= s.moveRadius) {
-						System.out.println("in");
-					}else {
-						System.out.println("out");
-					}
-				}
-			});
-		}
-	}
+	            @Override
+	            public void mouseMoved(MouseEvent e) {
+	                // Get the coordinates of the mouse
+	                int mouseX = e.getX();
+	                int mouseY = e.getY();
 
+	                // Transform the mouse coordinates to the rotated coordinate system
+	                AffineTransform at = new AffineTransform();
+	                at.rotate(-Math.toRadians(s.angle), s.initialX, s.initialY);
+	                Point transformedPoint = new Point(mouseX, mouseY);
+	                at.transform(transformedPoint, transformedPoint);
+
+	                // Check if the transformed mouse coordinates are within the circle
+	                double distance = Math.sqrt(Math.pow(transformedPoint.x - s.moveX, 2) + Math.pow(transformedPoint.y - s.moveY, 2));
+	                if (distance <= s.moveRadius / 2) {
+	                    System.out.println("in");
+	                } else {
+	                    System.out.println("out");
+	                }
+	            }
+	        });
+	    }
+	}
 	public void checkCollision(Circle c) {
 		addMouseListener(new MouseAdapter() {
 			@Override

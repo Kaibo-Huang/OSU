@@ -142,7 +142,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				stopMenu();
 				easy(); // calls startGame when pressed
 
-				add(s1, 100, 200, 300, 30);
+				add(s1, 100, 200, 300, 10);
 
 			}
 		});
@@ -311,7 +311,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 				s.moveY = s.initialY;
 				s.movingAlongPath = false; // Reset the state for next move
+				
+				if(s.goodSlide && s.goodClick) {
+					Score.score +=2;
+				}else if(s.goodSlide || s.goodClick) {
+					Score.score++;
+				}else {
+					Score.score --;
+				}
 				appearS[s.id] = false;
+				s.length = 200;
+				s.initialX = 2000;
+				s.initialY = 2000;
+				s.angle = 0;
+				s.moveX = 2000;
+				s.moveY = 2000;
 			}
 
 		}
@@ -339,9 +353,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					if (s.isMouseClickedInside(mouseX, mouseY) && !s.isClicked) {
 						s.isClicked = true;
 						if (s.moveRadius <= 120) {
-							Score.score++;
+							s.goodClick = true;
+							
 						} else {
-							Score.score--;
+							s.goodClick = false;
 						}
 					}
 				}
@@ -363,9 +378,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	                // Check if the transformed mouse coordinates are within the circle
 	                double distance = Math.sqrt(Math.pow(transformedPoint.x - s.moveX, 2) + Math.pow(transformedPoint.y - s.moveY, 2));
 	                if (distance <= s.moveRadius / 2) {
-	                    System.out.println("in");
+	                    
 	                } else {
-	                    System.out.println("out");
+	                    s.goodSlide = false;
 	                }
 	            }
 	        });

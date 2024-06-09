@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
@@ -17,10 +19,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Image image;
 	private Graphics graphics;
 	private static Clip menu;
-	
+
 	private Score score;
 
 	static boolean[] appearC = new boolean[10];
+	static boolean[] appearS = new boolean[10];
 
 	private Circle c1;
 	private Circle c2;
@@ -31,6 +34,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Circle c7;
 	private Circle c8;
 	private Circle c9;
+
+	private Slider s1;
+	private Slider s2;
+	private Slider s3;
+	private Slider s4;
+	private Slider s5;
+	private Slider s6;
+	private Slider s7;
+	private Slider s8;
+	private Slider s9;
 
 	private JButton maruButton, playButton, exitButton; // menu buttons
 	private JButton tutorial, easy, medium, hard, backButton; // level buttons
@@ -62,6 +75,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		c7 = new Circle(2000, 2000, 7);
 		c8 = new Circle(2000, 2000, 8);
 		c9 = new Circle(2000, 2000, 9);
+
+		s1 = new Slider(2000, 2000, 300, 1);
+		s2 = new Slider(2000, 2000, 300, 2);
+		s3 = new Slider(2000, 2000, 300, 3);
+		s4 = new Slider(2000, 2000, 300, 4);
+		s5 = new Slider(2000, 2000, 300, 5);
+		s6 = new Slider(2000, 2000, 300, 6);
+		s7 = new Slider(2000, 2000, 300, 7);
+		s8 = new Slider(2000, 2000, 300, 8);
+		s9 = new Slider(2000, 2000, 300, 9);
 
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 		playMenu();
@@ -233,11 +256,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		c8.draw(g);
 		c9.draw(g);
 
+		s1.draw(g);
+		s2.draw(g);
+		s3.draw(g);
+		s4.draw(g);
+		s5.draw(g);
+		s6.draw(g);
+		s7.draw(g);
+		s8.draw(g);
+		s9.draw(g);
+
 		Score.draw(g);
 	}
 
 	public void moveCircle(Circle c) {
-		
+		// System.out.println(c.getRadius());
 		if (c.getRadius() > Circle.MIN_RADIUS) {
 			c.setRadius(c.getRadius() - 1);
 
@@ -255,8 +288,110 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 	}
 
-	public void collision() {
+	// Method to move the slider
+	public void moveSlider(Slider s) {
+		if (!s.movingAlongPath) {
 
+			if (s.getRadius() > Slider.MIN_RADIUS) {
+				s.setRadius(s.getRadius() - 1);
+				s.setPosition(s.moveX - s.moveRadius / 2, s.moveY - s.moveRadius / 2);
+
+			} else {
+				s.movingAlongPath = true; // Start moving along the path
+
+			}
+
+		} else {
+			// Move along the path of the rounded rectangle
+			int steps = 100; // Number of steps to reach the right circle
+			double dx = (s.finalX - s.initialX) / (double) steps;
+
+			// Update the position of the circle along the path
+
+			s.moveX += dx;
+
+			// Check if the circle has reached the right circle
+			// System.out.println(s.moveX + " " + s.moveY);
+			if (s.moveX >= s.initialX + s.length) {
+				s.moveX = s.initialX + s.length;
+
+				s.moveY = s.initialY;
+				s.movingAlongPath = false; // Reset the state for next move
+
+				if (s.goodSlide && s.goodClick) {
+					Score.score += 2;
+				} else if (s.goodSlide || s.goodClick) {
+					Score.score++;
+				} else {
+					Score.score--;
+				}
+				appearS[s.id] = false;
+				s.length = 200;
+				s.initialX = 2000;
+				s.initialY = 2000;
+				s.angle = 0;
+				s.moveX = 2000;
+				s.moveY = 2000;
+			}
+
+		}
+
+	}
+
+	public void checkCollision(Slider s) {
+		// Remove existing listeners to avoid duplicates
+		for (MouseListener listener : getMouseListeners()) {
+			removeMouseListener(listener);
+		}
+		for (MouseMotionListener listener : getMouseMotionListeners()) {
+			removeMouseMotionListener(listener);
+		}
+
+		if (!s.movingAlongPath) {
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// Get the coordinates of the click
+					int mouseX = e.getX();
+					int mouseY = e.getY();
+
+					// Check if the click falls inside the circle
+					if (s.isMouseClickedInside(mouseX, mouseY) && !s.isClicked) {
+						s.isClicked = true;
+						if (s.moveRadius <= 120) {
+							s.goodClick = true;
+
+						} else {
+							s.goodClick = false;
+						}
+					}
+				}
+			});
+		} else {
+			addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
+				public void mouseMoved(MouseEvent e) {
+					// Get the coordinates of the mouse
+					int mouseX = e.getX();
+					int mouseY = e.getY();
+
+					// Transform the mouse coordinates to the rotated coordinate system
+					AffineTransform at = new AffineTransform();
+					at.rotate(-Math.toRadians(s.angle), s.initialX, s.initialY);
+					Point transformedPoint = new Point(mouseX, mouseY);
+					at.transform(transformedPoint, transformedPoint);
+
+					// Check if the transformed mouse coordinates are within the circle
+					double distance = Math.sqrt(
+							Math.pow(transformedPoint.x - s.moveX, 2) + Math.pow(transformedPoint.y - s.moveY, 2));
+					if (distance <= s.moveRadius / 2) {
+
+					} else {
+						s.goodSlide = false;
+					}
+				}
+			});
+		}
 	}
 
 	public void checkCollision(Circle c) {
@@ -269,7 +404,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 				// Check if the click falls inside the circle
 				if (c.isMouseClickedInside(mouseX, mouseY) && c.isClicked == false) {
-					playSound("Music/hitSound.wav");
 					c.isClicked = true;
 					if (c.moveRadius <= 100) {
 						Score.score++;
@@ -283,12 +417,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// adds the Circles to the screen and the coordinates when needed
-	public void add(Circle c, int x, int y, long addCircleCooldownMs) {
+	public void add(Circle c, int x, int y, long t) {
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
-				c.moveRadius = Circle.MAX_RADIUS;
 				c.x0 = x;
 				c.y0 = y;
 
@@ -298,46 +431,96 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				appearC[c.id] = true;
 			}
 		};
-		timer.schedule(task, addCircleCooldownMs);
+		timer.schedule(task, t);
+	}
+
+	public void add(Slider s, int x, int y, int l, int a) {
+
+		s.length = l;
+		s.initialX = x;
+		s.initialY = y;
+		s.angle = a;
+		s.moveX = x;
+		s.moveY = y;
+		s.moveRadius = Slider.MAX_RADIUS;
+
+		appearS[s.id] = true;
 	}
 
 	// ensures smooth movement of the approaching circle
 	public void move() {
-		if (appearC[1] == true) {
+		if (appearC[1]) {
 			moveCircle(c1);
 			checkCollision(c1);
 		}
-		if (appearC[2] == true) {
+		if (appearC[2]) {
 			moveCircle(c2);
 			checkCollision(c2);
 		}
-		if (appearC[3] == true) {
+		if (appearC[3]) {
 			moveCircle(c3);
 			checkCollision(c3);
 		}
-		if (appearC[4] == true) {
+		if (appearC[4]) {
 			moveCircle(c4);
 			checkCollision(c4);
 		}
-		if (appearC[5] == true) {
+		if (appearC[5]) {
 			moveCircle(c5);
 			checkCollision(c5);
 		}
-		if (appearC[6] == true) {
+		if (appearC[6]) {
 			moveCircle(c6);
 			checkCollision(c6);
 		}
-		if (appearC[7] == true) {
+		if (appearC[7]) {
 			moveCircle(c7);
 			checkCollision(c7);
 		}
-		if (appearC[8] == true) {
+		if (appearC[8]) {
 			moveCircle(c8);
 			checkCollision(c8);
 		}
-		if (appearC[9] == true) {
+		if (appearC[9]) {
 			moveCircle(c9);
 			checkCollision(c9);
+		}
+
+		if (appearS[1]) {
+			moveSlider(s1);
+			checkCollision(s1);
+		}
+		if (appearS[2]) {
+			moveSlider(s2);
+			checkCollision(s2);
+		}
+		if (appearS[3]) {
+			moveSlider(s3);
+			checkCollision(s3);
+		}
+		if (appearS[4]) {
+			moveSlider(s4);
+			checkCollision(s4);
+		}
+		if (appearS[5]) {
+			moveSlider(s5);
+			checkCollision(s5);
+		}
+		if (appearS[6]) {
+			moveSlider(s6);
+			checkCollision(s6);
+		}
+		if (appearS[7]) {
+			moveSlider(s7);
+			checkCollision(s7);
+		}
+		if (appearS[8]) {
+			moveSlider(s8);
+			checkCollision(s8);
+		}
+		if (appearS[9]) {
+			moveSlider(s9);
+			checkCollision(s9);
 		}
 	}
 
@@ -356,7 +539,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 			if (delta >= 1) {
 				move();
-				collision();
 				repaint();
 				delta--;
 			}
@@ -388,7 +570,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		playSound("Music/easy.wav");
 
-		add(c1, easyMap[0][0], easyMap[1][0], easyMap[2][0]);
+		add(s1, easyMap[0][0], easyMap[1][0], 150, 0);
 		add(c2, easyMap[0][1], easyMap[1][1], easyMap[2][1]);
 		add(c3, easyMap[0][2], easyMap[1][2], easyMap[2][2]);
 		add(c4, easyMap[0][3], easyMap[1][3], easyMap[2][3]);
@@ -397,7 +579,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(c7, easyMap[0][6], easyMap[1][6], easyMap[2][6]);
 		add(c8, easyMap[0][7], easyMap[1][7], easyMap[2][7]);
 		add(c9, easyMap[0][8], easyMap[1][8], easyMap[2][8]);
-		
+
 		add(c1, easyMap[0][9], easyMap[1][9], easyMap[2][9]);
 		add(c2, easyMap[0][10], easyMap[1][10], easyMap[2][10]);
 		add(c3, easyMap[0][11], easyMap[1][11], easyMap[2][11]);

@@ -21,6 +21,8 @@ public class Slider extends Rectangle {
 
 	boolean isClicked = false;
 	boolean movingAlongPath = false; // Indicates if the circle is moving along the path
+	boolean goodSlide = true;
+	boolean goodClick = false;
 
 	// Constructor creates circle at given location with given dimensions
 	public Slider(int centerX, int centerY, int l, int i) {

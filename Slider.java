@@ -13,7 +13,7 @@ public class Slider extends Rectangle {
 	int initialX, initialY;
 	int finalX, finalY; // Position of the right circle
 	int moveX, moveY;
-	double ghostY, ghostD = 0;
+	
 
 	int id;
 	int length;
@@ -32,6 +32,7 @@ public class Slider extends Rectangle {
 		id = i;
 		length = l;
 		this.angle = 0; // Default angle is 0 degrees
+		
 
 	}
 
@@ -45,6 +46,7 @@ public class Slider extends Rectangle {
 		id = i;
 		length = l;
 		this.angle = angle; // Set the angle
+		
 
 	}
 
@@ -72,7 +74,8 @@ public class Slider extends Rectangle {
 		int ovalWidth = length;
 		int ovalHeight = radius;
 		
-		ghostY = (int) ((double)length * Math.tan(Math.toRadians(angle))) + initialY - circleDiameter / 2;
+	
+		
 
 		// Draw the left circle
 		g2d.drawOval(initialX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);

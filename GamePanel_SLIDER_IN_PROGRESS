@@ -19,11 +19,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Image image;
 	private Graphics graphics;
 	private static Clip menu;
-	private JFrame frame;
-	private JLabel label;
-	private Timer timer;
-
-	private Score score;
 
 	static boolean[] appearC = new boolean[10];
 	static boolean[] appearS = new boolean[10];
@@ -55,12 +50,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	private int[][] tutorialMap = {
 			{ 640, 238, 1039, 999, 1039, 238, 511, 637, 650, 919, 1200, 644, 363, 85, 834, 438, 847, 679, 90, 158, 235,
-					341, 651, 879, 529, 70, 529, 962, 1142, 654, 100, 554, 300 },
+					341, 651, 879, 529, 120, 529, 962, 1142, 654, 100, 554, 150, 150 },
 			{ 360, 132, 132, 389, 636, 646, 237, 68, 646, 517, 389, 124, 253, 383, 318, 319, 650, 311, 383, 559, 732,
-					333, 48, 72, 696, 614, 676, 676, 30, 561, 674, 742, 360 },
+					333, 48, 72, 696, 550, 676, 676, 120, 561, 674, 742, 360, 500 },
 			{ 3491, 20106, 21952, 22875, 23798, 25645, 27029, 27491, 29337, 30260, 31183, 33029, 33952, 34875, 57029,
 					60722, 62568, 86568, 89337, 89799, 90260, 92106, 93491, 93953, 96722, 97645, 100414, 101337, 104106,
-					105029, 147799, 148722, 166260 } };
+					105029, 107799, 108722, 110490, 111355 } };
 
 	private int[][] easyMap = {
 			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,
@@ -69,9 +64,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					48, 371, 397, 537, 738, 469, 622, 612, 431, 251, 391, 559 },
 			{ 433, 1393, 2353, 3313, 4273, 5233, 6193, 8113, 9073, 10033, 10513, 11473, 11953, 13393, 13873, 15313,
 					15793, 16753, 17713, 19153, 20593, 21553, 22513, 23953, 24433, 25393, 26353, 27793, 28273, 29233,
-					30193, 31633, 32133 } };
+					30193, 31116, 33885 } };
 
-	private int[][] mediumMap = { {781, 1042, 624, }, {144, 193, 188, }, {1289, 1728, 3164, } };
+	private int[][] mediumMap = { { 781, 1042, 624, }, { 144, 193, 188, }, { 1289, 1728, 3164, } };
 
 	private int[][] hardMap = { {}, {}, {} };
 
@@ -79,10 +74,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public GamePanel() {
 		this.setFocusable(true); // make everything in this class appear on the screen
 		this.addKeyListener(this); // start listening for keyboard input
-
-		score = new Score();
-		frame = new JFrame("Display String Example");
-		label = new JLabel("", SwingConstants.CENTER);
 
 		c1 = new Circle(2000, 2000, 1);
 		c2 = new Circle(2000, 2000, 2);
@@ -321,7 +312,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		} else {
 			// Move along the path of the rounded rectangle
-			int steps = 100; // Number of steps to reach the right circle
+			int steps = 50; // Number of steps to reach the right circle
 			double dx = (s.finalX - s.initialX) / (double) steps;
 
 			// Update the position of the circle along the path
@@ -441,6 +432,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
+				c.isClicked = false;
 				c.x0 = x;
 				c.y0 = y;
 
@@ -460,6 +452,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
+				s.isClicked = false;
 				s.length = l;
 				s.initialX = x;
 				s.initialY = y;
@@ -615,14 +608,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(c8, tutorialMap[0][22], tutorialMap[1][22], tutorialMap[2][22]);
 		add(s7, tutorialMap[0][23], tutorialMap[1][23], tutorialMap[2][23], 300, 70);
 		add(c9, tutorialMap[0][24], tutorialMap[1][24], tutorialMap[2][24]);
-		add(s8, tutorialMap[0][25], tutorialMap[1][25], tutorialMap[2][25], 600, 70);
-		add(s9, tutorialMap[0][26], tutorialMap[1][26], tutorialMap[2][26], 90, 200);
+		add(s8, tutorialMap[0][25], tutorialMap[1][25], tutorialMap[2][25], 500, 300);
+		add(s9, tutorialMap[0][26], tutorialMap[1][26], tutorialMap[2][26], 100, 200);
 		add(s1, tutorialMap[0][27], tutorialMap[1][27], tutorialMap[2][27], 300, 240);
 		add(c1, tutorialMap[0][28], tutorialMap[1][28], tutorialMap[2][28]);
-		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 190);
+		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 250);
 		add(c2, tutorialMap[0][20], tutorialMap[1][30], tutorialMap[2][30]);
-		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 210);
-		add(s4, tutorialMap[0][32], tutorialMap[1][32], tutorialMap[2][32], 800, 0);
+		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 300);
+		add(c4, tutorialMap[0][32], tutorialMap[1][32], tutorialMap[2][32]);
+		add(s4, tutorialMap[0][33], tutorialMap[1][33], tutorialMap[2][33], 800, 0);
 
 	}
 

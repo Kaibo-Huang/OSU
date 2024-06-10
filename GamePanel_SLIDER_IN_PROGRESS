@@ -71,6 +71,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					15793, 16753, 17713, 19153, 20593, 21553, 22513, 23953, 24433, 25393, 26353, 27793, 28273, 29233,
 					30193, 31633, 32133 } };
 
+	private int[][] mediumMap = { {781, 1042, 624, }, {144, 193, 188, }, {1289, 1728, 3164, } };
+
+	private int[][] hardMap = { {}, {}, {} };
+
 	// constructor to initialize variables and add initial JButtons
 	public GamePanel() {
 		this.setFocusable(true); // make everything in this class appear on the screen
@@ -597,28 +601,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(c2, tutorialMap[0][10], tutorialMap[1][10], tutorialMap[2][10]);
 		add(c3, tutorialMap[0][11], tutorialMap[1][11], tutorialMap[2][11]);
 		add(c4, tutorialMap[0][12], tutorialMap[1][12], tutorialMap[2][12]);
-		add(c4, tutorialMap[0][13], tutorialMap[1][13], tutorialMap[2][13]);
+		add(c5, tutorialMap[0][13], tutorialMap[1][13], tutorialMap[2][13]);
 
 		add(s1, tutorialMap[0][14], tutorialMap[1][14], tutorialMap[2][14], 180, 0);
 		add(s2, tutorialMap[0][15], tutorialMap[1][15], tutorialMap[2][15], 100, 90);
 		add(s3, tutorialMap[0][16], tutorialMap[1][16], tutorialMap[2][16], 300, 270);
 
-		add(s3, tutorialMap[0][17], tutorialMap[1][17], tutorialMap[2][17], 300, 180);
-		add(c4, tutorialMap[0][18], tutorialMap[1][18], tutorialMap[2][18]);
-		add(c4, tutorialMap[0][19], tutorialMap[1][19], tutorialMap[2][19]);
-		add(s3, tutorialMap[0][20], tutorialMap[1][20], tutorialMap[2][20], 150, 350);
-		add(s3, tutorialMap[0][21], tutorialMap[1][21], tutorialMap[2][21], 150, 280);
-		add(c4, tutorialMap[0][22], tutorialMap[1][22], tutorialMap[2][22]);
-		add(s3, tutorialMap[0][23], tutorialMap[1][23], tutorialMap[2][23], 300, 70);
-		add(c4, tutorialMap[0][24], tutorialMap[1][24], tutorialMap[2][24]);
-		add(s3, tutorialMap[0][25], tutorialMap[1][25], tutorialMap[2][25], 600, 70);
-		add(s3, tutorialMap[0][26], tutorialMap[1][26], tutorialMap[2][26], 90, 270);
-		add(s3, tutorialMap[0][27], tutorialMap[1][27], tutorialMap[2][27], 300, 240);
-		add(c4, tutorialMap[0][28], tutorialMap[1][28], tutorialMap[2][28]);
-		add(s3, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 190);
-		add(c4, tutorialMap[0][20], tutorialMap[1][30], tutorialMap[2][30]);
+		add(s4, tutorialMap[0][17], tutorialMap[1][17], tutorialMap[2][17], 300, 180);
+		add(c6, tutorialMap[0][18], tutorialMap[1][18], tutorialMap[2][18]);
+		add(c7, tutorialMap[0][19], tutorialMap[1][19], tutorialMap[2][19]);
+		add(s5, tutorialMap[0][20], tutorialMap[1][20], tutorialMap[2][20], 150, 350);
+		add(s6, tutorialMap[0][21], tutorialMap[1][21], tutorialMap[2][21], 150, 280);
+		add(c8, tutorialMap[0][22], tutorialMap[1][22], tutorialMap[2][22]);
+		add(s7, tutorialMap[0][23], tutorialMap[1][23], tutorialMap[2][23], 300, 70);
+		add(c9, tutorialMap[0][24], tutorialMap[1][24], tutorialMap[2][24]);
+		add(s8, tutorialMap[0][25], tutorialMap[1][25], tutorialMap[2][25], 600, 70);
+		add(s9, tutorialMap[0][26], tutorialMap[1][26], tutorialMap[2][26], 90, 200);
+		add(s1, tutorialMap[0][27], tutorialMap[1][27], tutorialMap[2][27], 300, 240);
+		add(c1, tutorialMap[0][28], tutorialMap[1][28], tutorialMap[2][28]);
+		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 190);
+		add(c2, tutorialMap[0][20], tutorialMap[1][30], tutorialMap[2][30]);
 		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 210);
-		add(s3, tutorialMap[0][32], tutorialMap[1][32], tutorialMap[2][32], 800, 0);
+		add(s4, tutorialMap[0][32], tutorialMap[1][32], tutorialMap[2][32], 800, 0);
 
 	}
 
@@ -737,7 +741,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// Implementation for keyTyped
+
 	}
 
 	@Override

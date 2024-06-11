@@ -19,26 +19,26 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public static final int GAME_WIDTH = 1280;
 	public static final int GAME_HEIGHT = 780;
 
-	//variable declarations
+	// variable declarations
 	private Thread gameThread;
 	private Image image;
 	private Graphics graphics;
 	private static Clip menu;
 
-	//check if circle or slider has appeared
+	// check if circle or slider has appeared
 	private static boolean[] appearC = new boolean[10];
 	private static boolean[] appearS = new boolean[10];
 
-	//declare 9 circle and slider objects
+	// declare 9 circle and slider objects
 	private Circle c1, c2, c3, c4, c5, c6, c7, c8, c9;
 	private Slider s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
 	private JButton maruButton, playButton, exitButton; // menu buttons
-	private JButton tutorial, easy, medium, hard, backButton; // level buttons
+	private JButton tutorial, easy, medium, hard, backButton, play;// level buttons
 
 	private boolean isTitleScreen = true;
 
-	//map elements (x position, y position, time of placement)
+	// map elements (x position, y position, time of placement)
 	private int[][] tutorialMap = {
 			{ 640, 238, 1039, 999, 1039, 238, 511, 637, 650, 919, 1200, 644, 363, 85, 834, 438, 847, 679, 90, 158, 235,
 					341, 651, 879, 529, 120, 529, 962, 1142, 654, 100, 554, 150, 150 },
@@ -63,7 +63,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.setFocusable(true); // make everything in this class appear on the screen
 		this.addKeyListener(this); // start listening for keyboard input
 
-		//initialize circle and slider objects
+		// initialize circle and slider objects
 		c1 = new Circle(2000, 2000, 1);
 		c2 = new Circle(2000, 2000, 2);
 		c3 = new Circle(2000, 2000, 3);
@@ -125,10 +125,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		tutorial.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
-				isTitleScreen = false;
-				stopMenu();
-				tutorial(); // calls startGame when pressed
+
+				play = new JButton("PLAY!");
+				play.setFont(new Font("Arial", Font.PLAIN, 24));
+				addPlayButton();
+				play.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						playSound("Music/PlayClick.wav");
+						isTitleScreen = false;
+						stopMenu();
+						tutorial(); // calls startGame when pressed
+					}
+				});
 			}
 		});
 
@@ -228,6 +237,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.repaint();
 	}
 
+	public void addPlayButton() {
+		play.setBounds(GAME_WIDTH - 250, GAME_HEIGHT - 100, 200, 50);
+		this.add(play);
+	}
+
 	// paints images off the screen and moves them onto the screen to prevent lag
 	public void paint(Graphics g) {
 		if (isTitleScreen) {
@@ -267,7 +281,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		Score.draw(g);
 	}
 
-	//ensures smooth movement of closing circle
+	// ensures smooth movement of closing circle
 	public void moveCircle(Circle c) {
 		if (c.getRadius() > Circle.MIN_RADIUS) {
 			c.setRadius(c.getRadius() - 1);
@@ -336,7 +350,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	}
 
-	//checks if slider objects are clicked at the correct time and moving along their path
+	// checks if slider objects are clicked at the correct time and moving along
+	// their path
 	public void checkCollision(Slider s) {
 		// Remove existing listeners to avoid duplicates
 		for (MouseListener listener : getMouseListeners()) {
@@ -346,7 +361,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			removeMouseMotionListener(listener);
 		}
 
-		//check for mouse clicks
+		// check for mouse clicks
 		if (!s.movingAlongPath) {
 			addMouseListener(new MouseAdapter() {
 				@Override
@@ -367,7 +382,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					}
 				}
 
-				@Override 
+				@Override
 				public void mousePressed(MouseEvent e) {
 					s.mousePressed = true;
 				}
@@ -378,7 +393,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			});
 
-			//checks for 'z' or 'x' keys
+			// checks for 'z' or 'x' keys
 			addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
@@ -467,7 +482,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		requestFocusInWindow();
 	}
 
-	//checks for clicks inside of the circle objects
+	// checks for clicks inside of the circle objects
 	public void checkCollision(Circle c) {
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -544,7 +559,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		timer.schedule(task, t);
 	}
 
-	//method to add slider objects with correct coordinates, time, length, angle and speed
+	// method to add slider objects with correct coordinates, time, length, angle
+	// and speed
 	public void add(Slider s, int x, int y, long t, int l, int a, int sp) {
 		Timer timer = new Timer();
 		s.isClicked = false;
@@ -671,7 +687,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// Implementation for tutorial
 	private void tutorial() {
 
-		//remove all buttons onscreen
+		// remove all buttons onscreen
 		this.remove(maruButton);
 		this.remove(playButton);
 		this.remove(exitButton);
@@ -681,10 +697,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(hard);
 		this.remove(backButton);
 
-		//begin tutorial soundtrack
+		// begin tutorial soundtrack
 		playSound("Music/tutorial.wav");
 
-		//add circles and sliders for map, with correct arguments 
+		// add circles and sliders for map, with correct arguments
 		add(c1, tutorialMap[0][0], tutorialMap[1][0], tutorialMap[2][0]);
 
 		add(c2, tutorialMap[0][1], tutorialMap[1][1], tutorialMap[2][1]);
@@ -723,6 +739,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(c4, tutorialMap[0][32], tutorialMap[1][32], tutorialMap[2][32]);
 		add(s4, tutorialMap[0][33], tutorialMap[1][33], tutorialMap[2][33], 800, 0, 95);
 
+		if ()
 	}
 
 	// code to run the Easy game mode

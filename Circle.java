@@ -14,6 +14,7 @@ public class Circle extends Rectangle{
     int x0, y0;
     int id;
     
+    
     boolean isClicked = false;
 
     // constructor creates circle at given location with given dimensions
@@ -24,6 +25,7 @@ public class Circle extends Rectangle{
         initialX = x0- 100 / 2;
         initialY = y0- 100 / 2;
         id = i;
+       
        
     }
 

@@ -85,15 +85,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		c8 = new Circle(2000, 2000, 8);
 		c9 = new Circle(2000, 2000, 9);
 
-		s1 = new Slider(2000, 2000, 300, 1);
-		s2 = new Slider(2000, 2000, 300, 2);
-		s3 = new Slider(2000, 2000, 300, 3);
-		s4 = new Slider(2000, 2000, 300, 4);
-		s5 = new Slider(2000, 2000, 300, 5);
-		s6 = new Slider(2000, 2000, 300, 6);
-		s7 = new Slider(2000, 2000, 300, 7);
-		s8 = new Slider(2000, 2000, 300, 8);
-		s9 = new Slider(2000, 2000, 300, 9);
+		s1 = new Slider(2000, 2000, 300, 1, 100);
+		s2 = new Slider(2000, 2000, 300, 2, 100);
+		s3 = new Slider(2000, 2000, 300, 3, 100);
+		s4 = new Slider(2000, 2000, 300, 4, 100);
+		s5 = new Slider(2000, 2000, 300, 5, 100);
+		s6 = new Slider(2000, 2000, 300, 6, 100);
+		s7 = new Slider(2000, 2000, 300, 7, 100);
+		s8 = new Slider(2000, 2000, 300, 8, 100);
+		s9 = new Slider(2000, 2000, 300, 9, 100);
 
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 		playMenu();
@@ -312,7 +312,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		} else {
 			// Move along the path of the rounded rectangle
-			int steps = 50; // Number of steps to reach the right circle
+			int steps = s.speed; // Number of steps to reach the right circle
 			double dx = (s.finalX - s.initialX) / (double) steps;
 
 			// Update the position of the circle along the path
@@ -375,8 +375,73 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						}
 					}
 				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					s.mousePressed = true;
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					s.mousePressed = false;
+				}
 			});
+
+			addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_Z) {
+						s.zPressed = true;
+					} else if (e.getKeyCode() == KeyEvent.VK_X) {
+						s.xPressed = true;
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_Z) {
+						s.zPressed = false;
+					} else if (e.getKeyCode() == KeyEvent.VK_X) {
+						s.xPressed = false;
+					}
+				}
+			});
+
 		} else {
+
+			addMouseListener(new MouseAdapter() {
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					s.mousePressed = true;
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					s.mousePressed = false;
+				}
+			});
+
+			addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_Z) {
+						s.zPressed = true;
+					} else if (e.getKeyCode() == KeyEvent.VK_X) {
+						s.xPressed = true;
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_Z) {
+						s.zPressed = false;
+					} else if (e.getKeyCode() == KeyEvent.VK_X) {
+						s.xPressed = false;
+					}
+				}
+			});
+
 			addMouseMotionListener(new MouseMotionAdapter() {
 				@Override
 				public void mouseMoved(MouseEvent e) {
@@ -393,14 +458,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// Check if the transformed mouse coordinates are within the circle
 					double distance = Math.sqrt(
 							Math.pow(transformedPoint.x - s.moveX, 2) + Math.pow(transformedPoint.y - s.moveY, 2));
-					if (distance <= s.moveRadius / 2) {
-
-					} else {
+					if (distance > s.moveRadius / 2) {
 						s.goodSlide = false;
+					}
+
+					// Check if the mouse button, z, or x key is pressed
+					if (!s.mousePressed && !s.zPressed && !s.xPressed) {
+						s.goodSlide = false;
+						
 					}
 				}
 			});
 		}
+
+		setFocusable(true);
+		requestFocusInWindow();
 	}
 
 	public void checkCollision(Circle c) {
@@ -424,6 +496,38 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}
 		});
+
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_Z || e.getKeyCode() == KeyEvent.VK_X) {
+					System.out.println("hi");
+					// Get the current mouse location
+					Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+					int mouseX = mouseLocation.x;
+					int mouseY = mouseLocation.y;
+
+					// Convert to component's coordinate system
+					Point componentLocation = getLocationOnScreen();
+					mouseX -= componentLocation.x;
+					mouseY -= componentLocation.y;
+
+					// Handle mouse click
+					if (c.isMouseClickedInside(mouseX, mouseY) && !c.isClicked) {
+						c.isClicked = true;
+						if (c.moveRadius <= 120) {
+							Score.score++;
+							playSound("Music/clickSound.wav");
+						} else {
+							c.moveRadius = 80;
+							Score.score--;
+						}
+					}
+				}
+			}
+		});
+		setFocusable(true);
+		requestFocusInWindow();
 	}
 
 	// adds the Circles to the screen and the coordinates when needed
@@ -460,6 +564,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				s.moveX = x;
 				s.moveY = y;
 				s.moveRadius = Slider.MAX_RADIUS;
+				s.xPressed = false;
+				s.zPressed = false;
+				s.mousePressed = false;
 
 				appearS[s.id] = true;
 			}

@@ -551,7 +551,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		timer.schedule(task, t);
 	}
 
-	public void add(Slider s, int x, int y, long t, int l, int a) {
+	public void add(Slider s, int x, int y, long t, int l, int a, int sp) {
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
 			@Override
@@ -567,7 +567,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				s.xPressed = false;
 				s.zPressed = false;
 				s.mousePressed = false;
-
+				s.speed = sp;
 				appearS[s.id] = true;
 			}
 		};

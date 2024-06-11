@@ -1,7 +1,6 @@
 //Don Tran and Kaibo Huang
 //June 11, 2024
 //This class creates a new slider object, which will require the user to hover over the shape while holding down their mouse or keyboard bindings. 
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -13,7 +12,10 @@ public class Slider extends Rectangle {
 	int initialX, initialY;
 	int finalX, finalY; // Position of the right circle
 	int moveX, moveY;
-	
+	int speed;
+	  boolean mousePressed = false;
+	     boolean zPressed = false;
+	     boolean xPressed = false;
 
 	int id;
 	int length;
@@ -25,7 +27,7 @@ public class Slider extends Rectangle {
 	boolean goodClick = false;
 
 	// Constructor creates circle at given location with given dimensions
-	public Slider(int centerX, int centerY, int l, int i) {
+	public Slider(int centerX, int centerY, int l, int i, int s) {
 		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
 		initialX = centerX;
 		initialY = centerY;
@@ -34,6 +36,7 @@ public class Slider extends Rectangle {
 		id = i;
 		length = l;
 		this.angle = 0; // Default angle is 0 degrees
+		speed= s;
 		
 
 	}

@@ -337,7 +337,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		} else {
 			// Move along the path of the rounded rectangle
-			int steps = s.speed; // Number of steps to reach the right circle
+			int steps = s.moveTime * 60; // Number of steps to reach the right circle
 			double dx = (s.finalX - s.initialX) / (double) steps;
 
 			// Update the position of the circle along the path
@@ -387,7 +387,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		} else {
 			// Move along the path of the rounded rectangle
-			int steps = r.speed; // Number of steps to reach the right circle
+			int steps = r.moveTime * 60; // Number of steps to reach the right circle
 			double dx = (r.finalX - r.initialX) / (double) steps;
 			if (!r.reversePath) {
 
@@ -774,7 +774,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// method to add slider objects with correct coordinates, time, length, angle
 	// and speed
-	public void add(Slider s, int x, int y, long t, int l, int a, int sp) {
+	public void add(Slider s, int x, int y, long t, int l, int a, int mT) {
 		Timer timer = new Timer();
 		s.isClicked = false;
 
@@ -791,7 +791,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				s.xPressed = false;
 				s.zPressed = false;
 				s.mousePressed = false;
-				s.speed = sp;
+				s.moveTime = mT;
 				appearS[s.id] = true;
 			}
 		};
@@ -799,7 +799,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	}
 
-	public void add(Reverse r, int x, int y, long t, int l, int a, int sp) {
+	public void add(Reverse r, int x, int y, long t, int l, int a, int mT) {
 		Timer timer = new Timer();
 		r.isClicked = false;
 
@@ -816,7 +816,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				r.xPressed = false;
 				r.zPressed = false;
 				r.mousePressed = false;
-				r.speed = sp;
+				r.moveTime = mT;
 				appearR[r.id] = true;
 			}
 		};
@@ -992,7 +992,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(c4, tutorialMap[0][12], tutorialMap[1][12], tutorialMap[2][12]);
 		add(c5, tutorialMap[0][13], tutorialMap[1][13], tutorialMap[2][13]);
 
-		add(s1, tutorialMap[0][14], tutorialMap[1][14], tutorialMap[2][14], 180, 0, 100);
+		add(s1, tutorialMap[0][14], tutorialMap[1][14], tutorialMap[2][14], 180, 0, 2);
 		add(s2, tutorialMap[0][15], tutorialMap[1][15], tutorialMap[2][15], 100, 90, 50);
 		add(s3, tutorialMap[0][16], tutorialMap[1][16], tutorialMap[2][16], 300, 270, 100);
 

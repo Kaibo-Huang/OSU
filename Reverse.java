@@ -9,7 +9,7 @@ public class Reverse extends Rectangle {
     int initialX, initialY;
     int finalX, finalY; // Position of the right circle
     int moveX, moveY;
-    int speed;
+    int moveTime;
     boolean mousePressed = false;
     boolean zPressed = false;
     boolean xPressed = false;

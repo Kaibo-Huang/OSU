@@ -1,3 +1,4 @@
+
 //Don Tran and Kaibo Huang
 //June 11, 2024
 //This class creates a new slider object, which will require the user to hover over the shape while holding down their mouse or keyboard bindings. 
@@ -12,10 +13,10 @@ public class Slider extends Rectangle {
 	int initialX, initialY;
 	int finalX, finalY; // Position of the right circle
 	int moveX, moveY;
-	int speed;
-	  boolean mousePressed = false;
-	     boolean zPressed = false;
-	     boolean xPressed = false;
+	int moveTime;
+	boolean mousePressed = false;
+	boolean zPressed = false;
+	boolean xPressed = false;
 
 	int id;
 	int length;
@@ -27,7 +28,7 @@ public class Slider extends Rectangle {
 	boolean goodClick = false;
 
 	// Constructor creates circle at given location with given dimensions
-	public Slider(int centerX, int centerY, int l, int i, int s) {
+	public Slider(int centerX, int centerY, int l, int i, int mT) {
 		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
 		initialX = centerX;
 		initialY = centerY;
@@ -36,8 +37,7 @@ public class Slider extends Rectangle {
 		id = i;
 		length = l;
 		this.angle = 0; // Default angle is 0 degrees
-		speed= s;
-		
+		moveTime = mT;
 
 	}
 
@@ -51,7 +51,6 @@ public class Slider extends Rectangle {
 		id = i;
 		length = l;
 		this.angle = angle; // Set the angle
-		
 
 	}
 
@@ -78,9 +77,6 @@ public class Slider extends Rectangle {
 		int circleDiameter = radius;
 		int ovalWidth = length;
 		int ovalHeight = radius;
-		
-	
-		
 
 		// Draw the left circle
 		g2d.drawOval(initialX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
@@ -88,11 +84,6 @@ public class Slider extends Rectangle {
 		// Draw the right circle
 		int rightCircleX = initialX + ovalWidth;
 		g2d.drawOval(rightCircleX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
-	
-		/*g2d.setColor(Color.orange);
-		g2d.drawOval(initialX + length - radius / 2, initialY - radius / 2, radius, radius);
-		g2d.setColor(Color.black);
-		*/
 
 		g2d.setStroke(new BasicStroke(3)); // Change the thickness as needed
 
@@ -129,12 +120,10 @@ public class Slider extends Rectangle {
 
 	// Method to check if the mouse click is within the blue moving circle
 	public boolean isMouseClickedInside(int mouseX, int mouseY) {
-	    int circleCenterX = moveX;
-	    int circleCenterY = moveY;
-	    double distance = Math.sqrt(Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2));
-	    return distance <= moveRadius / 2;
+		int circleCenterX = moveX;
+		int circleCenterY = moveY;
+		double distance = Math.sqrt(Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2));
+		return distance <= moveRadius / 2;
 	}
-
-
 
 }

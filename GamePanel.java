@@ -28,10 +28,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// check if circle or slider has appeared
 	private static boolean[] appearC = new boolean[10];
 	private static boolean[] appearS = new boolean[10];
+	private static boolean[] appearR = new boolean[10];
 
 	// declare 9 circle and slider objects
 	private Circle c1, c2, c3, c4, c5, c6, c7, c8, c9;
 	private Slider s1, s2, s3, s4, s5, s6, s7, s8, s9;
+	private Reverse r1, r2, r3, r4, r5, r6, r7, r8, r9;
 
 	private JButton maruButton, playButton, exitButton; // menu buttons
 	private JButton tutorial, easy, medium, hard, backButton, play;// level buttons
@@ -83,6 +85,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		s7 = new Slider(2000, 2000, 300, 7, 100);
 		s8 = new Slider(2000, 2000, 300, 8, 100);
 		s9 = new Slider(2000, 2000, 300, 9, 100);
+
+		r1 = new Reverse(2000, 2000, 300, 1, 100);
+		r2 = new Reverse(2000, 2000, 300, 2, 100);
+		r3 = new Reverse(2000, 2000, 300, 3, 100);
+		r4 = new Reverse(2000, 2000, 300, 4, 100);
+		r5 = new Reverse(2000, 2000, 300, 5, 100);
+		r6 = new Reverse(2000, 2000, 300, 6, 100);
+		r7 = new Reverse(2000, 2000, 300, 7, 100);
+		r8 = new Reverse(2000, 2000, 300, 8, 100);
+		r9 = new Reverse(2000, 2000, 300, 9, 100);
 
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 		playMenu();
@@ -278,6 +290,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		s8.draw(g);
 		s9.draw(g);
 
+		r1.draw(g);
+		r2.draw(g);
+		r3.draw(g);
+		r4.draw(g);
+		r5.draw(g);
+		r6.draw(g);
+		r7.draw(g);
+		r8.draw(g);
+		r9.draw(g);
+
 		Score.draw(g);
 	}
 
@@ -350,6 +372,66 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	}
 
+	// Method to move the reverse slider
+	public void moveReverse(Reverse r) {
+		if (!r.movingAlongPath) {
+
+			if (r.getRadius() > Reverse.MIN_RADIUS) {
+				r.setRadius(r.getRadius() - 1);
+				r.setPosition(r.moveX - r.moveRadius / 2, r.moveY - r.moveRadius / 2);
+
+			} else {
+				r.movingAlongPath = true; // Start moving along the path
+
+			}
+
+		} else {
+			// Move along the path of the rounded rectangle
+			int steps = r.speed; // Number of steps to reach the right circle
+			double dx = (r.finalX - r.initialX) / (double) steps;
+			if (!r.reversePath) {
+
+				// Update the position of the circle along the path
+
+				r.moveX += dx;
+
+				// Check if the circle has reached the right circle
+				if (r.moveX >= r.initialX + r.length) {
+					r.reversePath = true;
+				}
+			} else {
+
+				r.moveX -= dx;
+				// Check if the circle has reached the right circle
+				if (r.moveX <= r.initialX) {
+					r.moveX = r.initialX;
+
+					r.moveY = r.initialY;
+					r.movingAlongPath = false; // Reset the state for next move
+
+					if (r.goodSlide && r.goodClick) {
+						Score.score += 2;
+					} else if (r.goodSlide || r.goodClick) {
+						Score.score++;
+						playSound("Music/clickSound.wav");
+					} else {
+						Score.score--;
+					}
+					appearR[r.id] = false;
+					r.length = 200;
+					r.initialX = 2000;
+					r.initialY = 2000;
+					r.angle = 0;
+					r.moveX = 2000;
+					r.moveY = 2000;
+					r.reversePath = false;
+				}
+			}
+
+		}
+
+	}
+
 	// checks if slider objects are clicked at the correct time and moving along
 	// their path
 	public void checkCollision(Slider s) {
@@ -373,7 +455,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// Check if the click falls inside the circle
 					if (s.isMouseClickedInside(mouseX, mouseY) && !s.isClicked) {
 						s.isClicked = true;
-						if (s.moveRadius <= 120) {
+						if (s.moveRadius <= 132) {
 							s.goodClick = true;
 							playSound("Music/clickSound.wav");
 						} else {
@@ -470,8 +552,139 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					}
 
 					// Check if the mouse button, z, or x key is pressed
-					if (!s.mousePressed && !s.zPressed && !s.xPressed) {
+					else if (!s.mousePressed && !s.zPressed && !s.xPressed) {
 						s.goodSlide = false;
+						
+
+					}
+				}
+			});
+		}
+
+		setFocusable(true);
+		requestFocusInWindow();
+	}
+
+	public void checkCollision(Reverse r) {
+		// Remove existing listeners to avoid duplicates
+		for (MouseListener listener : getMouseListeners()) {
+			removeMouseListener(listener);
+		}
+		for (MouseMotionListener listener : getMouseMotionListeners()) {
+			removeMouseMotionListener(listener);
+		}
+
+		// check for mouse clicks
+		if (!r.movingAlongPath) {
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// Get the coordinates of the click
+					int mouseX = e.getX();
+					int mouseY = e.getY();
+
+					// Check if the click falls inside the circle
+					if (r.isMouseClickedInside(mouseX, mouseY) && !r.isClicked) {
+						r.isClicked = true;
+						if (r.moveRadius <= 132) {
+							r.goodClick = true;
+							playSound("Music/clickSound.wav");
+						} else {
+							r.goodClick = false;
+						}
+					}
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					r.mousePressed = true;
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					r.mousePressed = false;
+				}
+			});
+
+			// checks for 'z' or 'x' keys
+			addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_Z) {
+						r.zPressed = true;
+					} else if (e.getKeyCode() == KeyEvent.VK_X) {
+						r.xPressed = true;
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_Z) {
+						r.zPressed = false;
+					} else if (e.getKeyCode() == KeyEvent.VK_X) {
+						r.xPressed = false;
+					}
+				}
+			});
+
+		} else {
+
+			addMouseListener(new MouseAdapter() {
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					r.mousePressed = true;
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					r.mousePressed = false;
+				}
+			});
+
+			addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_Z) {
+						r.zPressed = true;
+					} else if (e.getKeyCode() == KeyEvent.VK_X) {
+						r.xPressed = true;
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_Z) {
+						r.zPressed = false;
+					} else if (e.getKeyCode() == KeyEvent.VK_X) {
+						r.xPressed = false;
+					}
+				}
+			});
+
+			addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
+				public void mouseMoved(MouseEvent e) {
+					// Get the coordinates of the mouse
+					int mouseX = e.getX();
+					int mouseY = e.getY();
+
+					// Transform the mouse coordinates to the rotated coordinate system
+					AffineTransform at = new AffineTransform();
+					at.rotate(-Math.toRadians(r.angle), r.initialX, r.initialY);
+					Point transformedPoint = new Point(mouseX, mouseY);
+					at.transform(transformedPoint, transformedPoint);
+
+					// Check if the transformed mouse coordinates are within the circle
+					double distance = Math.sqrt(
+							Math.pow(transformedPoint.x - r.moveX, 2) + Math.pow(transformedPoint.y - r.moveY, 2));
+					if (distance > r.moveRadius / 2) {
+						r.goodSlide = false;
+					}
+
+					// Check if the mouse button, z, or x key is pressed
+					else if (!r.mousePressed && !r.zPressed && !r.xPressed) {
+						r.goodSlide = false;
 
 					}
 				}
@@ -586,6 +799,31 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	}
 
+	public void add(Reverse r, int x, int y, long t, int l, int a, int sp) {
+		Timer timer = new Timer();
+		r.isClicked = false;
+
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				r.length = l;
+				r.initialX = x;
+				r.initialY = y;
+				r.angle = a;
+				r.moveX = x;
+				r.moveY = y;
+				r.moveRadius = Slider.MAX_RADIUS;
+				r.xPressed = false;
+				r.zPressed = false;
+				r.mousePressed = false;
+				r.speed = sp;
+				appearR[r.id] = true;
+			}
+		};
+		timer.schedule(task, t);
+
+	}
+
 	// ensures smooth movement of the approaching circle
 	public void move() {
 		if (appearC[1]) {
@@ -661,6 +899,43 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			moveSlider(s9);
 			checkCollision(s9);
 		}
+		if (appearR[1]) {
+			moveReverse(r1);
+			checkCollision(r1);
+		}
+		if (appearR[2]) {
+			moveReverse(r2);
+			checkCollision(r2);
+		}
+		if (appearR[3]) {
+			moveReverse(r3);
+			checkCollision(r3);
+		}
+		if (appearR[4]) {
+			moveReverse(r4);
+			checkCollision(r4);
+		}
+		if (appearR[5]) {
+			moveReverse(r5);
+			checkCollision(r5);
+		}
+		if (appearR[6]) {
+			moveReverse(r6);
+			checkCollision(r6);
+		}
+		if (appearR[7]) {
+			moveReverse(r7);
+			checkCollision(r7);
+		}
+		if (appearR[8]) {
+			moveReverse(r8);
+			checkCollision(r8);
+		}
+		if (appearR[9]) {
+			moveReverse(r9);
+			checkCollision(r9);
+		}
+
 	}
 
 	// infinite game loop
@@ -739,7 +1014,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(c4, tutorialMap[0][32], tutorialMap[1][32], tutorialMap[2][32]);
 		add(s4, tutorialMap[0][33], tutorialMap[1][33], tutorialMap[2][33], 800, 0, 95);
 
-		if ()
 	}
 
 	// code to run the Easy game mode
@@ -796,6 +1070,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(medium);
 		this.remove(hard);
 		this.remove(backButton);
+
+		add(r1, 100, 100, 100, 180, 0, 100);
 	}
 
 	// plays sound given a file name

@@ -1057,7 +1057,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(s7, easyMap[0][28], easyMap[1][28], easyMap[2][28], 150, 270, 0.600);
 		add(s8, easyMap[0][29], easyMap[1][29], easyMap[2][29], 150, 190, 0.600);
 		add(r8, easyMap[0][30], easyMap[1][30], easyMap[2][30], 150, 340, 0.600);
-		add(c7, easyMap[0][31], easyMap[1][31], easyMap[2][31]);
+		//add(c7, easyMap[0][31], easyMap[1][31], easyMap[2][31]);
 	}
 
 	// code to run the Medium game mode

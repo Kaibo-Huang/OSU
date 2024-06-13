@@ -16,6 +16,8 @@ public class Circle extends Rectangle{
     
     
     boolean isClicked = false;
+    
+    public int fadeOutOpacity = -1;
 
     // constructor creates circle at given location with given dimensions
     public Circle(int centerX, int centerY, int i) {
@@ -28,15 +30,14 @@ public class Circle extends Rectangle{
        
        
     }
-
+    
     // draws the current location of the circle to the screen
     public void draw(Graphics g) {
-    	isClicked = false;
-        g.setColor(Color.gray);
+    	
+    	
         g.fillOval(initialX + 10, initialY + 10, radius - 20, radius - 20);
         
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.black);
         Stroke oldStroke = g2d.getStroke(); // Save the old stroke
         // Set the thickness of the outline
         g2d.setStroke(new BasicStroke(3)); // Change the thickness as needed

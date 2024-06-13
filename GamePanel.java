@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					333, 48, 72, 696, 550, 676, 676, 120, 561, 674, 710, 360, 500 },
 			{ 3491, 20106, 21952, 22875, 23798, 25645, 27029, 27491, 29337, 30260, 31183, 33029, 33952, 34875, 57029,
 					60722, 62568, 86568, 89337, 89799, 90260, 92106, 93491, 93953, 96722, 97645, 100414, 101337, 104106,
-					105029, 107799, 108722, 111270, 111330 } };
+					105029, 107799, 108722, 112270, 112995 } };
 	private int[][] easyMap = {
 			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,
 					478, 253, 113, 293, 524, 644, 867, 1172, 867, 723, 804 },
@@ -56,7 +56,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					48, 371, 397, 537, 738, 469, 622, 612, 431, 251, 391, 559 },
 			{ 433, 1393, 2353, 3313, 4273, 5233, 6193, 8113, 9073, 10033, 10513, 11473, 11953, 13393, 13873, 15313,
 					15793, 16753, 17713, 19153, 20593, 21553, 22513, 23953, 24433, 25393, 26353, 27793, 28273, 29233,
-					30193, 30416, 33885 } };
+					30193, 30916, 34485 } };
 	private int[][] mediumMap = { { 781, 1042, 624, }, { 144, 193, 188, }, { 1289, 1728, 3164, } };
 	private int[][] hardMap = { {}, {}, {} };
 
@@ -337,7 +337,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		} else {
 			// Move along the path of the rounded rectangle
-			int steps = s.moveTime * 60; // Number of steps to reach the right circle
+			double steps = s.moveTime * 60; // Number of steps to reach the right circle
 			double dx = (s.finalX - s.initialX) / (double) steps;
 
 			// Update the position of the circle along the path
@@ -387,7 +387,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		} else {
 			// Move along the path of the rounded rectangle
-			int steps = r.moveTime * 60; // Number of steps to reach the right circle
+			double steps = r.moveTime * 60; // Number of steps to reach the right circle
 			double dx = (r.finalX - r.initialX) / (double) steps;
 			if (!r.reversePath) {
 
@@ -554,7 +554,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// Check if the mouse button, z, or x key is pressed
 					else if (!s.mousePressed && !s.zPressed && !s.xPressed) {
 						s.goodSlide = false;
-						
 
 					}
 				}
@@ -774,7 +773,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// method to add slider objects with correct coordinates, time, length, angle
 	// and speed
-	public void add(Slider s, int x, int y, long t, int l, int a, int mT) {
+	public void add(Slider s, int x, int y, long t, int l, int a, double mT) {
 		Timer timer = new Timer();
 		s.isClicked = false;
 
@@ -799,7 +798,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	}
 
-	public void add(Reverse r, int x, int y, long t, int l, int a, int mT) {
+	public void add(Reverse r, int x, int y, long t, int l, int a, double mT) {
 		Timer timer = new Timer();
 		r.isClicked = false;
 
@@ -992,27 +991,27 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(c4, tutorialMap[0][12], tutorialMap[1][12], tutorialMap[2][12]);
 		add(c5, tutorialMap[0][13], tutorialMap[1][13], tutorialMap[2][13]);
 
-		add(s1, tutorialMap[0][14], tutorialMap[1][14], tutorialMap[2][14], 180, 0, 2);
-		add(s2, tutorialMap[0][15], tutorialMap[1][15], tutorialMap[2][15], 100, 90, 50);
-		add(s3, tutorialMap[0][16], tutorialMap[1][16], tutorialMap[2][16], 300, 270, 100);
+		add(s1, tutorialMap[0][14], tutorialMap[1][14], tutorialMap[2][14], 180, 0, 2.193);
+		add(s2, tutorialMap[0][15], tutorialMap[1][15], tutorialMap[2][15], 100, 90, 0.650);
+		add(r1, tutorialMap[0][16], tutorialMap[1][16], tutorialMap[2][16], 300, 270, 1.096);
 
-		add(s4, tutorialMap[0][17], tutorialMap[1][17], tutorialMap[2][17], 300, 180, 90);
+		add(s4, tutorialMap[0][17], tutorialMap[1][17], tutorialMap[2][17], 300, 180, 1.807);
 		add(c6, tutorialMap[0][18], tutorialMap[1][18], tutorialMap[2][18]);
 		add(c7, tutorialMap[0][19], tutorialMap[1][19], tutorialMap[2][19]);
-		add(s5, tutorialMap[0][20], tutorialMap[1][20], tutorialMap[2][20], 150, 350, 70);
-		add(s6, tutorialMap[0][21], tutorialMap[1][21], tutorialMap[2][21], 150, 280, 55);
+		add(s5, tutorialMap[0][20], tutorialMap[1][20], tutorialMap[2][20], 150, 350, 0.750);
+		add(s6, tutorialMap[0][21], tutorialMap[1][21], tutorialMap[2][21], 150, 280, 0.456);
 		add(c8, tutorialMap[0][22], tutorialMap[1][22], tutorialMap[2][22]);
-		add(s7, tutorialMap[0][23], tutorialMap[1][23], tutorialMap[2][23], 300, 70, 50);
+		add(s7, tutorialMap[0][23], tutorialMap[1][23], tutorialMap[2][23], 300, 70, 1.609);
 		add(c9, tutorialMap[0][24], tutorialMap[1][24], tutorialMap[2][24]);
-		add(s8, tutorialMap[0][25], tutorialMap[1][25], tutorialMap[2][25], 500, 300, 95);
-		add(s9, tutorialMap[0][26], tutorialMap[1][26], tutorialMap[2][26], 100, 200, 20);
-		add(s1, tutorialMap[0][27], tutorialMap[1][27], tutorialMap[2][27], 300, 240, 90);
+		add(r2, tutorialMap[0][25], tutorialMap[1][25], tutorialMap[2][25], 500, 300, 0.954);
+		add(s9, tutorialMap[0][26], tutorialMap[1][26], tutorialMap[2][26], 100, 200, 0.351);
+		add(s1, tutorialMap[0][27], tutorialMap[1][27], tutorialMap[2][27], 300, 240, 1.406);
 		add(c1, tutorialMap[0][28], tutorialMap[1][28], tutorialMap[2][28]);
-		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 250, 55);
+		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 250, 1.193);
 		add(c2, tutorialMap[0][20], tutorialMap[1][30], tutorialMap[2][30]);
-		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 300, 65);
+		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 300, 1.405);
 		add(c4, tutorialMap[0][32], tutorialMap[1][32], tutorialMap[2][32]);
-		add(s4, tutorialMap[0][33], tutorialMap[1][33], tutorialMap[2][33], 800, 0, 95);
+		add(s4, tutorialMap[0][33], tutorialMap[1][33], tutorialMap[2][33], 800, 0, 3.115);
 
 	}
 

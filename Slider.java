@@ -13,7 +13,7 @@ public class Slider extends Rectangle {
 	int initialX, initialY;
 	int finalX, finalY; // Position of the right circle
 	int moveX, moveY;
-	int moveTime;
+	double moveTime;
 	boolean mousePressed = false;
 	boolean zPressed = false;
 	boolean xPressed = false;

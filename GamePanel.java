@@ -706,7 +706,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				// Check if the click falls inside the circle
 				if (c.isMouseClickedInside(mouseX, mouseY) && c.isClicked == false) {
 					c.isClicked = true;
-					if (c.moveRadius <= 100) {
+					if (c.moveRadius <= 120) {
 						Score.score++;
 						playSound("Music/clickSound.wav");
 					} else {

@@ -51,12 +51,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					105029, 107799, 108722, 112270, 112995 } };
 	private int[][] easyMap = {
 			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,
-					478, 253, 113, 293, 524, 644, 867, 1172, 867, 723, 804 },
+					478, 253, 113, 293, 524, 644, 867, 1172, 867, 723 },
 			{ 319, 405, 251, 148, 513, 359, 537, 233, 395, 339, 419, 687, 616, 509, 615, 509, 387, 158, 457, 337, 201,
-					48, 371, 397, 537, 738, 469, 622, 612, 431, 251, 391, 559 },
+					48, 371, 397, 537, 738, 469, 622, 612, 431, 251 },
 			{ 433, 1393, 2353, 3313, 4273, 5233, 6193, 8113, 9073, 10033, 10513, 11473, 11953, 13393, 13873, 15313,
 					15793, 16753, 17713, 19153, 20593, 21553, 22513, 23953, 24433, 25393, 26353, 27793, 28273, 29233,
-					30193, 30916, 34485 } };
+					30193 } };
 	private int[][] mediumMap = { { 781, 1042, 624, }, { 144, 193, 188, }, { 1289, 1728, 3164, } };
 	private int[][] hardMap = { {}, {}, {} };
 
@@ -706,7 +706,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				// Check if the click falls inside the circle
 				if (c.isMouseClickedInside(mouseX, mouseY) && c.isClicked == false) {
 					c.isClicked = true;
-					if (c.moveRadius <= 120) {
+					if (c.moveRadius <= 100) {
 						Score.score++;
 						playSound("Music/clickSound.wav");
 					} else {
@@ -1010,8 +1010,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 250, 1.193);
 		add(c2, tutorialMap[0][20], tutorialMap[1][30], tutorialMap[2][30]);
 		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 300, 1.405);
-		add(c4, tutorialMap[0][32], tutorialMap[1][32], tutorialMap[2][32]);
-		add(s4, tutorialMap[0][33], tutorialMap[1][33], tutorialMap[2][33], 800, 0, 3.115);
 
 	}
 
@@ -1028,21 +1026,38 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		playSound("Music/easy.wav");
 
-//		add(s1, easyMap[0][0], easyMap[1][0], easyMap[2][0], 150, 0);
-		add(c2, easyMap[0][1], easyMap[1][1], easyMap[2][1]);
-		add(c3, easyMap[0][2], easyMap[1][2], easyMap[2][2]);
-		add(c4, easyMap[0][3], easyMap[1][3], easyMap[2][3]);
-		add(c5, easyMap[0][4], easyMap[1][4], easyMap[2][4]);
-		add(c6, easyMap[0][5], easyMap[1][5], easyMap[2][5]);
-		add(c7, easyMap[0][6], easyMap[1][6], easyMap[2][6]);
-		add(c8, easyMap[0][7], easyMap[1][7], easyMap[2][7]);
-		add(c9, easyMap[0][8], easyMap[1][8], easyMap[2][8]);
-
+		add(s1, easyMap[0][0], easyMap[1][0], easyMap[2][0], 150, 0, 0.600);
+		add(s2, easyMap[0][1], easyMap[1][1], easyMap[2][1], 150, 0, 0.600);
+		add(s3, easyMap[0][2], easyMap[1][2], easyMap[2][2], 150, 310, 0.600);
+		add(s4, easyMap[0][3], easyMap[1][3], easyMap[2][3], 150, 80, 0.600);
+		add(s5, easyMap[0][4], easyMap[1][4], easyMap[2][4], 150, 200, 0.600);
+		add(s6, easyMap[0][5], easyMap[1][5], easyMap[2][5], 150, 150, 0.600);
+		add(r1, easyMap[0][6], easyMap[1][6], easyMap[2][6], 150, 80, 0.540);
+		add(s7, easyMap[0][7], easyMap[1][7], easyMap[2][7], 150, 190, 0.600);
+		add(s8, easyMap[0][8], easyMap[1][8], easyMap[2][8], 150, 20, 0.600);
 		add(c1, easyMap[0][9], easyMap[1][9], easyMap[2][9]);
-		add(c2, easyMap[0][10], easyMap[1][10], easyMap[2][10]);
-		add(c3, easyMap[0][11], easyMap[1][11], easyMap[2][11]);
-		add(c4, easyMap[0][12], easyMap[1][12], easyMap[2][12]);
-
+		add(s9, easyMap[0][10], easyMap[1][10], easyMap[2][10], 150, 80, 0.600);
+		add(c2, easyMap[0][11], easyMap[1][11], easyMap[2][11]);
+		add(r2, easyMap[0][12], easyMap[1][12], easyMap[2][12], 150, 160, 0.600);
+		add(c3, easyMap[0][13], easyMap[1][13], easyMap[2][13]);
+		add(r3, easyMap[0][14], easyMap[1][14], easyMap[2][14], 150, 30, 0.600);
+		add(c4, easyMap[0][15], easyMap[1][15], easyMap[2][15]);
+		add(s1, easyMap[0][16], easyMap[1][16], easyMap[2][16], 150, 280, 0.600);
+		add(s2, easyMap[0][17], easyMap[1][17], easyMap[2][17], 150, 100, 0.600);
+		add(r4, easyMap[0][18], easyMap[1][18], easyMap[2][18], 150, 170, 0.600);
+		add(r5, easyMap[0][19], easyMap[1][19], easyMap[2][19], 150, 10, 0.600);
+		add(s3, easyMap[0][20], easyMap[1][20], easyMap[2][20], 150, 250, 0.600);
+		add(s4, easyMap[0][21], easyMap[1][21], easyMap[2][21], 150, 70, 0.600);
+		add(r6, easyMap[0][22], easyMap[1][22], easyMap[2][22], 150, 20, 0.600);
+		add(c5, easyMap[0][23], easyMap[1][23], easyMap[2][23]);
+		add(s5, easyMap[0][24], easyMap[1][24], easyMap[2][24], 150, 100, 0.600);
+		add(s6, easyMap[0][25], easyMap[1][25], easyMap[2][25], 150, 280, 0.600);
+		add(r7, easyMap[0][26], easyMap[1][26], easyMap[2][26], 150, 10, 0.600);
+		add(c6, easyMap[0][27], easyMap[1][27], easyMap[2][27]);
+		add(s7, easyMap[0][28], easyMap[1][28], easyMap[2][28], 150, 270, 0.600);
+		add(s8, easyMap[0][29], easyMap[1][29], easyMap[2][29], 150, 190, 0.600);
+		add(r8, easyMap[0][30], easyMap[1][30], easyMap[2][30], 150, 340, 0.600);
+		add(c7, easyMap[0][31], easyMap[1][31], easyMap[2][31]);
 	}
 
 	// code to run the Medium game mode

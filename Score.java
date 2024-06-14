@@ -10,7 +10,7 @@ public class Score {
    static DecimalFormat df = new DecimalFormat("00000000");
     
     public static void draw(Graphics g) {
-        g.setColor(Color.black);
+        g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 20));
        
         g.drawString(df.format(score), GamePanel.GAME_WIDTH - 100,20 );

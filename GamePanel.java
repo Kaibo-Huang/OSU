@@ -5,9 +5,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 
-import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
@@ -40,10 +38,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private JButton maruButton, playButton, exitButton; // menu buttons
 	private JButton tutorial, easy, medium, hard, backButton, play;// level buttons
 
-	boolean playTutorial, playEasy, playMedium, playHard;
-
 	private boolean isTitleScreen = true;
-	private BufferedImage backgroundImage;
 
 	// map elements (x position, y position, time of placement)
 	private int[][] tutorialMap = {
@@ -54,11 +49,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			{ 3491, 20106, 21952, 22875, 23798, 25645, 27029, 27491, 29337, 30260, 31183, 33029, 33952, 34875, 57029,
 					60722, 62568, 86568, 89337, 89799, 90260, 92106, 93491, 93953, 96722, 97645, 100414, 101337, 104106,
 					105029, 107799, 108722, 112270, 112995 } };
-
-	// https://osu.ppy.sh/beatmapsets/515069#osu/1095679
-	private int[][] easyMap = { {}, {}, {} };
-
-	private int[][] mediumMap = {
+	private int[][] easyMap = {
 			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,
 					478, 253, 113, 293, 524, 644, 867, 1172, 867, 723 },
 			{ 319, 405, 251, 148, 513, 359, 537, 233, 395, 339, 419, 687, 616, 509, 615, 509, 387, 158, 457, 337, 201,
@@ -66,9 +57,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			{ 433, 1393, 2353, 3313, 4273, 5233, 6193, 8113, 9073, 10033, 10513, 11473, 11953, 13393, 13873, 15313,
 					15793, 16753, 17713, 19153, 20593, 21553, 22513, 23953, 24433, 25393, 26353, 27793, 28273, 29233,
 					30193 } };
+	private int[][] mediumMap = { { 781, 1042, 624, }, { 144, 193, 188, }, { 1289, 1728, 3164, } };
 	private int[][] hardMap = { {}, {}, {} };
-
-	private int combo = 0;
 
 	// constructor to initialize variables and add initial JButtons
 	public GamePanel() {
@@ -156,7 +146,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						playTutorial = true;
 						stopMenu();
 						tutorial(); // calls startGame when pressed
 					}
@@ -170,20 +159,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		easy.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				play = new JButton("PLAY!");
-				play.setFont(new Font("Arial", Font.PLAIN, 24));
-				addPlayButton();
-				play.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						playSound("Music/PlayClick.wav");
-						isTitleScreen = false;
-						playEasy = true;
-						stopMenu();
-						easy(); // calls startGame when pressed
-					}
-				});
+				playSound("Music/PlayClick.wav");
+				isTitleScreen = false;
+				stopMenu();
+				easy(); // calls startGame when pressed
 
 			}
 		});
@@ -194,20 +173,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		medium.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				play = new JButton("PLAY!");
-				play.setFont(new Font("Arial", Font.PLAIN, 24));
-				addPlayButton();
-				play.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						playSound("Music/PlayClick.wav");
-						isTitleScreen = false;
-						playMedium = true;
-						stopMenu();
-						medium(); // calls startGame when pressed
-					}
-				});
+				playSound("Music/PlayClick.wav");
+				isTitleScreen = false;
+				stopMenu();
+				medium(); // calls startGame when pressed
 			}
 		});
 
@@ -215,23 +184,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		hard = new JButton("Hard");
 		hard.setFont(new Font("Arial", Font.PLAIN, 24));
 		hard.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				play = new JButton("PLAY!");
-				play.setFont(new Font("Arial", Font.PLAIN, 24));
-				addPlayButton();
-				play.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						playSound("Music/PlayClick.wav");
-						isTitleScreen = false;
-						playHard = true;
-						stopMenu();
-						hard(); // calls startGame when pressed
-					}
-				});
+				playSound("Music/PlayClick.wav");
+				isTitleScreen = false;
+				stopMenu();
+				hard(); // calls startGame when pressed
 			}
 		});
 
@@ -312,20 +270,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// draws each of the individual circles, sliders and spinners as well as the
 	// score
 	public void draw(Graphics g) {
-		
-		if (playTutorial) {
-			setBackgroundImage("Images/tutorial.png");
-			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
-		} else if (playEasy) {
-			setBackgroundImage("Images/easy.png");
-			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
-		} else if (playMedium) {
-			setBackgroundImage("Images/medium.png");
-			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
-		} else if (playHard) {
-			setBackgroundImage("Images/hard.png");
-			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
-		}
 		c1.draw(g);
 		c2.draw(g);
 		c3.draw(g);
@@ -356,13 +300,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		r8.draw(g);
 		r9.draw(g);
 
-		
-
 		Score.draw(g);
-		g.setColor(Color.white);
-		g.setFont(new Font("Arial", Font.BOLD, 20));
-
-		g.drawString(combo + "X", 20, GamePanel.GAME_HEIGHT - 30);
 	}
 
 	// ensures smooth movement of closing circle
@@ -414,14 +352,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				s.movingAlongPath = false; // Reset the state for next move
 
 				if (s.goodSlide && s.goodClick) {
-					combo++;
-					Score.score += 300 * combo;
+					Score.score += 2;
 				} else if (s.goodSlide || s.goodClick) {
-					combo++;
-					Score.score += 100 * combo;
+					Score.score++;
 					playSound("Music/clickSound.wav");
 				} else {
-					combo = 0;
+					Score.score--;
 				}
 				appearS[s.id] = false;
 				s.length = 200;
@@ -474,14 +410,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					r.movingAlongPath = false; // Reset the state for next move
 
 					if (r.goodSlide && r.goodClick) {
-						combo++;
-						Score.score += 300 * combo;
+						Score.score += 2;
 					} else if (r.goodSlide || r.goodClick) {
-						combo++;
-						Score.score += 100 * combo;
+						Score.score++;
 						playSound("Music/clickSound.wav");
 					} else {
-						combo = 0;
+						Score.score--;
 					}
 					appearR[r.id] = false;
 					r.length = 200;
@@ -772,19 +706,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				// Check if the click falls inside the circle
 				if (c.isMouseClickedInside(mouseX, mouseY) && c.isClicked == false) {
 					c.isClicked = true;
-					if (c.moveRadius <= 120) {
-						combo++;
-						Score.score += 300 * combo;
+					if (c.moveRadius <= 100) {
+						Score.score++;
 						playSound("Music/clickSound.wav");
-					} else if (c.moveRadius <= 130) {
-						combo++;
-						Score.score += 100 * combo;
-						playSound("Music/clickSound.wav");
-					}
-
-					else {
+					} else {
 						c.moveRadius = 80;
-						combo = 0;
+						Score.score--;
 					}
 				}
 			}
@@ -808,18 +735,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					if (c.isMouseClickedInside(mouseX, mouseY) && !c.isClicked) {
 						c.isClicked = true;
 						if (c.moveRadius <= 120) {
-							combo++;
-							Score.score += 300 * combo;
+							Score.score++;
 							playSound("Music/clickSound.wav");
-						} else if (c.moveRadius <= 130) {
-							combo++;
-							Score.score += 100 * combo;
-							playSound("Music/clickSound.wav");
-						}
-
-						else {
+						} else {
 							c.moveRadius = 80;
-							combo = 0;
+							Score.score--;
 						}
 					}
 				}
@@ -846,7 +766,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				c.moveRadius = Circle.MAX_RADIUS;
 
 				appearC[c.id] = true;
-				c.isClicked = false;
 			}
 		};
 		timer.schedule(task, t);
@@ -1091,25 +1010,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 250, 1.193);
 		add(c2, tutorialMap[0][20], tutorialMap[1][30], tutorialMap[2][30]);
 		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 300, 1.405);
+
 	}
 
 	// code to run the Easy game mode
 	private void easy() {
-		// Implementation for medium
-		this.remove(maruButton);
-		this.remove(playButton);
-		this.remove(exitButton);
-		this.remove(tutorial);
-		this.remove(easy);
-		this.remove(medium);
-		this.remove(hard);
-		this.remove(backButton);
-	}
-
-	// code to run the Medium game mode
-	private void medium() {
-
-		
 		this.remove(maruButton);
 		this.remove(playButton);
 		this.remove(exitButton);
@@ -1121,38 +1026,51 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		playSound("Music/easy.wav");
 
-		add(s1, mediumMap[0][0], mediumMap[1][0], mediumMap[2][0], 150, 0, 0.600);
-		add(s2, mediumMap[0][1], mediumMap[1][1], mediumMap[2][1], 150, 0, 0.600);
-		add(s3, mediumMap[0][2], mediumMap[1][2], mediumMap[2][2], 150, 310, 0.600);
-		add(s4, mediumMap[0][3], mediumMap[1][3], mediumMap[2][3], 150, 80, 0.600);
-		add(s5, mediumMap[0][4], mediumMap[1][4], mediumMap[2][4], 150, 200, 0.600);
-		add(s6, mediumMap[0][5], mediumMap[1][5], mediumMap[2][5], 150, 150, 0.600);
-		add(r1, mediumMap[0][6], mediumMap[1][6], mediumMap[2][6], 150, 80, 0.540);
-		add(s7, mediumMap[0][7], mediumMap[1][7], mediumMap[2][7], 150, 190, 0.600);
-		add(s8, mediumMap[0][8], mediumMap[1][8], mediumMap[2][8], 150, 20, 0.600);
-		add(c1, mediumMap[0][9], mediumMap[1][9], mediumMap[2][9]);
-		add(s9, mediumMap[0][10], mediumMap[1][10], mediumMap[2][10], 150, 80, 0.600);
-		add(c2, mediumMap[0][11], mediumMap[1][11], mediumMap[2][11]);
-		add(r2, mediumMap[0][12], mediumMap[1][12], mediumMap[2][12], 150, 160, 0.600);
-		add(c3, mediumMap[0][13], mediumMap[1][13], mediumMap[2][13]);
-		add(r3, mediumMap[0][14], mediumMap[1][14], mediumMap[2][14], 150, 30, 0.600);
-		add(c4, mediumMap[0][15], mediumMap[1][15], mediumMap[2][15]);
-		add(s1, mediumMap[0][16], mediumMap[1][16], mediumMap[2][16], 150, 280, 0.600);
-		add(s2, mediumMap[0][17], mediumMap[1][17], mediumMap[2][17], 150, 100, 0.600);
-		add(r4, mediumMap[0][18], mediumMap[1][18], mediumMap[2][18], 150, 170, 0.600);
-		add(r5, mediumMap[0][19], mediumMap[1][19], mediumMap[2][19], 150, 10, 0.600);
-		add(s3, mediumMap[0][20], mediumMap[1][20], mediumMap[2][20], 150, 250, 0.600);
-		add(s4, mediumMap[0][21], mediumMap[1][21], mediumMap[2][21], 150, 70, 0.600);
-		add(r6, mediumMap[0][22], mediumMap[1][22], mediumMap[2][22], 150, 20, 0.600);
-		add(c5, mediumMap[0][23], mediumMap[1][23], mediumMap[2][23]);
-		add(s5, mediumMap[0][24], mediumMap[1][24], mediumMap[2][24], 150, 100, 0.600);
-		add(s6, mediumMap[0][25], mediumMap[1][25], mediumMap[2][25], 150, 280, 0.600);
-		add(r7, mediumMap[0][26], mediumMap[1][26], mediumMap[2][26], 150, 10, 0.600);
-		add(c6, mediumMap[0][27], mediumMap[1][27], mediumMap[2][27]);
-		add(s7, mediumMap[0][28], mediumMap[1][28], mediumMap[2][28], 150, 270, 0.600);
-		add(s8, mediumMap[0][29], mediumMap[1][29], mediumMap[2][29], 150, 190, 0.600);
-		add(r8, mediumMap[0][30], mediumMap[1][30], mediumMap[2][30], 150, 340, 0.600);
-		// add(c7, easyMap[0][31], easyMap[1][31], easyMap[2][31]);
+		add(s1, easyMap[0][0], easyMap[1][0], easyMap[2][0], 150, 0, 0.600);
+		add(s2, easyMap[0][1], easyMap[1][1], easyMap[2][1], 150, 0, 0.600);
+		add(s3, easyMap[0][2], easyMap[1][2], easyMap[2][2], 150, 310, 0.600);
+		add(s4, easyMap[0][3], easyMap[1][3], easyMap[2][3], 150, 80, 0.600);
+		add(s5, easyMap[0][4], easyMap[1][4], easyMap[2][4], 150, 200, 0.600);
+		add(s6, easyMap[0][5], easyMap[1][5], easyMap[2][5], 150, 150, 0.600);
+		add(r1, easyMap[0][6], easyMap[1][6], easyMap[2][6], 150, 80, 0.540);
+		add(s7, easyMap[0][7], easyMap[1][7], easyMap[2][7], 150, 190, 0.600);
+		add(s8, easyMap[0][8], easyMap[1][8], easyMap[2][8], 150, 20, 0.600);
+		add(c1, easyMap[0][9], easyMap[1][9], easyMap[2][9]);
+		add(s9, easyMap[0][10], easyMap[1][10], easyMap[2][10], 150, 80, 0.600);
+		add(c2, easyMap[0][11], easyMap[1][11], easyMap[2][11]);
+		add(r2, easyMap[0][12], easyMap[1][12], easyMap[2][12], 150, 160, 0.600);
+		add(c3, easyMap[0][13], easyMap[1][13], easyMap[2][13]);
+		add(r3, easyMap[0][14], easyMap[1][14], easyMap[2][14], 150, 30, 0.600);
+		add(c4, easyMap[0][15], easyMap[1][15], easyMap[2][15]);
+		add(s1, easyMap[0][16], easyMap[1][16], easyMap[2][16], 150, 280, 0.600);
+		add(s2, easyMap[0][17], easyMap[1][17], easyMap[2][17], 150, 100, 0.600);
+		add(r4, easyMap[0][18], easyMap[1][18], easyMap[2][18], 150, 170, 0.600);
+		add(r5, easyMap[0][19], easyMap[1][19], easyMap[2][19], 150, 10, 0.600);
+		add(s3, easyMap[0][20], easyMap[1][20], easyMap[2][20], 150, 250, 0.600);
+		add(s4, easyMap[0][21], easyMap[1][21], easyMap[2][21], 150, 70, 0.600);
+		add(r6, easyMap[0][22], easyMap[1][22], easyMap[2][22], 150, 20, 0.600);
+		add(c5, easyMap[0][23], easyMap[1][23], easyMap[2][23]);
+		add(s5, easyMap[0][24], easyMap[1][24], easyMap[2][24], 150, 100, 0.600);
+		add(s6, easyMap[0][25], easyMap[1][25], easyMap[2][25], 150, 280, 0.600);
+		add(r7, easyMap[0][26], easyMap[1][26], easyMap[2][26], 150, 10, 0.600);
+		add(c6, easyMap[0][27], easyMap[1][27], easyMap[2][27]);
+		add(s7, easyMap[0][28], easyMap[1][28], easyMap[2][28], 150, 270, 0.600);
+		add(s8, easyMap[0][29], easyMap[1][29], easyMap[2][29], 150, 190, 0.600);
+		add(r8, easyMap[0][30], easyMap[1][30], easyMap[2][30], 150, 340, 0.600);
+		add(c7, easyMap[0][31], easyMap[1][31], easyMap[2][31]);
+	}
+
+	// code to run the Medium game mode
+	private void medium() {
+		// Implementation for medium
+		this.remove(maruButton);
+		this.remove(playButton);
+		this.remove(exitButton);
+		this.remove(tutorial);
+		this.remove(easy);
+		this.remove(medium);
+		this.remove(hard);
+		this.remove(backButton);
 	}
 
 	// code to run the Hard game mode
@@ -1167,7 +1085,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(hard);
 		this.remove(backButton);
 
-		
+		add(r1, 100, 100, 100, 180, 0, 100);
 	}
 
 	// plays sound given a file name
@@ -1225,17 +1143,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			menu.setMicrosecondPosition(0); // Reset its position to the beginning
 			menu.close(); // Close the clip
 		}
-	}
-
-	public void setBackgroundImage(String imagePath) {
-
-		try {
-			backgroundImage = ImageIO.read(new File(imagePath));
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
 	}
 
 	@Override

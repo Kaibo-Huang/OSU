@@ -99,6 +99,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 		playMenu();
 
+		label = new JLabel();
+		label.setBounds(GAME_WIDTH / 2 - 150, GAME_HEIGHT / 2 + 150, 300, 300);
+		this.add(label);
+
+		logo = loadImage("Images/Logo.png");
+		label.setIcon(new ImageIcon(logo));
+
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				label.setIcon(null);
+				playSound("Music/MARUClick.wav");
+				showGameOptions();
+			}
+		});
+
+		this.setVisible(true);
+		
 		// add MARU! button
 		maruButton = new JButton("MARU!");
 		maruButton.setFont(new Font("Arial", Font.PLAIN, 24));

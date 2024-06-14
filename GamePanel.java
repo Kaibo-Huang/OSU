@@ -39,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Slider s1, s2, s3, s4, s5, s6, s7, s8, s9;
 	private Reverse r1, r2, r3, r4, r5, r6, r7, r8, r9;
 
-	private JButton maruButton, playButton, exitButton; // menu buttons
+	private JButton playButton, exitButton; // menu buttons
 	private JButton tutorial, easy, medium, hard, backButton, play;// level buttons
 
 	boolean playTutorial, playEasy, playMedium, playHard;
@@ -110,9 +110,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 		playMenu();
+		this.setLayout(null);
 
 		label = new JLabel();
-		label.setBounds(GAME_WIDTH / 2 - 150, GAME_HEIGHT / 2 + 150, 300, 300);
+		label.setBounds(GAME_WIDTH / 2 - 225, GAME_HEIGHT / 2 - 225, 450, 450);
 		this.add(label);
 
 		logo = loadImage("Images/Logo.png");
@@ -121,25 +122,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		label.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				label.setIcon(null);
+				label.setBounds(GAME_WIDTH / 2 - 275, GAME_HEIGHT / 2 - 225, 450, 450);
 				playSound("Music/MARUClick.wav");
 				showGameOptions();
 			}
 		});
 
 		this.setVisible(true);
-
-//		// add MARU! button
-//		maruButton = new JButton("MARU!");
-//		maruButton.setFont(new Font("Arial", Font.PLAIN, 24));
-//		maruButton.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				playSound("Music/MARUClick.wav");
-//				showGameOptions(); // calls showGameOptions when pressed
-//			}
-//		});
 
 		// add PLAY button
 		playButton = new JButton("PLAY");
@@ -277,11 +266,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.removeAll();
 
 		// shifts the MARU! button and adds PLAY and EXIT buttons
-		label.setBounds(GAME_WIDTH / 4 - 150, GAME_HEIGHT / 2 + 150, 300, 300);
-		playButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 - 100, 200, 50);
-		exitButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2, 200, 50);
+		label.setBounds(GAME_WIDTH / 4, GAME_HEIGHT / 2 - 225, 450, 450);
+		playButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 - 50, 200, 50);
+		exitButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 + 40, 200, 50);
 
-//		this.add(maruButton);
+		this.add(label);
 		this.add(playButton);
 		this.add(exitButton);
 
@@ -291,7 +280,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// adds the buttons to show the level
 	public void showLevels() {
 		this.removeAll();
-
+		
 		tutorial.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 - 50, 200, 50);
 		easy.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 + 50, 200, 50);
 		medium.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 - 50, 200, 50);
@@ -1057,7 +1046,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private void tutorial() {
 
 		// remove all buttons onscreen
-		this.remove(maruButton);
 		this.remove(playButton);
 		this.remove(exitButton);
 		this.remove(tutorial);
@@ -1110,7 +1098,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// code to run the Easy game mode
 	private void easy() {
 		// Implementation for medium
-		this.remove(maruButton);
 		this.remove(playButton);
 		this.remove(exitButton);
 		this.remove(tutorial);
@@ -1123,7 +1110,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// code to run the Medium game mode
 	private void medium() {
 
-		this.remove(maruButton);
 		this.remove(playButton);
 		this.remove(exitButton);
 		this.remove(tutorial);
@@ -1171,7 +1157,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// code to run the Hard game mode
 	private void hard() {
 		// Implementation for hard
-		this.remove(maruButton);
 		this.remove(playButton);
 		this.remove(exitButton);
 		this.remove(tutorial);

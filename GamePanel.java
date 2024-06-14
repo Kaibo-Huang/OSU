@@ -5,7 +5,9 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
@@ -38,7 +40,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private JButton maruButton, playButton, exitButton; // menu buttons
 	private JButton tutorial, easy, medium, hard, backButton, play;// level buttons
 
+	boolean playTutorial, playEasy, playMedium, playHard;
+
 	private boolean isTitleScreen = true;
+	private BufferedImage backgroundImage;
 
 	// map elements (x position, y position, time of placement)
 	private int[][] tutorialMap = {
@@ -151,6 +156,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
+						playTutorial = true;
 						stopMenu();
 						tutorial(); // calls startGame when pressed
 					}
@@ -173,6 +179,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
+						playEasy = true;
 						stopMenu();
 						easy(); // calls startGame when pressed
 					}
@@ -196,6 +203,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
+						playMedium = true;
 						stopMenu();
 						medium(); // calls startGame when pressed
 					}
@@ -219,6 +227,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
+						playHard = true;
 						stopMenu();
 						hard(); // calls startGame when pressed
 					}
@@ -303,6 +312,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// draws each of the individual circles, sliders and spinners as well as the
 	// score
 	public void draw(Graphics g) {
+		
+		if (playTutorial) {
+			setBackgroundImage("Images/tutorial.png");
+			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
+		} else if (playEasy) {
+			setBackgroundImage("Images/easy.png");
+			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
+		} else if (playMedium) {
+			setBackgroundImage("Images/medium.png");
+			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
+		} else if (playHard) {
+			setBackgroundImage("Images/hard.png");
+			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
+		}
 		c1.draw(g);
 		c2.draw(g);
 		c3.draw(g);
@@ -333,8 +356,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		r8.draw(g);
 		r9.draw(g);
 
+		
+
 		Score.draw(g);
-		g.setColor(Color.black);
+		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 20));
 
 		g.drawString(combo + "X", 20, GamePanel.GAME_HEIGHT - 30);
@@ -1083,6 +1108,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// code to run the Medium game mode
 	private void medium() {
+
+		
 		this.remove(maruButton);
 		this.remove(playButton);
 		this.remove(exitButton);
@@ -1140,7 +1167,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(hard);
 		this.remove(backButton);
 
-		add(r1, 100, 100, 100, 180, 0, 100);
+		
 	}
 
 	// plays sound given a file name
@@ -1198,6 +1225,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			menu.setMicrosecondPosition(0); // Reset its position to the beginning
 			menu.close(); // Close the clip
 		}
+	}
+
+	public void setBackgroundImage(String imagePath) {
+
+		try {
+			backgroundImage = ImageIO.read(new File(imagePath));
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override

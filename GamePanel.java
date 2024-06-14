@@ -1,4 +1,3 @@
-Updates to keyboard shortcuts … On Thursday, August 1, 2024, Drive keyboard shortcuts will be updated to give you first-letters navigation.Learn more
 //Don Tran and Kaibo Huang
 //June 11, 2024
 //This class uses the run method to constantly loop through game elements such as notes, sliders, menu and buttons

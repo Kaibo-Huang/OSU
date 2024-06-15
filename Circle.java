@@ -13,6 +13,8 @@ public class Circle extends Rectangle {
 	int initialX, initialY;
 	int x0, y0;
 	int id;
+	
+	public static Color c;
 
 	boolean isClicked = false;
 
@@ -29,14 +31,17 @@ public class Circle extends Rectangle {
 
 	// draws the current location of the circle to the screen
 	public void draw(Graphics g) {
-
+		g.setColor(c);	
 		g.fillOval(initialX + 10, initialY + 10, radius - 20, radius - 20);
 
 		Graphics2D g2d = (Graphics2D) g;
 		Stroke oldStroke = g2d.getStroke(); // Save the old stroke
 		// Set the thickness of the outline
-		g2d.setStroke(new BasicStroke(3)); // Change the thickness as needed
-		g2d.drawOval(initialX, initialY, radius, radius);
+		g2d.setColor(Color.white);
+		g2d.setStroke(new BasicStroke(8)); // Change the thickness as needed
+		g2d.drawOval(initialX+4, initialY+4, radius-8, radius-8);
+		
+		g2d.setColor(c);
 
 		g2d.setStroke(new BasicStroke(5)); // Change the thickness as needed
 		g2d.drawOval(x, y, moveRadius, moveRadius);

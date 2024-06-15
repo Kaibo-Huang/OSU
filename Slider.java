@@ -26,20 +26,11 @@ public class Slider extends Rectangle {
 	boolean movingAlongPath = false; // Indicates if the circle is moving along the path
 	boolean goodSlide = true;
 	boolean goodClick = false;
+	
 
-	// Constructor creates circle at given location with given dimensions
-	public Slider(int centerX, int centerY, int l, int i, int mT) {
-		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
-		initialX = centerX;
-		initialY = centerY;
-		moveX = centerX;
-		moveY = centerY;
-		id = i;
-		length = l;
-		this.angle = 0; // Default angle is 0 degrees
-		moveTime = mT;
+	public static Color c;
+	public static Color moveC;
 
-	}
 
 	// New constructor with rotation angle
 	public Slider(int centerX, int centerY, int l, int i, double angle) {
@@ -61,11 +52,11 @@ public class Slider extends Rectangle {
 		this.finalY = initialY; // Same y-position as the initial
 
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(Color.black);
+		
 		isClicked = false;
 		Stroke oldStroke = g2d.getStroke(); // Save the old stroke
-		int thickStroke = 10; // Thickness of the stroke for circles
-		g2d.setStroke(new BasicStroke(thickStroke)); // Change the thickness as needed
+
+		g2d.setStroke(new BasicStroke(7)); // Change the thickness as needed
 
 		// Save the original transform
 		AffineTransform originalTransform = g2d.getTransform();
@@ -78,6 +69,14 @@ public class Slider extends Rectangle {
 		int ovalWidth = length;
 		int ovalHeight = radius;
 
+		g2d.setColor(Color.white);
+		// Draw the connecting rectangle with rounded edges
+		int rectX = initialX - circleDiameter / 2;
+		int rectY = initialY - ovalHeight / 2;
+		g2d.drawRoundRect(rectX, rectY, ovalWidth + circleDiameter, ovalHeight, ovalHeight, ovalHeight);
+		g2d.setColor(c);
+		g2d.fillRoundRect(rectX +2, rectY + 2, ovalWidth + circleDiameter - 4, ovalHeight - 4, ovalHeight, ovalHeight);
+		g2d.setColor(Color.white);
 		// Draw the left circle
 		g2d.drawOval(initialX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
 
@@ -85,15 +84,10 @@ public class Slider extends Rectangle {
 		int rightCircleX = initialX + ovalWidth;
 		g2d.drawOval(rightCircleX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
 
-		g2d.setStroke(new BasicStroke(3)); // Change the thickness as needed
-
-		// Draw the connecting rectangle with rounded edges
-		int rectX = initialX - circleDiameter / 2;
-		int rectY = initialY - ovalHeight / 2;
-		g2d.drawRoundRect(rectX, rectY, ovalWidth + circleDiameter, ovalHeight, ovalHeight, ovalHeight);
+		g2d.setStroke(new BasicStroke(7)); // Change the thickness as needed
 
 		// Draw the larger circle around the left circle
-		g2d.setColor(Color.blue);
+		g2d.setColor(moveC);
 		g2d.drawOval(moveX - moveRadius / 2, moveY - moveRadius / 2, moveRadius, moveRadius);
 
 		// Restore the original transform

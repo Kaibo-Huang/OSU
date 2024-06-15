@@ -133,7 +133,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		label.setBounds(GAME_WIDTH / 2 - 225, GAME_HEIGHT / 2 - 225, 450, 450);
 		this.add(label);
 
-		logo = loadImage("Images/Logo.png");
+		logo = loadImage("Images/Logo.jpg");
 		label.setIcon(new ImageIcon(logo));
 
 		label.addMouseListener(new MouseAdapter() {
@@ -336,7 +336,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public void draw(Graphics g) {
 
 		if (playTutorial) {
-			setBackgroundImage("Images/tutorial.png");
+			setBackgroundImage("Images/tutorial.jpg");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 			Circle.c = Color.green;
 			Slider.c = Color.green;
@@ -344,7 +344,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			Slider.moveC = Color.yellow;
 			Reverse.moveC = Color.yellow;
 		} else if (playEasy) {
-			setBackgroundImage("Images/easy.png");
+			setBackgroundImage("Images/easy.jpg");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 			Circle.c = Color.pink;
 			Slider.c = Color.pink;
@@ -352,7 +352,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			Slider.moveC = Color.yellow;
 			Reverse.moveC = Color.yellow;
 		} else if (playMedium) {
-			setBackgroundImage("Images/medium.png");
+			setBackgroundImage("Images/medium.jpg");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 			Circle.c = Color.blue;
 			Slider.c = Color.blue;
@@ -360,7 +360,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			Slider.moveC = Color.yellow;
 			Reverse.moveC = Color.yellow;
 		} else if (playHard) {
-			setBackgroundImage("Images/hard.png");
+			setBackgroundImage("Images/hard.jpg");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 			Circle.c = Color.magenta;
 			Slider.c = Color.magenta;

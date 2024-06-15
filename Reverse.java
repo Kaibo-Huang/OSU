@@ -24,6 +24,9 @@ public class Reverse extends Rectangle {
 	boolean goodClick = false;
 	boolean reversePath = false;
 
+	public static Color c;
+	public static Color moveC;
+
 	// New constructor with rotation angle
 	public Reverse(int centerX, int centerY, int l, int i, double angle) {
 		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
@@ -42,7 +45,7 @@ public class Reverse extends Rectangle {
 		this.finalY = initialY; // Same y-position as the initial
 
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(Color.black);
+
 		isClicked = false;
 		Stroke oldStroke = g2d.getStroke(); // Save the old stroke
 		int thickStroke = 10; // Thickness of the stroke for circles
@@ -59,6 +62,23 @@ public class Reverse extends Rectangle {
 		int ovalWidth = length;
 		int ovalHeight = radius;
 
+		g2d.setColor(Color.white);
+		// Draw the connecting rectangle with rounded edges
+		int rectX = initialX - circleDiameter / 2;
+		int rectY = initialY - ovalHeight / 2;
+		g2d.drawRoundRect(rectX, rectY, ovalWidth + circleDiameter, ovalHeight, ovalHeight, ovalHeight);
+
+		
+		g2d.setColor(c);
+		g2d.fillRoundRect(rectX + 2, rectY + 2, ovalWidth + circleDiameter - 4, ovalHeight - 4, ovalHeight, ovalHeight);
+		g2d.setColor(Color.white);
+		int arrowSize = 25; // Size of the arrow
+		int arrowX = initialX + ovalWidth;
+		int arrowY = initialY;
+		int[] xPoints = { arrowX + arrowSize / 2, arrowX - arrowSize / 2, arrowX + arrowSize / 2 };
+		int[] yPoints = { arrowY - arrowSize / 2, arrowY, arrowY + arrowSize / 2 };
+		g2d.fillPolygon(xPoints, yPoints, 3);
+		g2d.setColor(Color.white);
 		// Draw the left circle
 		g2d.drawOval(initialX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
 
@@ -66,34 +86,17 @@ public class Reverse extends Rectangle {
 		int rightCircleX = initialX + ovalWidth;
 		g2d.drawOval(rightCircleX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
 
-		// Fill the right circle with an opaque background
-		g2d.setColor(new Color(255, 255, 255, 200)); // White with some transparency
-		g2d.fillOval(rightCircleX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
-
-		// Draw the arrow inside the right circle pointing left
-		g2d.setColor(Color.black);
-		int arrowSize = 25; // Size of the arrow
-		int arrowX = rightCircleX;
-		int arrowY = initialY;
-		int[] xPoints = { arrowX + arrowSize / 2, arrowX - arrowSize / 2, arrowX + arrowSize / 2 };
-		int[] yPoints = { arrowY - arrowSize / 2, arrowY, arrowY + arrowSize / 2 };
-		g2d.fillPolygon(xPoints, yPoints, 3);
-
-		g2d.setStroke(new BasicStroke(3)); // Change the thickness as needed
-
-		// Draw the connecting rectangle with rounded edges
-		int rectX = initialX - circleDiameter / 2;
-		int rectY = initialY - ovalHeight / 2;
-		g2d.drawRoundRect(rectX, rectY, ovalWidth + circleDiameter, ovalHeight, ovalHeight, ovalHeight);
+		g2d.setStroke(new BasicStroke(7)); // Change the thickness as needed
 
 		// Draw the larger circle around the left circle
-		g2d.setColor(Color.blue);
+		g2d.setColor(moveC);
 		g2d.drawOval(moveX - moveRadius / 2, moveY - moveRadius / 2, moveRadius, moveRadius);
 
 		// Restore the original transform
 		g2d.setTransform(originalTransform);
 
 		g2d.setStroke(oldStroke); // Restore the old stroke
+
 	}
 
 	// Method to set the radius and update the rectangle bounds

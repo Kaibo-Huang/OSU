@@ -28,6 +28,7 @@ public class Reverse extends Rectangle {
 	public static Color c;
 	public static Color moveC;
 	int scoreX, scoreY;
+	int num = 0;
 
 	// New constructor with rotation angle
 	public Reverse(int centerX, int centerY, int l, int i, double angle) {
@@ -48,10 +49,9 @@ public class Reverse extends Rectangle {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		
 		Stroke oldStroke = g2d.getStroke(); // Save the old stroke
-		int thickStroke = 10; // Thickness of the stroke for circles
-		g2d.setStroke(new BasicStroke(thickStroke)); // Change the thickness as needed
+
+		g2d.setStroke(new BasicStroke(10)); // Change the thickness as needed
 
 		// Save the original transform
 		AffineTransform originalTransform = g2d.getTransform();
@@ -59,34 +59,26 @@ public class Reverse extends Rectangle {
 		// Apply rotation
 		g2d.rotate(Math.toRadians(angle), initialX, initialY);
 
-		// Calculate the positions and dimensions of the shapes
-		int circleDiameter = radius;
-		int ovalWidth = length;
-		int ovalHeight = radius;
-
 		g2d.setColor(Color.white);
 		// Draw the connecting rectangle with rounded edges
-		int rectX = initialX - circleDiameter / 2;
-		int rectY = initialY - ovalHeight / 2;
-		g2d.drawRoundRect(rectX, rectY, ovalWidth + circleDiameter, ovalHeight, ovalHeight, ovalHeight);
+		int rectX = initialX - radius / 2;
+		int rectY = initialY - radius / 2;
+		g2d.drawRoundRect(rectX, rectY, length + radius, radius, radius, radius);
 
-		
 		g2d.setColor(c);
-		g2d.fillRoundRect(rectX + 2, rectY + 2, ovalWidth + circleDiameter - 4, ovalHeight - 4, ovalHeight, ovalHeight);
+		g2d.fillRoundRect(rectX + 2, rectY + 2, length + radius - 4, radius - 4, radius, radius);
 		g2d.setColor(Color.white);
-		int arrowSize = 25; // Size of the arrow
-		int arrowX = initialX + ovalWidth;
-		int arrowY = initialY;
-		int[] xPoints = { arrowX + arrowSize / 2, arrowX - arrowSize / 2, arrowX + arrowSize / 2 };
-		int[] yPoints = { arrowY - arrowSize / 2, arrowY, arrowY + arrowSize / 2 };
+
+		int[] xPoints = { initialX + length + 25 / 2, initialX + length - 25 / 2, initialX + length + 25 / 2 };
+		int[] yPoints = { initialY - 25 / 2, initialY, initialY + 25 / 2 };
 		g2d.fillPolygon(xPoints, yPoints, 3);
 		g2d.setColor(Color.white);
 		// Draw the left circle
-		g2d.drawOval(initialX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
+		g2d.drawOval(initialX - radius / 2, initialY - radius / 2, radius, radius);
 
 		// Draw the right circle
-		int rightCircleX = initialX + ovalWidth;
-		g2d.drawOval(rightCircleX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
+
+		g2d.drawOval(initialX + length - radius / 2, initialY - radius / 2, radius, radius);
 
 		g2d.setStroke(new BasicStroke(7)); // Change the thickness as needed
 
@@ -96,6 +88,16 @@ public class Reverse extends Rectangle {
 
 		// Restore the original transform
 		g2d.setTransform(originalTransform);
+		// Draw the number inside the left circle
+		g2d.setColor(Color.white);
+		Font originalFont = g2d.getFont();
+		Font largeFont = originalFont.deriveFont(48f); // Set a larger font size
+		g2d.setFont(largeFont);
+		FontMetrics fm = g2d.getFontMetrics();
+
+		g2d.drawString(Integer.toString(num), initialX - fm.stringWidth(Integer.toString(num)) / 2,
+				initialY + fm.getAscent() / 2 - fm.getDescent());
+		g2d.setFont(originalFont); // Restore the original font
 
 		g2d.setStroke(oldStroke); // Restore the old stroke
 
@@ -119,9 +121,7 @@ public class Reverse extends Rectangle {
 
 	// Method to check if the mouse click is within the blue moving circle
 	public boolean isMouseClickedInside(int mouseX, int mouseY) {
-		int circleCenterX = moveX;
-		int circleCenterY = moveY;
-		double distance = Math.sqrt(Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2));
-		return distance <= moveRadius / 2;
+
+		return (double) Math.sqrt(Math.pow(mouseX - moveX, 2) + Math.pow(mouseY - moveY, 2)) <= moveRadius / 2;
 	}
 }

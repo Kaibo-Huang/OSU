@@ -413,54 +413,55 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		g.setFont(new Font("Arial", Font.BOLD, 20));
 
 		g.drawString(combo + "X", 20, GamePanel.GAME_HEIGHT - 30);
+		if (appearC[1]) {
+			if (c1.scoreState == 3) {
+				Timer timer = new Timer();
 
-		if (c1.scoreState == 3) {
-			Timer timer = new Timer();
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c1.initialX, c1.initialY, 200, 200, null);
+					}
+				};
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c1.initialX, c1.initialY, 200, 200, null);
-				}
-			};
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c1.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c1.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+			} else if (c1.scoreState == 1) {
+				Timer timer = new Timer();
 
-		} else if (c1.scoreState == 1) {
-			Timer timer = new Timer();
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c1.initialX, c1.initialY, 200, 200, null);
+					}
+				};
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c1.initialX, c1.initialY, 200, 200, null);
-				}
-			};
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
-
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c1.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c1.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
 		}
-
+		if (appearC[2]) {
 		if (c2.scoreState == 3) {
 			Timer timer = new Timer();
 
@@ -506,8 +507,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					c2.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 200);
-		}
-
+		}}
+		if (appearC[3]) {
 		if (c3.scoreState == 3) {
 			Timer timer = new Timer();
 
@@ -553,7 +554,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					c3.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 200);
-		}
+		}}
+		
+		if (appearC[4]) {
 
 		if (c4.scoreState == 3) {
 			Timer timer = new Timer();
@@ -600,8 +603,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					c4.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 200);
-		}
-
+		}}
+		if (appearC[5]) {
 		if (c5.scoreState == 3) {
 			Timer timer = new Timer();
 
@@ -647,8 +650,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					c5.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 200);
-		}
-
+		}}
+		if (appearC[6]) {
 		if (c6.scoreState == 3) {
 			Timer timer = new Timer();
 
@@ -694,8 +697,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					c6.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 200);
-		}
-
+		}}
+		if (appearC[7]) {
 		if (c7.scoreState == 3) {
 			Timer timer = new Timer();
 
@@ -741,7 +744,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					c7.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 200);
-		}
+		}}
+		if (appearC[8]) {
 
 		if (c8.scoreState == 3) {
 			Timer timer = new Timer();
@@ -788,8 +792,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					c8.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 200);
-		}
-
+		}}
+		if (appearC[9]) {
 		if (c9.scoreState == 3) {
 			Timer timer = new Timer();
 
@@ -836,7 +840,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 200);
 		}
-
+		}
+		
 		if (s1.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -885,6 +890,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
+		
 
 		if (s2.scoreState == 3) {
 
@@ -1813,10 +1819,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				appearS[s.id] = false;
 				s.scoreX = s.initialX;
 				s.scoreY = s.initialY;
-				
+
 				s.initialX = 2000;
 				s.initialY = 2000;
-				
+
 				s.moveX = 2000;
 				s.moveY = 2000;
 			}
@@ -1879,10 +1885,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					appearR[r.id] = false;
 					r.scoreX = r.initialX;
 					r.scoreY = r.initialY;
-					
+
 					r.initialX = 2000;
 					r.initialY = 2000;
-					
+
 					r.moveX = 2000;
 					r.moveY = 2000;
 					r.reversePath = false;

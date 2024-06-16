@@ -2854,6 +2854,37 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			// Open and play the theme song
 			clip = AudioSystem.getClip();
 			clip.open(audioStream);
+
+			clip.addLineListener(new LineListener() {
+				@Override
+				public void update(LineEvent event) {
+					if (event.getType() == LineEvent.Type.STOP) {
+
+						clip.close();
+					}
+				}
+			});
+
+			clip.start(); // Start playing the sound
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void playClicks(String soundFile) {
+		File file;
+		AudioInputStream audioStream;
+		Clip clip;
+
+		try {
+			// open theme song file
+			file = new File(soundFile);
+
+			// Get audio input stream
+			audioStream = AudioSystem.getAudioInputStream(file);
+			// Open and play the theme song
+			clip = AudioSystem.getClip();
+			clip.open(audioStream);
 			clip.start(); // Start playing the sound
 		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 			e.printStackTrace();

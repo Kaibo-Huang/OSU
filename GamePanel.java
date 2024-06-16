@@ -50,6 +50,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private BufferedImage Score100 = loadImage("Images/100red.jpg");
 
 	private static int mX, mY;
+	private byte level;
 
 	// map elements (x position, y position, time of placement)
 	private int[][] tutorialMap = {
@@ -188,14 +189,29 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				play = new JButton("PLAY!");
 				play.setFont(new Font("Arial", Font.PLAIN, 24));
 				addPlayButton();
+				level = 0;
 				play.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						playTutorial = true;
+						
 						stopMenu();
-						tutorial(); // calls startGame when pressed
+						
+						if(level == 0) {
+							playTutorial = true;
+							tutorial(); 
+						}else if(level == 1) {
+							playEasy = true;
+							easy(); 
+						}else if(level == 2) {
+							playMedium = true;
+							medium(); 
+						}else if(level == 3) {
+							playHard = true;
+							hard(); 
+						}
+						
 					}
 				});
 			}
@@ -211,14 +227,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				play = new JButton("PLAY!");
 				play.setFont(new Font("Arial", Font.PLAIN, 24));
 				addPlayButton();
+				level = 1;
 				play.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						playEasy = true;
+						
 						stopMenu();
-						easy(); // calls startGame when pressed
+						if(level == 0) {
+							playTutorial = true;
+							tutorial(); 
+						}else if(level == 1) {
+							playEasy = true;
+							easy(); 
+						}else if(level == 2) {
+							playMedium = true;
+							medium(); 
+						}else if(level == 3) {
+							playHard = true;
+							hard(); 
+						}
+						
 					}
 				});
 
@@ -235,14 +265,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				play = new JButton("PLAY!");
 				play.setFont(new Font("Arial", Font.PLAIN, 24));
 				addPlayButton();
+				level = 2;
 				play.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						playMedium = true;
+						
 						stopMenu();
-						medium(); // calls startGame when pressed
+						if(level == 0) {
+							playTutorial = true;
+							tutorial(); 
+						}else if(level == 1) {
+							playEasy = true;
+							easy(); 
+						}else if(level == 2) {
+							playMedium = true;
+							medium(); 
+						}else if(level == 3) {
+							playHard = true;
+							hard(); 
+						}
+						
 					}
 				});
 			}
@@ -259,14 +303,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				play = new JButton("PLAY!");
 				play.setFont(new Font("Arial", Font.PLAIN, 24));
 				addPlayButton();
+				level = 3;
 				play.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						playHard = true;
+						
 						stopMenu();
-						hard(); // calls startGame when pressed
+						if(level == 0) {
+							playTutorial = true;
+							tutorial(); 
+						}else if(level == 1) {
+							playEasy = true;
+							easy(); 
+						}else if(level == 2) {
+							playMedium = true;
+							medium(); 
+						}else if(level == 3) {
+							playHard = true;
+							hard(); 
+						}
+						
 					}
 				});
 			}

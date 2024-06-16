@@ -8,7 +8,7 @@ public class Circle extends Rectangle {
 	int initialX, initialY;
 	int x0, y0;
 	int id;
-	int scoreState = 0;
+	byte scoreState = 0;
 	int num = 0;
 
 	public static Color c;

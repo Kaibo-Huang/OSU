@@ -23,9 +23,11 @@ public class Reverse extends Rectangle {
 	boolean goodSlide = true;
 	boolean goodClick = false;
 	boolean reversePath = false;
+	int scoreState = 0;
 
 	public static Color c;
 	public static Color moveC;
+	int scoreX, scoreY;
 
 	// New constructor with rotation angle
 	public Reverse(int centerX, int centerY, int l, int i, double angle) {
@@ -46,7 +48,7 @@ public class Reverse extends Rectangle {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		isClicked = false;
+		
 		Stroke oldStroke = g2d.getStroke(); // Save the old stroke
 		int thickStroke = 10; // Thickness of the stroke for circles
 		g2d.setStroke(new BasicStroke(thickStroke)); // Change the thickness as needed

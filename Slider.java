@@ -10,19 +10,19 @@ public class Slider extends Rectangle {
 	int finalX, finalY; // Position of the right circle
 	int moveX, moveY;
 	double moveTime;
-	boolean mousePressed = false;
-	boolean zPressed = false;
-	boolean xPressed = false;
+	boolean mousePressed;
+	boolean zPressed;
+	boolean xPressed;
 
 	int id;
 	int length;
 	double angle; // Rotation angle
 
-	boolean isClicked = false;
-	boolean movingAlongPath = false; // Indicates if the circle is moving along the path
-	boolean goodSlide = true;
-	boolean goodClick = false;
-	int scoreState = 0;
+	boolean isClicked;
+	boolean movingAlongPath; // Indicates if the circle is moving along the path
+	boolean goodSlide;
+	boolean goodClick;
+	int scoreState;
 	int scoreX, scoreY;
 
 	public static Color c;
@@ -32,6 +32,16 @@ public class Slider extends Rectangle {
 	// New constructor with rotation angle
 	public Slider(int centerX, int centerY, int l, int i, double angle) {
 		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
+
+		goodSlide = true;
+		goodClick = false;
+		isClicked = false;
+		movingAlongPath = false;
+		scoreState = 0;
+		mousePressed = false;
+		zPressed = false;
+		xPressed = false;
+
 		initialX = centerX;
 
 		initialY = centerY;

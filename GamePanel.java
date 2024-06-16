@@ -52,6 +52,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private static int mX, mY;
 	private byte level;
 
+	private int totalMisses = 0, clicked300 = 0, clicked100 = 0, maxCombo = 0;
+	private int totalTutorial = 300 * 32, totalEasy = 300 * 65, totalMedium = 300 * 31, totalHard = 300 * 53;
+
 	// map elements (x position, y position, time of placement)
 	private int[][] tutorialMap = {
 			{ 640, 238, 1039, 999, 1039, 238, 511, 637, 650, 919, 1200, 644, 363, 85, 834, 438, 847, 679, 90, 158, 235,
@@ -195,23 +198,23 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						
+
 						stopMenu();
-						
-						if(level == 0) {
+
+						if (level == 0) {
 							playTutorial = true;
-							tutorial(); 
-						}else if(level == 1) {
+							tutorial();
+						} else if (level == 1) {
 							playEasy = true;
-							easy(); 
-						}else if(level == 2) {
+							easy();
+						} else if (level == 2) {
 							playMedium = true;
-							medium(); 
-						}else if(level == 3) {
+							medium();
+						} else if (level == 3) {
 							playHard = true;
-							hard(); 
+							hard();
 						}
-						
+
 					}
 				});
 			}
@@ -233,22 +236,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						
+
 						stopMenu();
-						if(level == 0) {
+						if (level == 0) {
 							playTutorial = true;
-							tutorial(); 
-						}else if(level == 1) {
+							tutorial();
+						} else if (level == 1) {
 							playEasy = true;
-							easy(); 
-						}else if(level == 2) {
+							easy();
+						} else if (level == 2) {
 							playMedium = true;
-							medium(); 
-						}else if(level == 3) {
+							medium();
+						} else if (level == 3) {
 							playHard = true;
-							hard(); 
+							hard();
 						}
-						
+
 					}
 				});
 
@@ -271,22 +274,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						
+
 						stopMenu();
-						if(level == 0) {
+						if (level == 0) {
 							playTutorial = true;
-							tutorial(); 
-						}else if(level == 1) {
+							tutorial();
+						} else if (level == 1) {
 							playEasy = true;
-							easy(); 
-						}else if(level == 2) {
+							easy();
+						} else if (level == 2) {
 							playMedium = true;
-							medium(); 
-						}else if(level == 3) {
+							medium();
+						} else if (level == 3) {
 							playHard = true;
-							hard(); 
+							hard();
 						}
-						
+
 					}
 				});
 			}
@@ -309,22 +312,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					public void actionPerformed(ActionEvent e) {
 						playSound("Music/PlayClick.wav");
 						isTitleScreen = false;
-						
+
 						stopMenu();
-						if(level == 0) {
+						if (level == 0) {
 							playTutorial = true;
-							tutorial(); 
-						}else if(level == 1) {
+							tutorial();
+						} else if (level == 1) {
 							playEasy = true;
-							easy(); 
-						}else if(level == 2) {
+							easy();
+						} else if (level == 2) {
 							playMedium = true;
-							medium(); 
-						}else if(level == 3) {
+							medium();
+						} else if (level == 3) {
 							playHard = true;
-							hard(); 
+							hard();
 						}
-						
+
 					}
 				});
 			}
@@ -377,6 +380,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.add(medium);
 		this.add(hard);
 		this.add(backButton);
+
+		totalMisses = 0;
+		clicked300 = 0;
+		clicked100 = 0;
+		maxCombo = 0;
 
 		this.repaint();
 	}
@@ -520,386 +528,393 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			}
 		}
 		if (appearC[2]) {
-		if (c2.scoreState == 3) {
-			Timer timer = new Timer();
+			if (c2.scoreState == 3) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c2.initialX, c2.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c2.initialX, c2.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c2.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c2.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-		} else if (c2.scoreState == 1) {
-			Timer timer = new Timer();
+			} else if (c2.scoreState == 1) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c2.initialX, c2.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c2.initialX, c2.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c2.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
-		}}
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c2.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
+		}
 		if (appearC[3]) {
-		if (c3.scoreState == 3) {
-			Timer timer = new Timer();
+			if (c3.scoreState == 3) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c3.initialX, c3.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c3.initialX, c3.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c3.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c3.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-		} else if (c3.scoreState == 1) {
-			Timer timer = new Timer();
+			} else if (c3.scoreState == 1) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c3.initialX, c3.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c3.initialX, c3.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c3.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
-		}}
-		
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c3.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
+		}
+
 		if (appearC[4]) {
 
-		if (c4.scoreState == 3) {
-			Timer timer = new Timer();
+			if (c4.scoreState == 3) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c4.initialX, c4.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c4.initialX, c4.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c4.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c4.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-		} else if (c4.scoreState == 1) {
-			Timer timer = new Timer();
+			} else if (c4.scoreState == 1) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c4.initialX, c4.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c4.initialX, c4.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c4.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
-		}}
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c4.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
+		}
 		if (appearC[5]) {
-		if (c5.scoreState == 3) {
-			Timer timer = new Timer();
+			if (c5.scoreState == 3) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c5.initialX, c5.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c5.initialX, c5.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c5.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c5.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-		} else if (c5.scoreState == 1) {
-			Timer timer = new Timer();
+			} else if (c5.scoreState == 1) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c5.initialX, c5.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c5.initialX, c5.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c5.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
-		}}
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c5.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
+		}
 		if (appearC[6]) {
-		if (c6.scoreState == 3) {
-			Timer timer = new Timer();
+			if (c6.scoreState == 3) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c6.initialX, c6.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c6.initialX, c6.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c6.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c6.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-		} else if (c6.scoreState == 1) {
-			Timer timer = new Timer();
+			} else if (c6.scoreState == 1) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c6.initialX, c6.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c6.initialX, c6.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c6.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
-		}}
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c6.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
+		}
 		if (appearC[7]) {
-		if (c7.scoreState == 3) {
-			Timer timer = new Timer();
+			if (c7.scoreState == 3) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c7.initialX, c7.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c7.initialX, c7.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c7.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c7.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-		} else if (c7.scoreState == 1) {
-			Timer timer = new Timer();
+			} else if (c7.scoreState == 1) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c7.initialX, c7.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c7.initialX, c7.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c7.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
-		}}
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c7.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
+		}
 		if (appearC[8]) {
 
-		if (c8.scoreState == 3) {
-			Timer timer = new Timer();
+			if (c8.scoreState == 3) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c8.initialX, c8.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c8.initialX, c8.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c8.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c8.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-		} else if (c8.scoreState == 1) {
-			Timer timer = new Timer();
+			} else if (c8.scoreState == 1) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c8.initialX, c8.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c8.initialX, c8.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c8.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
-		}}
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c8.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
+		}
 		if (appearC[9]) {
-		if (c9.scoreState == 3) {
-			Timer timer = new Timer();
+			if (c9.scoreState == 3) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score300, c9.initialX, c9.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score300, c9.initialX, c9.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c9.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c9.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
 
-		} else if (c9.scoreState == 1) {
-			Timer timer = new Timer();
+			} else if (c9.scoreState == 1) {
+				Timer timer = new Timer();
 
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					g.drawImage(Score100, c9.initialX, c9.initialY, 200, 200, null);
-				}
-			};
+				TimerTask task = new TimerTask() {
+					@Override
+					public void run() {
+						g.drawImage(Score100, c9.initialX, c9.initialY, 200, 200, null);
+					}
+				};
 
-			// Schedule the task to run once, after a delay of 0 milliseconds,
-			// and then every 1000 milliseconds (1 second) thereafter
-			timer.scheduleAtFixedRate(task, 0, 200);
+				// Schedule the task to run once, after a delay of 0 milliseconds,
+				// and then every 1000 milliseconds (1 second) thereafter
+				timer.scheduleAtFixedRate(task, 0, 200);
 
-			// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
-					c9.scoreState = 0; // Reset scoreState after starting the timer
-				}
-			}, 200);
+				// Schedule a timer to cancel the task after 1 second (1000 milliseconds)
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						timer.cancel(); // Cancel the timer to stop further executions
+						c9.scoreState = 0; // Reset scoreState after starting the timer
+					}
+				}, 200);
+			}
 		}
-		}
-		
+
 		if (s1.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -948,7 +963,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
 
 		if (s2.scoreState == 3) {
 
@@ -1864,14 +1878,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					combo++;
 					Score.score += 300 * combo;
 					s.scoreState = 3;
+					clicked300++;
+					maxCombo = Math.max(combo, maxCombo);
 
 				} else if (s.goodClick == true) {
 					combo++;
 					Score.score += 100 * combo;
 					s.scoreState = 1;
+					clicked100++;
+					maxCombo = Math.max(combo, maxCombo);
 
 				} else {
 					combo = 0;
+					totalMisses++;
 
 				}
 				appearS[s.id] = false;
@@ -1930,14 +1949,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						combo++;
 						Score.score += 300 * combo;
 						r.scoreState = 3;
+						clicked300++;
+						maxCombo = Math.max(combo, maxCombo);
 
 					} else if (r.goodClick == true) {
 						combo++;
 						Score.score += 100 * combo;
 						r.scoreState = 1;
+						clicked100++;
+						maxCombo = Math.max(combo, maxCombo);
 
 					} else {
 						combo = 0;
+						totalMisses++;
 
 					}
 					appearR[r.id] = false;
@@ -2280,12 +2304,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						combo++;
 						Score.score += 300 * combo;
 						c.scoreState = 3;
+						clicked300++;
+						maxCombo = Math.max(combo, maxCombo);
 						repaint();
 						playSound("Music/clickSound.wav");
 					} else if (c.moveRadius <= 130) {
 						combo++;
 						Score.score += 100 * combo;
 						playSound("Music/clickSound.wav");
+						clicked100++;
+						maxCombo = Math.max(combo, maxCombo);
 						repaint();
 						c.scoreState = 1;
 					}
@@ -2293,10 +2321,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					else {
 						c.moveRadius = 80;
 						combo = 0;
+						totalMisses++;
 					}
 				}
 			}
+
 		});
+
+		if (c.moveRadius == 80 && c.isClicked == false) {
+			combo = 0;
+		}
 
 		addKeyListener(new KeyAdapter() {
 			@Override

@@ -10,19 +10,19 @@ public class Reverse extends Rectangle {
 	int finalX, finalY; // Position of the right circle
 	int moveX, moveY;
 	double moveTime;
-	boolean mousePressed = false;
-	boolean zPressed = false;
-	boolean xPressed = false;
+	boolean mousePressed;
+	boolean zPressed;
+	boolean xPressed;
 
 	int id;
 	int length;
 	double angle; // Rotation angle
 
-	boolean isClicked = false;
-	boolean movingAlongPath = false; // Indicates if the circle is moving along the path
-	boolean goodSlide = true;
-	boolean goodClick = false;
-	boolean reversePath = false;
+	boolean isClicked;
+	boolean movingAlongPath; // Indicates if the circle is moving along the path
+	boolean goodSlide;
+	boolean goodClick;
+	boolean reversePath;
 	int scoreState = 0;
 
 	public static Color c;
@@ -33,6 +33,17 @@ public class Reverse extends Rectangle {
 	// New constructor with rotation angle
 	public Reverse(int centerX, int centerY, int l, int i, double angle) {
 		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
+
+		isClicked = false;
+		movingAlongPath = false; // Indicates if the circle is moving along the path
+		goodSlide = true;
+		goodClick = false;
+		reversePath = false;
+		scoreState = 0;
+		mousePressed = false;
+		zPressed = false;
+		xPressed = false;
+
 		initialX = centerX;
 		initialY = centerY;
 		moveX = centerX;

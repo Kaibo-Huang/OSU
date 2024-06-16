@@ -172,6 +172,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// add PLAY button
 		playButton = new JButton("PLAY");
 		playButton.setFont(new Font("Arial", Font.PLAIN, 24));
+		playButton.setBorderPainted(false);
+		playButton.setFocusPainted(false);
 		playButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -183,6 +185,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// add EXIT button
 		exitButton = new JButton("EXIT");
 		exitButton.setFont(new Font("Arial", Font.PLAIN, 24));
+		exitButton.setFocusPainted(false);
+		exitButton.setBorderPainted(false);
+
+
 		exitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -191,9 +197,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		});
 		play = new JButton("PLAY!");
 		play.setFont(new Font("Arial", Font.PLAIN, 24));
+		play.setFocusPainted(false);
+		play.setBorderPainted(false);
+		play.setContentAreaFilled(false);
 		// add Tutorial button
 		tutorial = new JButton("Tutorial");
 		tutorial.setFont(new Font("Arial", Font.PLAIN, 24));
+		tutorial.setFocusPainted(false);
+		tutorial.setBorderPainted(false);
+
 		tutorial.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -207,6 +219,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// add Easy button
 		easy = new JButton("Easy");
 		easy.setFont(new Font("Arial", Font.PLAIN, 24));
+		easy.setFocusPainted(false);
+		easy.setBorderPainted(false);
+
 		easy.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -220,6 +235,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// add Medium button
 		medium = new JButton("Medium");
 		medium.setFont(new Font("Arial", Font.PLAIN, 24));
+		medium.setFocusPainted(false);
+		medium.setBorderPainted(false);
+
 		medium.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -233,6 +251,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// add Hard button
 		hard = new JButton("Hard");
 		hard.setFont(new Font("Arial", Font.PLAIN, 24));
+		hard.setFocusPainted(false);
+		hard.setBorderPainted(false);
 		hard.addActionListener(new ActionListener() {
 
 			@Override

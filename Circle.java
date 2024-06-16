@@ -4,6 +4,11 @@
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class Circle extends Rectangle {
 	private int radius = 100; // initial size of the circle
@@ -13,7 +18,8 @@ public class Circle extends Rectangle {
 	int initialX, initialY;
 	int x0, y0;
 	int id;
-	
+	int scoreState = 0;
+
 	public static Color c;
 
 	boolean isClicked = false;
@@ -31,7 +37,7 @@ public class Circle extends Rectangle {
 
 	// draws the current location of the circle to the screen
 	public void draw(Graphics g) {
-		g.setColor(c);	
+		g.setColor(c);
 		g.fillOval(initialX + 10, initialY + 10, radius - 20, radius - 20);
 
 		Graphics2D g2d = (Graphics2D) g;
@@ -39,8 +45,8 @@ public class Circle extends Rectangle {
 		// Set the thickness of the outline
 		g2d.setColor(Color.white);
 		g2d.setStroke(new BasicStroke(8)); // Change the thickness as needed
-		g2d.drawOval(initialX+4, initialY+4, radius-8, radius-8);
-		
+		g2d.drawOval(initialX + 4, initialY + 4, radius - 8, radius - 8);
+
 		g2d.setColor(c);
 
 		g2d.setStroke(new BasicStroke(5)); // Change the thickness as needed

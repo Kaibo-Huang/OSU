@@ -1,7 +1,3 @@
-
-//Don Tran and Kaibo Huang
-//June 11, 2024
-//This class creates a new slider object, which will require the user to hover over the shape while holding down their mouse or keyboard bindings. 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -31,13 +27,13 @@ public class Slider extends Rectangle {
 
 	public static Color c;
 	public static Color moveC;
-
+	int num = 0;
 
 	// New constructor with rotation angle
 	public Slider(int centerX, int centerY, int l, int i, double angle) {
 		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
 		initialX = centerX;
-		
+
 		initialY = centerY;
 		moveX = centerX;
 		moveY = centerY;
@@ -54,8 +50,7 @@ public class Slider extends Rectangle {
 		this.finalY = initialY; // Same y-position as the initial
 
 		Graphics2D g2d = (Graphics2D) g;
-		
-		
+
 		Stroke oldStroke = g2d.getStroke(); // Save the old stroke
 
 		g2d.setStroke(new BasicStroke(7)); // Change the thickness as needed
@@ -67,25 +62,20 @@ public class Slider extends Rectangle {
 		g2d.rotate(Math.toRadians(angle), initialX, initialY);
 
 		// Calculate the positions and dimensions of the shapes
-		int circleDiameter = radius;
-		int ovalWidth = length;
-		int ovalHeight = radius;
 
 		g2d.setColor(Color.white);
 		// Draw the connecting rectangle with rounded edges
-		int rectX = initialX - circleDiameter / 2;
-		int rectY = initialY - ovalHeight / 2;
-		g2d.drawRoundRect(rectX, rectY, ovalWidth + circleDiameter, ovalHeight, ovalHeight, ovalHeight);
+
+		g2d.drawRoundRect(initialX - radius / 2, initialY - radius / 2, length + radius, radius, radius, radius);
 		g2d.setColor(c);
-		g2d.fillRoundRect(rectX +2, rectY + 2, ovalWidth + circleDiameter - 4, ovalHeight - 4, ovalHeight, ovalHeight);
+		g2d.fillRoundRect(initialX - radius / 2 + 2, initialY - radius / 2 + 2, length + radius - 4, radius - 4, radius,
+				radius);
 		g2d.setColor(Color.white);
 		// Draw the left circle
-		g2d.drawOval(initialX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
-	
+		g2d.drawOval(initialX - radius / 2, initialY - radius / 2, radius, radius);
 
 		// Draw the right circle
-		int rightCircleX = initialX + ovalWidth;
-		g2d.drawOval(rightCircleX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
+		g2d.drawOval(initialX + length - radius / 2, initialY - radius / 2, radius, radius);
 
 		g2d.setStroke(new BasicStroke(7)); // Change the thickness as needed
 
@@ -95,6 +85,16 @@ public class Slider extends Rectangle {
 
 		// Restore the original transform
 		g2d.setTransform(originalTransform);
+		// Draw the number inside the left circle
+		g2d.setColor(Color.white);
+		Font originalFont = g2d.getFont();
+		Font largeFont = originalFont.deriveFont(48f); // Set a larger font size
+		g2d.setFont(largeFont);
+		FontMetrics fm = g2d.getFontMetrics();
+
+		g2d.drawString(Integer.toString(num), initialX - fm.stringWidth(Integer.toString(num)) / 2,
+				initialY + fm.getAscent() / 2 - fm.getDescent());
+		g2d.setFont(originalFont); // Restore the original font
 
 		g2d.setStroke(oldStroke); // Restore the old stroke
 	}
@@ -117,10 +117,6 @@ public class Slider extends Rectangle {
 
 	// Method to check if the mouse click is within the blue moving circle
 	public boolean isMouseClickedInside(int mouseX, int mouseY) {
-		int circleCenterX = moveX;
-		int circleCenterY = moveY;
-		double distance = Math.sqrt(Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2));
-		return distance <= moveRadius / 2;
+		return (double) Math.sqrt(Math.pow(mouseX - moveX, 2) + Math.pow(mouseY - moveY, 2)) <= moveRadius / 2;
 	}
-
 }

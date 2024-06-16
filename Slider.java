@@ -26,7 +26,8 @@ public class Slider extends Rectangle {
 	boolean movingAlongPath = false; // Indicates if the circle is moving along the path
 	boolean goodSlide = true;
 	boolean goodClick = false;
-	
+	int scoreState = 0;
+	int scoreX, scoreY;
 
 	public static Color c;
 	public static Color moveC;
@@ -36,6 +37,7 @@ public class Slider extends Rectangle {
 	public Slider(int centerX, int centerY, int l, int i, double angle) {
 		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
 		initialX = centerX;
+		
 		initialY = centerY;
 		moveX = centerX;
 		moveY = centerY;
@@ -53,7 +55,7 @@ public class Slider extends Rectangle {
 
 		Graphics2D g2d = (Graphics2D) g;
 		
-		isClicked = false;
+		
 		Stroke oldStroke = g2d.getStroke(); // Save the old stroke
 
 		g2d.setStroke(new BasicStroke(7)); // Change the thickness as needed
@@ -79,6 +81,7 @@ public class Slider extends Rectangle {
 		g2d.setColor(Color.white);
 		// Draw the left circle
 		g2d.drawOval(initialX - circleDiameter / 2, initialY - circleDiameter / 2, circleDiameter, circleDiameter);
+	
 
 		// Draw the right circle
 		int rightCircleX = initialX + ovalWidth;

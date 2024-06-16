@@ -845,7 +845,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s1.scoreX-100, s1.scoreY - 150, 200, 200, null);
+					g.drawImage(Score300, s1.scoreX - 100, s1.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -864,11 +864,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		} else if (s1.scoreState == 1) {
 			Timer timer = new Timer();
-			
+
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s1.scoreX-100, s1.scoreY - 150, 200, 200, null);
+					g.drawImage(Score100, s1.scoreX - 100, s1.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -894,7 +894,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s2.scoreX-100, s2.scoreY - 150, 200, 200, null);
+					g.drawImage(Score300, s2.scoreX - 100, s2.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -917,7 +917,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s2.scoreX-100, s2.scoreY - 150, 200, 200, null);
+					g.drawImage(Score100, s2.scoreX - 100, s2.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -943,7 +943,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s3.scoreX-100, s3.scoreY - 150, 200, 200, null);
+					g.drawImage(Score300, s3.scoreX - 100, s3.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -966,7 +966,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s3.scoreX-100, s3.scoreY - 150, 200, 200, null);
+					g.drawImage(Score100, s3.scoreX - 100, s3.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -992,7 +992,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s4.scoreX-100, s4.scoreY - 150, 200, 200, null);
+					g.drawImage(Score300, s4.scoreX - 100, s4.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1015,7 +1015,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s4.scoreX-100, s4.scoreY - 150, 200, 200, null);
+					g.drawImage(Score100, s4.scoreX - 100, s4.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1041,7 +1041,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s5.scoreX-100, s5.scoreY - 150, 200, 200, null);
+					g.drawImage(Score300, s5.scoreX - 100, s5.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1064,7 +1064,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s5.scoreX-100, s5.scoreY - 150, 200, 200, null);
+					g.drawImage(Score100, s5.scoreX - 100, s5.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1090,7 +1090,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s6.scoreX-100, s6.scoreY - 150, 200, 200, null);
+					g.drawImage(Score300, s6.scoreX - 100, s6.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1113,7 +1113,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s6.scoreX-100, s6.scoreY - 150, 200, 200, null);
+					g.drawImage(Score100, s6.scoreX - 100, s6.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1139,7 +1139,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s7.scoreX-100, s7.scoreY - 150, 200, 200, null);
+					g.drawImage(Score300, s7.scoreX - 100, s7.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1162,7 +1162,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s7.scoreX-100, s7.scoreY - 150, 200, 200, null);
+					g.drawImage(Score100, s7.scoreX - 100, s7.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1188,7 +1188,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s8.scoreX-100, s8.scoreY - 150, 200, 200, null);
+					g.drawImage(Score300, s8.scoreX - 100, s8.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1211,7 +1211,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s8.scoreX-100, s8.scoreY - 150, 200, 200, null);
+					g.drawImage(Score100, s8.scoreX - 100, s8.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1277,8 +1277,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
-		
+
 		if (r1.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1288,7 +1287,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r1.scoreX - 100, r1.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1311,9 +1310,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r1.scoreX - 100, r1.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1330,8 +1329,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
-		
+
 		if (r2.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1341,7 +1339,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r2.scoreX - 100, r2.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1364,9 +1362,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r2.scoreX - 100, r2.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1383,7 +1381,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
+
 		if (r3.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1393,7 +1391,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r3.scoreX - 100, r3.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1416,9 +1414,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r3.scoreX - 100, r3.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1435,7 +1433,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
+
 		if (r4.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1445,7 +1443,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r4.scoreX - 100, r4.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1468,9 +1466,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r4.scoreX - 100, r4.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1487,7 +1485,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
+
 		if (r5.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1497,7 +1495,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r5.scoreX - 100, r5.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1520,9 +1518,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r5.scoreX - 100, r5.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1539,7 +1537,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
+
 		if (r6.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1549,7 +1547,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r6.scoreX - 100, r6.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1572,9 +1570,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r6.scoreX - 100, r6.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1591,7 +1589,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
+
 		if (r7.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1601,7 +1599,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r7.scoreX - 100, r7.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1624,9 +1622,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r7.scoreX - 100, r7.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1643,7 +1641,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
+
 		if (r8.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1653,7 +1651,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r8.scoreX - 100, r8.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1676,9 +1674,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r8.scoreX - 100, r8.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1695,7 +1693,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}, 400);
 		}
-		
+
 		if (r9.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1705,7 +1703,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				public void run() {
 
 					g.drawImage(Score300, r9.scoreX - 100, r9.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1728,9 +1726,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					
+
 					g.drawImage(Score100, r9.scoreX - 100, r9.scoreY - 200, 200, 200, null);
-					
+
 				}
 			};
 
@@ -1803,7 +1801,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					Score.score += 300 * combo;
 					s.scoreState = 3;
 
-				} else if (s.goodClick == true || s.goodSlide == true) {
+				} else if (s.goodClick == true) {
 					combo++;
 					Score.score += 100 * combo;
 					s.scoreState = 1;
@@ -1815,10 +1813,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				appearS[s.id] = false;
 				s.scoreX = s.initialX;
 				s.scoreY = s.initialY;
-				s.length = 200;
+				
 				s.initialX = 2000;
 				s.initialY = 2000;
-				s.angle = 0;
+				
 				s.moveX = 2000;
 				s.moveY = 2000;
 			}
@@ -1868,13 +1866,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						combo++;
 						Score.score += 300 * combo;
 						r.scoreState = 3;
-						repaint();
 
-					} else if (r.goodClick == true || r.goodSlide == true) {
+					} else if (r.goodClick == true) {
 						combo++;
 						Score.score += 100 * combo;
 						r.scoreState = 1;
-						repaint();
 
 					} else {
 						combo = 0;
@@ -1883,10 +1879,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					appearR[r.id] = false;
 					r.scoreX = r.initialX;
 					r.scoreY = r.initialY;
-					r.length = 200;
+					
 					r.initialX = 2000;
 					r.initialY = 2000;
-					r.angle = 0;
+					
 					r.moveX = 2000;
 					r.moveY = 2000;
 					r.reversePath = false;
@@ -2001,7 +1997,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 			addMouseListener(new MouseAdapter() {
 
-			
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					s.mousePressed = false;
@@ -2009,7 +2004,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			});
 
 			addKeyListener(new KeyAdapter() {
-				
 
 				@Override
 				public void keyReleased(KeyEvent e) {
@@ -2027,7 +2021,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// Get the coordinates of the mouse
 					mX = e.getX();
 					mY = e.getY();
-					
 
 					// Transform the mouse coordinates to the rotated coordinate system
 					AffineTransform at = new AffineTransform();
@@ -2038,8 +2031,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// Check if the transformed mouse coordinates are within the circle
 					double distance = Math.sqrt(
 							Math.pow(transformedPoint.x - s.moveX, 2) + Math.pow(transformedPoint.y - s.moveY, 2));
-					
-					
+
 					if (distance > s.moveRadius / 2) {
 						s.goodSlide = false;
 
@@ -2164,7 +2156,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			});
 
 			addKeyListener(new KeyAdapter() {
-				
 
 				@Override
 				public void keyReleased(KeyEvent e) {
@@ -2287,7 +2278,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// adds the Circles to the screen and the coordinates when needed
-	public void add(Circle c, int x, int y, long t) {
+	public void add(Circle c, int x, int y, long t, int n) {
 		Timer timer = new Timer();
 		c.isClicked = false;
 
@@ -2304,6 +2295,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 				appearC[c.id] = true;
 				c.isClicked = false;
+				c.num = n;
 
 			}
 		};
@@ -2312,7 +2304,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// method to add slider objects with correct coordinates, time, length, angle
 	// and speed
-	public void add(Slider s, int x, int y, long t, int l, int a, double mT) {
+	public void add(Slider s, int x, int y, long t, int l, int a, double mT, int n) {
 		Timer timer = new Timer();
 
 		TimerTask task = new TimerTask() {
@@ -2331,13 +2323,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				s.moveTime = mT;
 				appearS[s.id] = true;
 				s.isClicked = false;
+				s.num = n;
 			}
 		};
 		timer.schedule(task, t);
 
 	}
 
-	public void add(Reverse r, int x, int y, long t, int l, int a, double mT) {
+	public void add(Reverse r, int x, int y, long t, int l, int a, double mT, int n) {
 		Timer timer = new Timer();
 
 		TimerTask task = new TimerTask() {
@@ -2356,6 +2349,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				r.moveTime = mT;
 				appearR[r.id] = true;
 				r.isClicked = false;
+				r.num = n;
 			}
 		};
 		timer.schedule(task, t);
@@ -2513,41 +2507,41 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		playSound("Music/tutorial.wav");
 
 		// add circles and sliders for map, with correct arguments
-		add(c1, tutorialMap[0][0], tutorialMap[1][0], tutorialMap[2][0]);
+		add(c1, tutorialMap[0][0], tutorialMap[1][0], tutorialMap[2][0], 1);
 
-		add(c2, tutorialMap[0][1], tutorialMap[1][1], tutorialMap[2][1]);
-		add(c3, tutorialMap[0][2], tutorialMap[1][2], tutorialMap[2][2]);
-		add(c4, tutorialMap[0][3], tutorialMap[1][3], tutorialMap[2][3]);
-		add(c5, tutorialMap[0][4], tutorialMap[1][4], tutorialMap[2][4]);
-		add(c6, tutorialMap[0][5], tutorialMap[1][5], tutorialMap[2][5]);
-		add(c7, tutorialMap[0][6], tutorialMap[1][6], tutorialMap[2][6]);
-		add(c8, tutorialMap[0][7], tutorialMap[1][7], tutorialMap[2][7]);
-		add(c9, tutorialMap[0][8], tutorialMap[1][8], tutorialMap[2][8]);
-		add(c1, tutorialMap[0][9], tutorialMap[1][9], tutorialMap[2][9]);
-		add(c2, tutorialMap[0][10], tutorialMap[1][10], tutorialMap[2][10]);
-		add(c3, tutorialMap[0][11], tutorialMap[1][11], tutorialMap[2][11]);
-		add(c4, tutorialMap[0][12], tutorialMap[1][12], tutorialMap[2][12]);
-		add(c5, tutorialMap[0][13], tutorialMap[1][13], tutorialMap[2][13]);
+		add(c2, tutorialMap[0][1], tutorialMap[1][1], tutorialMap[2][1], 1);
+		add(c3, tutorialMap[0][2], tutorialMap[1][2], tutorialMap[2][2], 2);
+		add(c4, tutorialMap[0][3], tutorialMap[1][3], tutorialMap[2][3], 3);
+		add(c5, tutorialMap[0][4], tutorialMap[1][4], tutorialMap[2][4], 4);
+		add(c6, tutorialMap[0][5], tutorialMap[1][5], tutorialMap[2][5], 5);
+		add(c7, tutorialMap[0][6], tutorialMap[1][6], tutorialMap[2][6], 6);
+		add(c8, tutorialMap[0][7], tutorialMap[1][7], tutorialMap[2][7], 7);
+		add(c9, tutorialMap[0][8], tutorialMap[1][8], tutorialMap[2][8], 8);
+		add(c1, tutorialMap[0][9], tutorialMap[1][9], tutorialMap[2][9], 9);
+		add(c2, tutorialMap[0][10], tutorialMap[1][10], tutorialMap[2][10], 1);
+		add(c3, tutorialMap[0][11], tutorialMap[1][11], tutorialMap[2][11], 2);
+		add(c4, tutorialMap[0][12], tutorialMap[1][12], tutorialMap[2][12], 3);
+		add(c5, tutorialMap[0][13], tutorialMap[1][13], tutorialMap[2][13], 4);
 
-		add(s1, tutorialMap[0][14], tutorialMap[1][14], tutorialMap[2][14], 180, 0, 2.193);
-		add(s2, tutorialMap[0][15], tutorialMap[1][15], tutorialMap[2][15], 100, 90, 0.650);
-		add(r1, tutorialMap[0][16], tutorialMap[1][16], tutorialMap[2][16], 300, 270, 1.096);
+		add(s1, tutorialMap[0][14], tutorialMap[1][14], tutorialMap[2][14], 180, 0, 2.193, 1);
+		add(s2, tutorialMap[0][15], tutorialMap[1][15], tutorialMap[2][15], 100, 90, 0.650, 2);
+		add(r1, tutorialMap[0][16], tutorialMap[1][16], tutorialMap[2][16], 300, 270, 1.096, 3);
 
-		add(s4, tutorialMap[0][17], tutorialMap[1][17], tutorialMap[2][17], 300, 180, 1.807);
-		add(c6, tutorialMap[0][18], tutorialMap[1][18], tutorialMap[2][18]);
-		add(c7, tutorialMap[0][19], tutorialMap[1][19], tutorialMap[2][19]);
-		add(s5, tutorialMap[0][20], tutorialMap[1][20], tutorialMap[2][20], 150, 350, 0.750);
-		add(s6, tutorialMap[0][21], tutorialMap[1][21], tutorialMap[2][21], 150, 280, 0.456);
-		add(c8, tutorialMap[0][22], tutorialMap[1][22], tutorialMap[2][22]);
-		add(s7, tutorialMap[0][23], tutorialMap[1][23], tutorialMap[2][23], 300, 70, 1.609);
-		add(c9, tutorialMap[0][24], tutorialMap[1][24], tutorialMap[2][24]);
-		add(r2, tutorialMap[0][25], tutorialMap[1][25], tutorialMap[2][25], 500, 300, 0.954);
-		add(s9, tutorialMap[0][26], tutorialMap[1][26], tutorialMap[2][26], 100, 200, 0.351);
-		add(s1, tutorialMap[0][27], tutorialMap[1][27], tutorialMap[2][27], 300, 240, 1.406);
-		add(c1, tutorialMap[0][28], tutorialMap[1][28], tutorialMap[2][28]);
-		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 250, 1.193);
-		add(c2, tutorialMap[0][20], tutorialMap[1][30], tutorialMap[2][30]);
-		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 300, 1.405);
+		add(s4, tutorialMap[0][17], tutorialMap[1][17], tutorialMap[2][17], 300, 180, 1.807, 1);
+		add(c6, tutorialMap[0][18], tutorialMap[1][18], tutorialMap[2][18], 2);
+		add(c7, tutorialMap[0][19], tutorialMap[1][19], tutorialMap[2][19], 3);
+		add(s5, tutorialMap[0][20], tutorialMap[1][20], tutorialMap[2][20], 150, 350, 0.750, 4);
+		add(s6, tutorialMap[0][21], tutorialMap[1][21], tutorialMap[2][21], 150, 280, 0.456, 5);
+		add(c8, tutorialMap[0][22], tutorialMap[1][22], tutorialMap[2][22], 6);
+		add(s7, tutorialMap[0][23], tutorialMap[1][23], tutorialMap[2][23], 300, 70, 1.609, 7);
+		add(c9, tutorialMap[0][24], tutorialMap[1][24], tutorialMap[2][24], 8);
+		add(r2, tutorialMap[0][25], tutorialMap[1][25], tutorialMap[2][25], 500, 300, 0.954, 9);
+		add(s9, tutorialMap[0][26], tutorialMap[1][26], tutorialMap[2][26], 100, 200, 0.351, 1);
+		add(s1, tutorialMap[0][27], tutorialMap[1][27], tutorialMap[2][27], 300, 240, 1.406, 2);
+		add(c1, tutorialMap[0][28], tutorialMap[1][28], tutorialMap[2][28], 3);
+		add(s2, tutorialMap[0][29], tutorialMap[1][29], tutorialMap[2][29], 250, 250, 1.193, 4);
+		add(c2, tutorialMap[0][20], tutorialMap[1][30], tutorialMap[2][30], 5);
+		add(s3, tutorialMap[0][31], tutorialMap[1][31], tutorialMap[2][31], 220, 300, 1.405, 6);
 	}
 
 	// code to run the Easy game mode
@@ -2563,71 +2557,71 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		playSound("Music/easy.wav");
 
-		add(s1, easyMap[0][0], easyMap[1][0], easyMap[2][0], 250, 270, 0.900);
-		add(s2, easyMap[0][1], easyMap[1][1], easyMap[2][1], 250, 0, 0.800);
-		add(c1, easyMap[0][2], easyMap[1][2], easyMap[2][2]);
-		add(c2, easyMap[0][3], easyMap[1][3], easyMap[2][3]);
-		add(s3, easyMap[0][4], easyMap[1][4], easyMap[2][4], 300, 70, 0.800);
-		add(s4, easyMap[0][5], easyMap[1][5], easyMap[2][5], 300, 0, 0.800);
-		add(c3, easyMap[0][6], easyMap[1][6], easyMap[2][6]);
-		add(s5, easyMap[0][7], easyMap[1][7], easyMap[2][7], 200, 180, 0.500);
-		add(s6, easyMap[0][8], easyMap[1][8], easyMap[2][8], 300, 0, 0.600);
-		add(s7, easyMap[0][9], easyMap[1][9], easyMap[2][9], 200, 230, 0.700);
-		add(c6, easyMap[0][10], easyMap[1][10], easyMap[2][10]);
-		add(s8, easyMap[0][11], easyMap[1][11], easyMap[2][11], 200, 0, 0.600);
-		add(s9, easyMap[0][12], easyMap[1][12], easyMap[2][12], 200, 190, 0.600);
-		add(r1, easyMap[0][13], easyMap[1][13], easyMap[2][13], 350, 90, 0.600);
-		add(c8, easyMap[0][14], easyMap[1][14], easyMap[2][14]);
-		add(s1, easyMap[0][15], easyMap[1][15], easyMap[2][15], 200, 0, 0.600);
-		add(c9, easyMap[0][16], easyMap[1][16], easyMap[2][16]);
-		add(s2, easyMap[0][17], easyMap[1][17], easyMap[2][17], 200, 100, 0.600);
-		add(s3, easyMap[0][18], easyMap[1][18], easyMap[2][18], 350, 180, 0.600);
-		add(r2, easyMap[0][19], easyMap[1][19], easyMap[2][19], 200, 0, 0.500);
-		add(s4, easyMap[0][20], easyMap[1][20], easyMap[2][20], 200, 80, 0.500);
-		add(s5, easyMap[0][21], easyMap[1][21], easyMap[2][21], 200, 10, 0.500);
-		add(s6, easyMap[0][22], easyMap[1][22], easyMap[2][22], 200, 200, 0.500);
-		add(s7, easyMap[0][23], easyMap[1][23], easyMap[2][23], 200, 200, 0.500);
-		add(s8, easyMap[0][24], easyMap[1][24], easyMap[2][24], 450, 0, 2.500);
-		add(s9, easyMap[0][25], easyMap[1][25], easyMap[2][25], 200, 0, 0.600);
-		add(c5, easyMap[0][26], easyMap[1][26], easyMap[2][26]);
-		add(s2, easyMap[0][27], easyMap[1][27], easyMap[2][27], 200, 30, 0.600);
-		add(s3, easyMap[0][28], easyMap[1][28], easyMap[2][28], 200, 210, 0.600);
-		add(s4, easyMap[0][29], easyMap[1][29], easyMap[2][29], 200, 110, 0.600);
-		add(r3, easyMap[0][30], easyMap[1][30], easyMap[2][30], 170, 0, 0.400); // move up
-		add(s5, easyMap[0][31], easyMap[1][31], easyMap[2][31], 400, 0, 0.600);
-		add(s6, easyMap[0][32], easyMap[1][32], easyMap[2][32], 400, 200, 0.600);
-		add(s7, easyMap[0][33], easyMap[1][33], easyMap[2][33], 400, 180, 0.600);
-		add(s8, easyMap[0][34], easyMap[1][34], easyMap[2][34], 200, 310, 0.600);
-		add(s9, easyMap[0][35], easyMap[1][35], easyMap[2][35], 300, 50, 0.600);
-		add(s1, easyMap[0][36], easyMap[1][36], easyMap[2][36], 300, 160, 0.600);
-		add(s2, easyMap[0][37], easyMap[1][37], easyMap[2][37], 200, 180, 0.500);
-		add(s3, easyMap[0][38], easyMap[1][38], easyMap[2][38], 200, 10, 0.600);
-		add(c4, easyMap[0][39], easyMap[1][39], easyMap[2][39]);
-		add(s4, easyMap[0][40], easyMap[1][40], easyMap[2][40], 400, 180, 0.700);
-		add(s5, easyMap[0][41], easyMap[1][41], easyMap[2][41], 400, 180, 0.600);
-		add(r4, easyMap[0][42], easyMap[1][42], easyMap[2][42], 170, 10, 0.500);
-		add(r5, easyMap[0][43], easyMap[1][43], easyMap[2][43], 170, 10, 0.500);
-		add(s6, easyMap[0][44], easyMap[1][44], easyMap[2][44], 400, 180, 0.600);
-		add(s7, easyMap[0][45], easyMap[1][45], easyMap[2][45], 400, 180, 0.600);
-		add(r6, easyMap[0][46], easyMap[1][46], easyMap[2][46], 170, 270, 0.500);
-		add(s8, easyMap[0][47], easyMap[1][47], easyMap[2][47], 200, 20, 0.500);
-		add(c9, easyMap[0][48], easyMap[1][48], easyMap[2][48]);
-		add(c1, easyMap[0][49], easyMap[1][49], easyMap[2][49]);
-		add(r7, easyMap[0][50], easyMap[1][50], easyMap[2][50], 250, 280, 0.700);
-		add(s2, easyMap[0][51], easyMap[1][51], easyMap[2][51], 180, 0, 0.500);
-		add(s3, easyMap[0][52], easyMap[1][52], easyMap[2][52], 180, 190, 1.000);
-		add(s4, easyMap[0][53], easyMap[1][53], easyMap[2][53], 180, 350, 1.000);
-		add(s5, easyMap[0][54], easyMap[1][54], easyMap[2][54], 180, 180, 0.600);
-		add(s6, easyMap[0][55], easyMap[1][55], easyMap[2][55], 180, 0, 0.600);
-		add(s7, easyMap[0][56], easyMap[1][56], easyMap[2][56], 400, 0, 2.500); // move left
-		add(s8, easyMap[0][57], easyMap[1][57], easyMap[2][57], 200, 120, 1.000);
-		add(s9, easyMap[0][58], easyMap[1][58], easyMap[2][58], 200, 700, 0.600);
-		add(s1, easyMap[0][59], easyMap[1][59], easyMap[2][59], 300, 180, 0.700);
-		add(s2, easyMap[0][60], easyMap[1][60], easyMap[2][60], 200, 270, 0.700);
-		add(s3, easyMap[0][61], easyMap[1][61], easyMap[2][61], 300, 350, 0.700);
-		add(s4, easyMap[0][62], easyMap[1][62], easyMap[2][62], 300, 110, 0.700); // move down and left
-		add(s5, easyMap[0][63], easyMap[1][63], easyMap[2][63], 400, 180, 0.700);
-		add(s6, easyMap[0][64], easyMap[1][64], easyMap[2][64], 600, 0, 2.500);
+		add(s1, easyMap[0][0], easyMap[1][0], easyMap[2][0], 250, 270, 0.900, 1);
+		add(s2, easyMap[0][1], easyMap[1][1], easyMap[2][1], 250, 0, 0.800, 2);
+		add(c1, easyMap[0][2], easyMap[1][2], easyMap[2][2], 3);
+		add(c2, easyMap[0][3], easyMap[1][3], easyMap[2][3], 4);
+		add(s3, easyMap[0][4], easyMap[1][4], easyMap[2][4], 300, 70, 0.800, 5);
+		add(s4, easyMap[0][5], easyMap[1][5], easyMap[2][5], 300, 0, 0.800, 6);
+		add(c3, easyMap[0][6], easyMap[1][6], easyMap[2][6], 7);
+		add(s5, easyMap[0][7], easyMap[1][7], easyMap[2][7], 200, 180, 0.500, 8);
+		add(s6, easyMap[0][8], easyMap[1][8], easyMap[2][8], 300, 0, 0.600, 9);
+		add(s7, easyMap[0][9], easyMap[1][9], easyMap[2][9], 200, 230, 0.700, 1);
+		add(c6, easyMap[0][10], easyMap[1][10], easyMap[2][10], 2);
+		add(s8, easyMap[0][11], easyMap[1][11], easyMap[2][11], 200, 0, 0.600, 3);
+		add(s9, easyMap[0][12], easyMap[1][12], easyMap[2][12], 200, 190, 0.600, 4);
+		add(r1, easyMap[0][13], easyMap[1][13], easyMap[2][13], 350, 90, 0.600, 5);
+		add(c8, easyMap[0][14], easyMap[1][14], easyMap[2][14], 6);
+		add(s1, easyMap[0][15], easyMap[1][15], easyMap[2][15], 200, 0, 0.600, 7);
+		add(c9, easyMap[0][16], easyMap[1][16], easyMap[2][16], 8);
+		add(s2, easyMap[0][17], easyMap[1][17], easyMap[2][17], 200, 100, 0.600, 9);
+		add(s3, easyMap[0][18], easyMap[1][18], easyMap[2][18], 350, 180, 0.600, 1);
+		add(r2, easyMap[0][19], easyMap[1][19], easyMap[2][19], 200, 0, 0.500, 2);
+		add(s4, easyMap[0][20], easyMap[1][20], easyMap[2][20], 200, 80, 0.500, 3);
+		add(s5, easyMap[0][21], easyMap[1][21], easyMap[2][21], 200, 10, 0.500, 4);
+		add(s6, easyMap[0][22], easyMap[1][22], easyMap[2][22], 200, 200, 0.500, 5);
+		add(s7, easyMap[0][23], easyMap[1][23], easyMap[2][23], 200, 200, 0.500, 6);
+		add(s8, easyMap[0][24], easyMap[1][24], easyMap[2][24], 450, 0, 2.500, 7);
+		add(s9, easyMap[0][25], easyMap[1][25], easyMap[2][25], 200, 0, 0.600, 8);
+		add(c5, easyMap[0][26], easyMap[1][26], easyMap[2][26], 9);
+		add(s2, easyMap[0][27], easyMap[1][27], easyMap[2][27], 200, 30, 0.600, 1);
+		add(s3, easyMap[0][28], easyMap[1][28], easyMap[2][28], 200, 210, 0.600, 2);
+		add(s4, easyMap[0][29], easyMap[1][29], easyMap[2][29], 200, 110, 0.600, 3);
+		add(r3, easyMap[0][30], easyMap[1][30], easyMap[2][30], 170, 0, 0.400, 4); // move up
+		add(s5, easyMap[0][31], easyMap[1][31], easyMap[2][31], 400, 0, 0.600, 5);
+		add(s6, easyMap[0][32], easyMap[1][32], easyMap[2][32], 400, 200, 0.600, 6);
+		add(s7, easyMap[0][33], easyMap[1][33], easyMap[2][33], 400, 180, 0.600, 7);
+		add(s8, easyMap[0][34], easyMap[1][34], easyMap[2][34], 200, 310, 0.600, 8);
+		add(s9, easyMap[0][35], easyMap[1][35], easyMap[2][35], 300, 50, 0.600, 9);
+		add(s1, easyMap[0][36], easyMap[1][36], easyMap[2][36], 300, 160, 0.600, 1);
+		add(s2, easyMap[0][37], easyMap[1][37], easyMap[2][37], 200, 180, 0.500, 2);
+		add(s3, easyMap[0][38], easyMap[1][38], easyMap[2][38], 200, 10, 0.600, 3);
+		add(c4, easyMap[0][39], easyMap[1][39], easyMap[2][39], 4);
+		add(s4, easyMap[0][40], easyMap[1][40], easyMap[2][40], 400, 180, 0.700, 5);
+		add(s5, easyMap[0][41], easyMap[1][41], easyMap[2][41], 400, 180, 0.600, 6);
+		add(r4, easyMap[0][42], easyMap[1][42], easyMap[2][42], 170, 10, 0.500, 7);
+		add(r5, easyMap[0][43], easyMap[1][43], easyMap[2][43], 170, 10, 0.500, 8);
+		add(s6, easyMap[0][44], easyMap[1][44], easyMap[2][44], 400, 180, 0.600, 9);
+		add(s7, easyMap[0][45], easyMap[1][45], easyMap[2][45], 400, 180, 0.600, 1);
+		add(r6, easyMap[0][46], easyMap[1][46], easyMap[2][46], 170, 270, 0.500, 2);
+		add(s8, easyMap[0][47], easyMap[1][47], easyMap[2][47], 200, 20, 0.500, 3);
+		add(c9, easyMap[0][48], easyMap[1][48], easyMap[2][48], 4);
+		add(c1, easyMap[0][49], easyMap[1][49], easyMap[2][49], 5);
+		add(r7, easyMap[0][50], easyMap[1][50], easyMap[2][50], 250, 280, 0.700, 6);
+		add(s2, easyMap[0][51], easyMap[1][51], easyMap[2][51], 180, 0, 0.500, 7);
+		add(s3, easyMap[0][52], easyMap[1][52], easyMap[2][52], 180, 190, 1.000, 8);
+		add(s4, easyMap[0][53], easyMap[1][53], easyMap[2][53], 180, 350, 1.000, 9);
+		add(s5, easyMap[0][54], easyMap[1][54], easyMap[2][54], 180, 180, 0.600, 1);
+		add(s6, easyMap[0][55], easyMap[1][55], easyMap[2][55], 180, 0, 0.600, 2);
+		add(s7, easyMap[0][56], easyMap[1][56], easyMap[2][56], 400, 0, 2.500, 3);
+		add(s8, easyMap[0][57], easyMap[1][57], easyMap[2][57], 200, 120, 1.000, 4);
+		add(s9, easyMap[0][58], easyMap[1][58], easyMap[2][58], 200, 700, 0.600, 5);
+		add(s1, easyMap[0][59], easyMap[1][59], easyMap[2][59], 300, 180, 0.700, 6);
+		add(s2, easyMap[0][60], easyMap[1][60], easyMap[2][60], 200, 270, 0.700, 7);
+		add(s3, easyMap[0][61], easyMap[1][61], easyMap[2][61], 300, 350, 0.700, 8);
+		add(s4, easyMap[0][62], easyMap[1][62], easyMap[2][62], 300, 110, 0.700, 9);
+		add(s5, easyMap[0][63], easyMap[1][63], easyMap[2][63], 400, 180, 0.700, 1);
+		add(s6, easyMap[0][64], easyMap[1][64], easyMap[2][64], 600, 0, 2.500, 2);
 
 	}
 
@@ -2644,38 +2638,38 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		playSound("Music/medium.wav");
 
-		add(s1, mediumMap[0][0], mediumMap[1][0], mediumMap[2][0], 150, 0, 0.600);
-		add(s2, mediumMap[0][1], mediumMap[1][1], mediumMap[2][1], 150, 0, 0.600);
-		add(s3, mediumMap[0][2], mediumMap[1][2], mediumMap[2][2], 150, 310, 0.600);
-		add(s4, mediumMap[0][3], mediumMap[1][3], mediumMap[2][3], 150, 80, 0.600);
-		add(s5, mediumMap[0][4], mediumMap[1][4], mediumMap[2][4], 150, 200, 0.600);
-		add(s6, mediumMap[0][5], mediumMap[1][5], mediumMap[2][5], 150, 150, 0.600);
-		add(r1, mediumMap[0][6], mediumMap[1][6], mediumMap[2][6], 150, 80, 0.540);
-		add(s7, mediumMap[0][7], mediumMap[1][7], mediumMap[2][7], 150, 190, 0.600);
-		add(s8, mediumMap[0][8], mediumMap[1][8], mediumMap[2][8], 150, 20, 0.600);
-		add(c1, mediumMap[0][9], mediumMap[1][9], mediumMap[2][9]);
-		add(s9, mediumMap[0][10], mediumMap[1][10], mediumMap[2][10], 150, 80, 0.600);
-		add(c2, mediumMap[0][11], mediumMap[1][11], mediumMap[2][11]);
-		add(r2, mediumMap[0][12], mediumMap[1][12], mediumMap[2][12], 150, 160, 0.600);
-		add(c3, mediumMap[0][13], mediumMap[1][13], mediumMap[2][13]);
-		add(r3, mediumMap[0][14], mediumMap[1][14], mediumMap[2][14], 150, 30, 0.600);
-		add(c4, mediumMap[0][15], mediumMap[1][15], mediumMap[2][15]);
-		add(s1, mediumMap[0][16], mediumMap[1][16], mediumMap[2][16], 150, 280, 0.600);
-		add(s2, mediumMap[0][17], mediumMap[1][17], mediumMap[2][17], 150, 100, 0.600);
-		add(r4, mediumMap[0][18], mediumMap[1][18], mediumMap[2][18], 150, 170, 0.600);
-		add(r5, mediumMap[0][19], mediumMap[1][19], mediumMap[2][19], 150, 10, 0.600);
-		add(s3, mediumMap[0][20], mediumMap[1][20], mediumMap[2][20], 150, 250, 0.600);
-		add(s4, mediumMap[0][21], mediumMap[1][21], mediumMap[2][21], 150, 70, 0.600);
-		add(r6, mediumMap[0][22], mediumMap[1][22], mediumMap[2][22], 150, 20, 0.600);
-		add(c5, mediumMap[0][23], mediumMap[1][23], mediumMap[2][23]);
-		add(s5, mediumMap[0][24], mediumMap[1][24], mediumMap[2][24], 150, 100, 0.600);
-		add(s6, mediumMap[0][25], mediumMap[1][25], mediumMap[2][25], 150, 280, 0.600);
-		add(r7, mediumMap[0][26], mediumMap[1][26], mediumMap[2][26], 150, 10, 0.600);
-		add(c6, mediumMap[0][27], mediumMap[1][27], mediumMap[2][27]);
-		add(s7, mediumMap[0][28], mediumMap[1][28], mediumMap[2][28], 150, 270, 0.600);
-		add(s8, mediumMap[0][29], mediumMap[1][29], mediumMap[2][29], 150, 190, 0.600);
-		add(r8, mediumMap[0][30], mediumMap[1][30], mediumMap[2][30], 150, 340, 0.600);
-		// add(c7, easyMap[0][31], easyMap[1][31], easyMap[2][31]);
+		add(s1, mediumMap[0][0], mediumMap[1][0], mediumMap[2][0], 150, 0, 0.600, 1);
+		add(s2, mediumMap[0][1], mediumMap[1][1], mediumMap[2][1], 150, 0, 0.600, 2);
+		add(s3, mediumMap[0][2], mediumMap[1][2], mediumMap[2][2], 150, 310, 0.600, 3);
+		add(s4, mediumMap[0][3], mediumMap[1][3], mediumMap[2][3], 150, 80, 0.600, 4);
+		add(s5, mediumMap[0][4], mediumMap[1][4], mediumMap[2][4], 150, 200, 0.600, 5);
+		add(s6, mediumMap[0][5], mediumMap[1][5], mediumMap[2][5], 150, 150, 0.600, 6);
+		add(r1, mediumMap[0][6], mediumMap[1][6], mediumMap[2][6], 150, 80, 0.540, 7);
+		add(s7, mediumMap[0][7], mediumMap[1][7], mediumMap[2][7], 150, 190, 0.600, 8);
+		add(s8, mediumMap[0][8], mediumMap[1][8], mediumMap[2][8], 150, 20, 0.600, 9);
+		add(c1, mediumMap[0][9], mediumMap[1][9], mediumMap[2][9], 1);
+		add(s9, mediumMap[0][10], mediumMap[1][10], mediumMap[2][10], 150, 80, 0.600, 2);
+		add(c2, mediumMap[0][11], mediumMap[1][11], mediumMap[2][11], 3);
+		add(r2, mediumMap[0][12], mediumMap[1][12], mediumMap[2][12], 150, 160, 0.600, 4);
+		add(c3, mediumMap[0][13], mediumMap[1][13], mediumMap[2][13], 5);
+		add(r3, mediumMap[0][14], mediumMap[1][14], mediumMap[2][14], 150, 30, 0.600, 6);
+		add(c4, mediumMap[0][15], mediumMap[1][15], mediumMap[2][15], 7);
+		add(s1, mediumMap[0][16], mediumMap[1][16], mediumMap[2][16], 150, 280, 0.600, 8);
+		add(s2, mediumMap[0][17], mediumMap[1][17], mediumMap[2][17], 150, 100, 0.600, 9);
+		add(r4, mediumMap[0][18], mediumMap[1][18], mediumMap[2][18], 150, 170, 0.600, 1);
+		add(r5, mediumMap[0][19], mediumMap[1][19], mediumMap[2][19], 150, 10, 0.600, 2);
+		add(s3, mediumMap[0][20], mediumMap[1][20], mediumMap[2][20], 150, 250, 0.600, 3);
+		add(s4, mediumMap[0][21], mediumMap[1][21], mediumMap[2][21], 150, 70, 0.600, 4);
+		add(r6, mediumMap[0][22], mediumMap[1][22], mediumMap[2][22], 150, 20, 0.600, 5);
+		add(c5, mediumMap[0][23], mediumMap[1][23], mediumMap[2][23], 6);
+		add(s5, mediumMap[0][24], mediumMap[1][24], mediumMap[2][24], 150, 100, 0.600, 7);
+		add(s6, mediumMap[0][25], mediumMap[1][25], mediumMap[2][25], 150, 280, 0.600, 8);
+		add(r7, mediumMap[0][26], mediumMap[1][26], mediumMap[2][26], 150, 10, 0.600, 9);
+		add(c6, mediumMap[0][27], mediumMap[1][27], mediumMap[2][27], 1);
+		add(s7, mediumMap[0][28], mediumMap[1][28], mediumMap[2][28], 150, 270, 0.600, 2);
+		add(s8, mediumMap[0][29], mediumMap[1][29], mediumMap[2][29], 150, 190, 0.600, 3);
+		add(r8, mediumMap[0][30], mediumMap[1][30], mediumMap[2][30], 150, 340, 0.600, 4);
+
 	}
 
 	// code to run the Hard game mode
@@ -2691,59 +2685,59 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		playSound("Music/hard.wav");
 
-		add(c1, hardMap[0][0], hardMap[1][0], hardMap[2][0]);
-		add(c2, hardMap[0][1], hardMap[1][1], hardMap[2][1]);
-		add(c3, hardMap[0][2], hardMap[1][2], hardMap[2][2]);
-		add(c4, hardMap[0][3], hardMap[1][3], hardMap[2][3]);
-		add(c5, hardMap[0][4], hardMap[1][4], hardMap[2][4]);
-		add(c6, hardMap[0][5], hardMap[1][5], hardMap[2][5]);
-		add(c7, hardMap[0][6], hardMap[1][6], hardMap[2][6]);
-		add(c8, hardMap[0][7], hardMap[1][7], hardMap[2][7]);
-		add(c9, hardMap[0][8], hardMap[1][8], hardMap[2][8]);
-		add(c1, hardMap[0][9], hardMap[1][9], hardMap[2][9]);
-		add(c2, hardMap[0][10], hardMap[1][10], hardMap[2][10]);
-		add(c3, hardMap[0][11], hardMap[1][11], hardMap[2][11]);
-		add(c4, hardMap[0][12], hardMap[1][12], hardMap[2][12]);
-		add(c5, hardMap[0][13], hardMap[1][13], hardMap[2][13]);
-		add(c6, hardMap[0][14], hardMap[1][14], hardMap[2][14]);
-		add(c7, hardMap[0][15], hardMap[1][15], hardMap[2][15]);
-		add(c8, hardMap[0][16], hardMap[1][16], hardMap[2][16]);
-		add(c9, hardMap[0][17], hardMap[1][17], hardMap[2][17]);
-		add(c1, hardMap[0][18], hardMap[1][18], hardMap[2][18]);
-		add(c2, hardMap[0][19], hardMap[1][19], hardMap[2][19]);
-		add(c3, hardMap[0][20], hardMap[1][20], hardMap[2][20]);
-		add(c4, hardMap[0][21], hardMap[1][21], hardMap[2][21]);
-		add(c5, hardMap[0][22], hardMap[1][22], hardMap[2][22]);
-		add(c6, hardMap[0][23], hardMap[1][23], hardMap[2][23]);
-		add(c7, hardMap[0][24], hardMap[1][24], hardMap[2][24]);
-		add(c8, hardMap[0][25], hardMap[1][25], hardMap[2][25]);
-		add(c9, hardMap[0][26], hardMap[1][26], hardMap[2][26]);
-		add(c1, hardMap[0][27], hardMap[1][27], hardMap[2][27]);
-		add(c2, hardMap[0][28], hardMap[1][28], hardMap[2][28]);
-		add(c3, hardMap[0][29], hardMap[1][29], hardMap[2][29]);
-		add(c4, hardMap[0][30], hardMap[1][30], hardMap[2][30]);
-		add(c5, hardMap[0][31], hardMap[1][31], hardMap[2][31]);
-		add(c6, hardMap[0][32], hardMap[1][32], hardMap[2][32]);
-		add(c7, hardMap[0][33], hardMap[1][33], hardMap[2][33]);
-		add(c8, hardMap[0][34], hardMap[1][34], hardMap[2][34]);
-		add(c9, hardMap[0][35], hardMap[1][35], hardMap[2][35]);
-		add(c1, hardMap[0][36], hardMap[1][36], hardMap[2][36]);
-		add(c2, hardMap[0][37], hardMap[1][37], hardMap[2][37]);
-		add(c3, hardMap[0][38], hardMap[1][38], hardMap[2][38]);
-		add(c4, hardMap[0][39], hardMap[1][39], hardMap[2][39]);
-		add(c5, hardMap[0][40], hardMap[1][40], hardMap[2][40]);
-		add(c6, hardMap[0][41], hardMap[1][41], hardMap[2][41]);
-		add(c7, hardMap[0][42], hardMap[1][42], hardMap[2][42]);
-		add(c8, hardMap[0][43], hardMap[1][43], hardMap[2][43]);
-		add(c9, hardMap[0][44], hardMap[1][44], hardMap[2][44]);
-		add(c1, hardMap[0][45], hardMap[1][45], hardMap[2][45]);
-		add(c2, hardMap[0][46], hardMap[1][46], hardMap[2][46]);
-		add(c3, hardMap[0][47], hardMap[1][47], hardMap[2][47]);
-		add(c4, hardMap[0][48], hardMap[1][48], hardMap[2][48]);
-		add(c5, hardMap[0][49], hardMap[1][49], hardMap[2][49]);
-		add(c6, hardMap[0][50], hardMap[1][50], hardMap[2][50]);
-		add(c7, hardMap[0][51], hardMap[1][51], hardMap[2][51]);
-		add(c8, hardMap[0][52], hardMap[1][52], hardMap[2][52]);
+		add(c1, hardMap[0][0], hardMap[1][0], hardMap[2][0], 1);
+		add(c2, hardMap[0][1], hardMap[1][1], hardMap[2][1], 2);
+		add(c3, hardMap[0][2], hardMap[1][2], hardMap[2][2], 3);
+		add(c4, hardMap[0][3], hardMap[1][3], hardMap[2][3], 4);
+		add(c5, hardMap[0][4], hardMap[1][4], hardMap[2][4], 5);
+		add(c6, hardMap[0][5], hardMap[1][5], hardMap[2][5], 6);
+		add(c7, hardMap[0][6], hardMap[1][6], hardMap[2][6], 7);
+		add(c8, hardMap[0][7], hardMap[1][7], hardMap[2][7], 8);
+		add(c9, hardMap[0][8], hardMap[1][8], hardMap[2][8], 9);
+		add(c1, hardMap[0][9], hardMap[1][9], hardMap[2][9], 1);
+		add(c2, hardMap[0][10], hardMap[1][10], hardMap[2][10], 2);
+		add(c3, hardMap[0][11], hardMap[1][11], hardMap[2][11], 3);
+		add(c4, hardMap[0][12], hardMap[1][12], hardMap[2][12], 4);
+		add(c5, hardMap[0][13], hardMap[1][13], hardMap[2][13], 5);
+		add(c6, hardMap[0][14], hardMap[1][14], hardMap[2][14], 6);
+		add(c7, hardMap[0][15], hardMap[1][15], hardMap[2][15], 7);
+		add(c8, hardMap[0][16], hardMap[1][16], hardMap[2][16], 8);
+		add(c9, hardMap[0][17], hardMap[1][17], hardMap[2][17], 9);
+		add(c1, hardMap[0][18], hardMap[1][18], hardMap[2][18], 1);
+		add(c2, hardMap[0][19], hardMap[1][19], hardMap[2][19], 2);
+		add(c3, hardMap[0][20], hardMap[1][20], hardMap[2][20], 3);
+		add(c4, hardMap[0][21], hardMap[1][21], hardMap[2][21], 4);
+		add(c5, hardMap[0][22], hardMap[1][22], hardMap[2][22], 5);
+		add(c6, hardMap[0][23], hardMap[1][23], hardMap[2][23], 6);
+		add(c7, hardMap[0][24], hardMap[1][24], hardMap[2][24], 7);
+		add(c8, hardMap[0][25], hardMap[1][25], hardMap[2][25], 8);
+		add(c9, hardMap[0][26], hardMap[1][26], hardMap[2][26], 9);
+		add(c1, hardMap[0][27], hardMap[1][27], hardMap[2][27], 1);
+		add(c2, hardMap[0][28], hardMap[1][28], hardMap[2][28], 2);
+		add(c3, hardMap[0][29], hardMap[1][29], hardMap[2][29], 3);
+		add(c4, hardMap[0][30], hardMap[1][30], hardMap[2][30], 4);
+		add(c5, hardMap[0][31], hardMap[1][31], hardMap[2][31], 5);
+		add(c6, hardMap[0][32], hardMap[1][32], hardMap[2][32], 6);
+		add(c7, hardMap[0][33], hardMap[1][33], hardMap[2][33], 7);
+		add(c8, hardMap[0][34], hardMap[1][34], hardMap[2][34], 8);
+		add(c9, hardMap[0][35], hardMap[1][35], hardMap[2][35], 9);
+		add(c1, hardMap[0][36], hardMap[1][36], hardMap[2][36], 1);
+		add(c2, hardMap[0][37], hardMap[1][37], hardMap[2][37], 2);
+		add(c3, hardMap[0][38], hardMap[1][38], hardMap[2][38], 3);
+		add(c4, hardMap[0][39], hardMap[1][39], hardMap[2][39], 4);
+		add(c5, hardMap[0][40], hardMap[1][40], hardMap[2][40], 5);
+		add(c6, hardMap[0][41], hardMap[1][41], hardMap[2][41], 6);
+		add(c7, hardMap[0][42], hardMap[1][42], hardMap[2][42], 7);
+		add(c8, hardMap[0][43], hardMap[1][43], hardMap[2][43], 8);
+		add(c9, hardMap[0][44], hardMap[1][44], hardMap[2][44], 9);
+		add(c1, hardMap[0][45], hardMap[1][45], hardMap[2][45], 1);
+		add(c2, hardMap[0][46], hardMap[1][46], hardMap[2][46], 2);
+		add(c3, hardMap[0][47], hardMap[1][47], hardMap[2][47], 3);
+		add(c4, hardMap[0][48], hardMap[1][48], hardMap[2][48], 4);
+		add(c5, hardMap[0][49], hardMap[1][49], hardMap[2][49], 5);
+		add(c6, hardMap[0][50], hardMap[1][50], hardMap[2][50], 6);
+		add(c7, hardMap[0][51], hardMap[1][51], hardMap[2][51], 7);
+		add(c8, hardMap[0][52], hardMap[1][52], hardMap[2][52], 8);
 
 	}
 

@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Graphics graphics;
 	private static Clip menu;
 
-	JLabel label;
+	JLabel osuLabel, backLabel, titleLabel;
 
 	// check if circle or slider has appeared
 	private static boolean[] appearC = new boolean[10];
@@ -40,12 +40,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Reverse r1, r2, r3, r4, r5, r6, r7, r8, r9;
 
 	private JButton playButton, exitButton; // menu buttons
-	private JButton tutorial, easy, medium, hard, backButton, play;// level buttons
+	private JButton tutorial, easy, medium, hard, play;// level buttons
 
 	boolean playTutorial, playEasy, playMedium, playHard;
 
-	private boolean isTitleScreen = true;
-	private BufferedImage backgroundImage, logo;
+	private boolean isTitleScreen = true, endScreen = false;;
+	private BufferedImage backgroundImage, logo, back, title;
 	private BufferedImage Score300 = loadImage("Images/300red.jpg");
 	private BufferedImage Score100 = loadImage("Images/100red.jpg");
 
@@ -142,19 +142,27 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		playMenu();
 		this.setLayout(null);
 
-		label = new JLabel();
-		label.setBounds(GAME_WIDTH / 2 - 225, GAME_HEIGHT / 2 - 225, 450, 450);
-		this.add(label);
+		isTitleScreen = true;
+		titleLabel = new JLabel();
+		titleLabel.setBounds(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+		title = loadImage("Images/titleBackground.jpg");
+		titleLabel.setIcon(new ImageIcon(title));
+
+		osuLabel = new JLabel();
+		osuLabel.setBounds(GAME_WIDTH / 2 - 225, GAME_HEIGHT / 2 - 225, 450, 450);
+		this.add(osuLabel);
+		this.add(titleLabel);
 
 		logo = loadImage("Images/Logo.jpg");
 
-		label.setIcon(new ImageIcon(logo));
+		osuLabel.setIcon(new ImageIcon(logo));
 
-		label.addMouseListener(new MouseAdapter() {
+		osuLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				label.setBounds(GAME_WIDTH / 2 - 275, GAME_HEIGHT / 2 - 225, 450, 450);
-				playSound("Music/MARUClick.wav");
+				osuLabel.setBounds(GAME_WIDTH / 2 - 275, GAME_HEIGHT / 2 - 225, 450, 450);
+				playClicks("Music/MARUClick.wav");
 				showGameOptions();
 			}
 		});
@@ -167,7 +175,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		playButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
+				playClicks("Music/PlayClick.wav");
 				showLevels(); // calls startGame when pressed
 			}
 		});
@@ -181,7 +189,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				System.exit(0); // exits when pressed
 			}
 		});
-
+		play = new JButton("PLAY!");
+		play.setFont(new Font("Arial", Font.PLAIN, 24));
 		// add Tutorial button
 		tutorial = new JButton("Tutorial");
 		tutorial.setFont(new Font("Arial", Font.PLAIN, 24));
@@ -189,34 +198,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				play = new JButton("PLAY!");
-				play.setFont(new Font("Arial", Font.PLAIN, 24));
-				addPlayButton();
 				level = 0;
-				play.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						playSound("Music/PlayClick.wav");
-						isTitleScreen = false;
+				addPlayButton();
 
-						stopMenu();
-
-						if (level == 0) {
-							playTutorial = true;
-							tutorial();
-						} else if (level == 1) {
-							playEasy = true;
-							easy();
-						} else if (level == 2) {
-							playMedium = true;
-							medium();
-						} else if (level == 3) {
-							playHard = true;
-							hard();
-						}
-
-					}
-				});
 			}
 		});
 
@@ -227,33 +211,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				play = new JButton("PLAY!");
-				play.setFont(new Font("Arial", Font.PLAIN, 24));
-				addPlayButton();
 				level = 1;
-				play.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						playSound("Music/PlayClick.wav");
-						isTitleScreen = false;
-
-						stopMenu();
-						if (level == 0) {
-							playTutorial = true;
-							tutorial();
-						} else if (level == 1) {
-							playEasy = true;
-							easy();
-						} else if (level == 2) {
-							playMedium = true;
-							medium();
-						} else if (level == 3) {
-							playHard = true;
-							hard();
-						}
-
-					}
-				});
+				addPlayButton();
 
 			}
 		});
@@ -265,33 +224,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				play = new JButton("PLAY!");
-				play.setFont(new Font("Arial", Font.PLAIN, 24));
-				addPlayButton();
 				level = 2;
-				play.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						playSound("Music/PlayClick.wav");
-						isTitleScreen = false;
+				addPlayButton();
 
-						stopMenu();
-						if (level == 0) {
-							playTutorial = true;
-							tutorial();
-						} else if (level == 1) {
-							playEasy = true;
-							easy();
-						} else if (level == 2) {
-							playMedium = true;
-							medium();
-						} else if (level == 3) {
-							playHard = true;
-							hard();
-						}
-
-					}
-				});
 			}
 		});
 
@@ -302,45 +237,23 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				play = new JButton("PLAY!");
-				play.setFont(new Font("Arial", Font.PLAIN, 24));
-				addPlayButton();
 				level = 3;
-				play.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						playSound("Music/PlayClick.wav");
-						isTitleScreen = false;
+				addPlayButton();
 
-						stopMenu();
-						if (level == 0) {
-							playTutorial = true;
-							tutorial();
-						} else if (level == 1) {
-							playEasy = true;
-							easy();
-						} else if (level == 2) {
-							playMedium = true;
-							medium();
-						} else if (level == 3) {
-							playHard = true;
-							hard();
-						}
-
-					}
-				});
 			}
 		});
 
-		// add Back button
-		backButton = new JButton("BACK");
-		backButton.setFont(new Font("Arial", Font.PLAIN, 24));
-		backButton.addActionListener(new ActionListener() {
+		backLabel = new JLabel();
+		back = loadImage("Images/back.jpg");
+
+		backLabel.setIcon(new ImageIcon(back));
+
+		backLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				playSound("Music/PlayClick.wav");
-				showGameOptions(); // calls startGame when pressed
+			public void mouseClicked(MouseEvent e) {
+				backLabel.setBounds(50, GAME_HEIGHT - 100, 200, 50);
+				playClicks("Music/MARUClick.wav");
+				showGameOptions();
 			}
 		});
 
@@ -354,14 +267,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.removeAll();
 
 		// shifts the MARU! button and adds PLAY and EXIT buttons
-		label.setBounds(GAME_WIDTH / 4, GAME_HEIGHT / 2 - 225, 450, 450);
+		osuLabel.setBounds(GAME_WIDTH / 4, GAME_HEIGHT / 2 - 225, 450, 450);
 		playButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 - 50, 200, 50);
 		exitButton.setBounds(GAME_WIDTH / 2 + 100, GAME_HEIGHT / 2 + 40, 200, 50);
 
-		this.add(label);
+		this.add(osuLabel);
 		this.add(playButton);
 		this.add(exitButton);
-
+		this.add(titleLabel);
 		this.repaint();
 	}
 
@@ -373,13 +286,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		easy.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 + 50, 200, 50);
 		medium.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 - 50, 200, 50);
 		hard.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 + 50, 200, 50);
-		backButton.setBounds(50, GAME_HEIGHT - 100, 200, 50);
+		play.setBounds(GAME_WIDTH - 250, GAME_HEIGHT - 100, 200, 50);
+		play.setVisible(false);
+		backLabel.setBounds(50, GAME_HEIGHT - 340, 450, 450);
 
 		this.add(tutorial);
 		this.add(easy);
 		this.add(medium);
 		this.add(hard);
-		this.add(backButton);
+		this.add(play);
+		this.add(backLabel);
+		this.add(titleLabel);
 
 		totalMisses = 0;
 		clicked300 = 0;
@@ -390,14 +307,45 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	public void addPlayButton() {
-		play.setBounds(GAME_WIDTH - 250, GAME_HEIGHT - 100, 200, 50);
-		this.add(play);
+	    play.setVisible(true);
+	    
+	    // Remove any existing ActionListeners
+	    ActionListener[] listeners = play.getActionListeners();
+	    for (ActionListener listener : listeners) {
+	        play.removeActionListener(listener);
+	    }
+	    
+	    // Add the new ActionListener
+	    play.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            playClicks("Music/PlayClick.wav");
+	            isTitleScreen = false;
+
+	            stopMenu();
+	            if (level == 0) {
+	                playTutorial = true;
+	                tutorial();
+	            } else if (level == 1) {
+	                playEasy = true;
+	                easy();
+	            } else if (level == 2) {
+	                playMedium = true;
+	                medium();
+	            } else if (level == 3) {
+	                playHard = true;
+	                hard();
+	            }
+	        }
+	    });
 	}
+
 
 	// paints images off the screen and moves them onto the screen to prevent lag
 	public void paint(Graphics g) {
 		if (isTitleScreen) {
 			super.paint(g);
+
 		} else {
 			// We are using "double buffering here"
 			image = createImage(GAME_WIDTH, GAME_HEIGHT); // draw off screen
@@ -443,7 +391,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			Reverse.c = Color.magenta;
 			Slider.moveC = Color.yellow;
 			Reverse.moveC = Color.yellow;
+		} else if (endScreen) {
+			setBackgroundImage("Images/easy.jpg");
+			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 		}
+		if (isTitleScreen) {
+			setBackgroundImage("Images/titleBackground.jpg");
+			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
+		}
+
 		c1.draw(g);
 		c2.draw(g);
 		c3.draw(g);
@@ -2007,7 +1963,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 						if (s.moveRadius <= 130) {
 							s.goodClick = true;
-							playSound("Music/clickSound.wav");
+							playClicks("Music/clickSound.wav");
 						} else {
 							s.goodClick = false;
 						}
@@ -2049,7 +2005,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 							if (s.moveRadius <= 130) {
 								s.goodClick = true;
-								playSound("Music/clickSound.wav");
+								playClicks("Music/clickSound.wav");
 							} else {
 								s.goodClick = false;
 							}
@@ -2061,7 +2017,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 							if (s.moveRadius <= 130) {
 								s.goodClick = true;
-								playSound("Music/clickSound.wav");
+								playClicks("Music/clickSound.wav");
 							} else {
 								s.goodClick = false;
 							}
@@ -2162,7 +2118,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						if (r.moveRadius <= 130) {
 							r.goodClick = true;
 
-							playSound("Music/clickSound.wav");
+							playClicks("Music/clickSound.wav");
 						} else {
 							r.goodClick = false;
 						}
@@ -2203,7 +2159,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 							if (r.moveRadius <= 130) {
 								r.goodClick = true;
-								playSound("Music/clickSound.wav");
+								playClicks("Music/clickSound.wav");
 							} else {
 								r.goodClick = false;
 							}
@@ -2215,7 +2171,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 							if (r.moveRadius <= 130) {
 								r.goodClick = true;
-								playSound("Music/clickSound.wav");
+								playClicks("Music/clickSound.wav");
 							} else {
 								r.goodClick = false;
 							}
@@ -2307,11 +2263,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						clicked300++;
 						maxCombo = Math.max(combo, maxCombo);
 						repaint();
-						playSound("Music/clickSound.wav");
+						playClicks("Music/clickSound.wav");
 					} else if (c.moveRadius <= 130) {
 						combo++;
 						Score.score += 100 * combo;
-						playSound("Music/clickSound.wav");
+						playClicks("Music/clickSound.wav");
 						clicked100++;
 						maxCombo = Math.max(combo, maxCombo);
 						repaint();
@@ -2330,7 +2286,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		if (c.moveRadius == 80 && c.isClicked == false) {
 			combo = 0;
-			totalMisses++;
 		}
 
 		addKeyListener(new KeyAdapter() {
@@ -2355,11 +2310,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 							c.scoreState = 3;
 
 							repaint();
-							playSound("Music/clickSound.wav");
+							playClicks("Music/clickSound.wav");
 						} else if (c.moveRadius <= 130) {
 							combo++;
 							Score.score += 100 * combo;
-							playSound("Music/clickSound.wav");
+							playClicks("Music/clickSound.wav");
 							repaint();
 							c.scoreState = 1;
 						}
@@ -2578,6 +2533,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		long now;
 
 		while (true) {
+
 			now = System.nanoTime();
 			delta = delta + (now - lastTime) / ns;
 			lastTime = now;
@@ -2600,7 +2556,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(easy);
 		this.remove(medium);
 		this.remove(hard);
-		this.remove(backButton);
+		this.remove(backLabel);
 
 		// begin tutorial soundtrack
 		playSound("Music/tutorial.wav");
@@ -2652,7 +2608,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(easy);
 		this.remove(medium);
 		this.remove(hard);
-		this.remove(backButton);
+		this.remove(backLabel);
 
 		playSound("Music/easy.wav");
 
@@ -2733,7 +2689,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(easy);
 		this.remove(medium);
 		this.remove(hard);
-		this.remove(backButton);
+		this.remove(backLabel);
 
 		playSound("Music/medium.wav");
 
@@ -2780,7 +2736,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		this.remove(easy);
 		this.remove(medium);
 		this.remove(hard);
-		this.remove(backButton);
+		this.remove(backLabel);
 
 		playSound("Music/hard.wav");
 
@@ -2842,6 +2798,38 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// plays sound given a file name
 	private void playSound(String soundFile) {
+		File file;
+		AudioInputStream audioStream;
+		Clip clip;
+
+		try {
+			// open theme song file
+			file = new File(soundFile);
+
+			// Get audio input stream
+			audioStream = AudioSystem.getAudioInputStream(file);
+			// Open and play the theme song
+			clip = AudioSystem.getClip();
+			clip.open(audioStream);
+
+			clip.addLineListener(new LineListener() {
+				@Override
+				public void update(LineEvent event) {
+					if (event.getType() == LineEvent.Type.STOP) {
+						playHard = false;
+						endScreen = true;
+						clip.close();
+					}
+				}
+			});
+
+			clip.start(); // Start playing the sound
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void playClicks(String soundFile) {
 		File file;
 		AudioInputStream audioStream;
 		Clip clip;

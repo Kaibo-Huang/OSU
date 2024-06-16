@@ -1,14 +1,4 @@
-//Don Tran and Kaibo Huang
-//June 11, 2024
-//This class creates circle shapes called "notes", which will be the target area for the user to click them with the correct timing. 
-
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class Circle extends Rectangle {
 	private int radius = 100; // initial size of the circle
@@ -19,12 +9,13 @@ public class Circle extends Rectangle {
 	int x0, y0;
 	int id;
 	int scoreState = 0;
+	int num = 0;
 
 	public static Color c;
 
 	boolean isClicked = false;
 
-	// constructor creates circle at given location with given dimensions
+	// Constructor creates circle at given location with given dimensions
 	public Circle(int centerX, int centerY, int i) {
 		super(centerX - 100 / 2, centerY - 100 / 2, 100, 100);
 		x0 = centerX;
@@ -32,10 +23,9 @@ public class Circle extends Rectangle {
 		initialX = x0 - 100 / 2;
 		initialY = y0 - 100 / 2;
 		id = i;
-
 	}
 
-	// draws the current location of the circle to the screen
+	// Draws the current location of the circle to the screen
 	public void draw(Graphics g) {
 		g.setColor(c);
 		g.fillOval(initialX + 10, initialY + 10, radius - 20, radius - 20);
@@ -53,30 +43,39 @@ public class Circle extends Rectangle {
 		g2d.drawOval(x, y, moveRadius, moveRadius);
 		g2d.setStroke(oldStroke); // Restore the old stroke
 
+		// Draw the number inside the circle
+		g2d.setColor(Color.white);
+		Font originalFont = g2d.getFont();
+		Font largeFont = originalFont.deriveFont(48f); // Set a larger font size
+		g2d.setFont(largeFont);
+		FontMetrics fm = g2d.getFontMetrics();
+
+		g2d.drawString(Integer.toString(num), initialX + radius / 2 - fm.stringWidth(Integer.toString(num)) / 2,
+				initialY + radius / 2 + fm.getAscent() / 2 - fm.getDescent());
+		g2d.setFont(originalFont); // Restore the original font
+
+		g2d.setStroke(oldStroke); // Restore the old stroke
 	}
 
-	// method to set the radius and update the rectangle bounds
+	// Method to set the radius and update the rectangle bounds
 	public void setRadius(int r) {
 		moveRadius = r;
 	}
 
-	// method to get the radius
+	// Method to get the radius
 	public int getRadius() {
 		return moveRadius;
 	}
 
-	// method to update the position based on the center
+	// Method to update the position based on the center
 	public void setPosition(int centerX, int centerY) {
 		this.x = centerX;
 		this.y = centerY;
 	}
 
-	// method to check if the mouse click is within the circle
+	// Method to check if the mouse click is within the circle
 	public boolean isMouseClickedInside(int mouseX, int mouseY) {
-		int circleCenterX = x + radius / 2;
-		int circleCenterY = y + radius / 2;
-		double distance = Math.sqrt(Math.pow(mouseX - circleCenterX, 2) + Math.pow(mouseY - circleCenterY, 2));
-		return distance <= radius / 2;
+		return (double) Math
+				.sqrt(Math.pow(mouseX - (x + radius / 2), 2) + Math.pow(mouseY - (y + radius / 2), 2)) <= radius / 2;
 	}
-
 }

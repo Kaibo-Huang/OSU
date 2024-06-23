@@ -10,4 +10,4 @@ After each play, you will have the option to view your score for a couple of sec
 
 Have fun and enjoy!
 
-- Don Tran and Kaibo Huang
+- Kaibo Huang & Don Tran!

@@ -1,3 +1,6 @@
+// Don Tran and Kaibo Huang
+// June 17, 2024
+// This class draws the reverse slider.
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 

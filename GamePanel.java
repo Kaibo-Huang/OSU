@@ -1,5 +1,5 @@
 //Don Tran and Kaibo Huang
-//June 11, 2024
+//June 17, 2024
 //This class uses the run method to constantly loop through game elements such as notes, sliders, menu and buttons
 
 import java.awt.*;
@@ -10,8 +10,13 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.Timer;
 
@@ -27,35 +32,82 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private Graphics graphics;
 	private static Clip menu;
 
-	JLabel osuLabel, backLabel, titleLabel;
-
 	// check if circle or slider has appeared
 	private static boolean[] appearC = new boolean[10];
 	private static boolean[] appearS = new boolean[10];
 	private static boolean[] appearR = new boolean[10];
 
-	// declare 9 circle and slider objects
+	// Define leaderboard file names for each game mode
+	private static final String TUTORIAL_LEADERBOARD = "tutorial_leaderboard.txt";
+	private static final String EASY_LEADERBOARD = "easy_leaderboard.txt";
+	private static final String MEDIUM_LEADERBOARD = "medium_leaderboard.txt";
+	private static final String HARD_LEADERBOARD = "hard_leaderboard.txt";
+
+	// Data structures for each leaderboard
+	private static ArrayList<PlayerScore> tutorialLeaderboard = new ArrayList<>();
+	private static ArrayList<PlayerScore> easyLeaderboard = new ArrayList<>();
+	private static ArrayList<PlayerScore> mediumLeaderboard = new ArrayList<>();
+	private static ArrayList<PlayerScore> hardLeaderboard = new ArrayList<>();
+
+	// declare 9 circle, slider, and reverse objects
 	private Circle c1, c2, c3, c4, c5, c6, c7, c8, c9;
 	private Slider s1, s2, s3, s4, s5, s6, s7, s8, s9;
 	private Reverse r1, r2, r3, r4, r5, r6, r7, r8, r9;
 
-	private JButton playButton, exitButton; // menu buttons
-	private JButton tutorial, easy, medium, hard, play;// level buttons
+	// booleans to check the screen is ui is currently on
+	private boolean isTitleScreen, playTutorial, playEasy, playMedium, playHard, endScreen;
 
-	boolean playTutorial, playEasy, playMedium, playHard;
+	// JLabels for UI at the introduction of the game
+	private JLabel osuLabel, backLabel, titleLabel, playLabel, overLabel;
 
-	private boolean isTitleScreen = true, endScreen = false;;
-	private BufferedImage backgroundImage, logo, back, title;
-	private BufferedImage Score300 = loadImage("Images/300red.jpg");
-	private BufferedImage Score100 = loadImage("Images/100red.jpg");
+	// JLabel for storing leaderboard title
+	private JLabel lTitle;
 
+	// JLabel for storing leaderboard people
+	private JLabel person1, person2, person3, person4, person5;
+
+	// JLabel for storing leaderboard scores
+	private JLabel score1, score2, score3, score4, score5;
+
+	// BufferedImages for storing the images placed on the UI
+	private BufferedImage title, osu, back, play, backgroundImage, over;
+
+	// buttons for the UI
+	private JButton playButton, exitButton, tutorial, easy, medium, hard;
+
+	// buffered image of scoring 300
+	private BufferedImage score300 = loadImage("Images/300red.png");
+
+	// buffered image of scoring 100
+	private BufferedImage score100 = loadImage("Images/100red.png");
+
+	// store mouse location
 	private static int mX, mY;
+
+	// store difficulty level played
 	private byte level;
 
-	private int totalMisses = 0, clicked300 = 0, clicked100 = 0, maxCombo = 0;
-	private int totalTutorial = 300 * 32, totalEasy = 300 * 65, totalMedium = 300 * 31, totalHard = 300 * 53;
+	// store x-position for leaderboard
+	private int pos;
 
-	// map elements (x position, y position, time of placement)
+	// track stats of the game
+	static int totalMisses = 0, clicked300 = 0, clicked100 = 0, maxCombo = 0;
+
+	// track total buttons displayed on the scrren in the moment
+	static int totalButtons = 0;
+
+	// text field for userName input
+	private JTextField textField;
+
+	// button to submit username
+	private JButton submitButton;
+	// button to give status on submission
+	private JLabel statusLabel;
+
+	// button to track submittedText
+	private String submittedText;
+
+	// map elements (x position, y position, time of placement) of tutorialMap
 	private int[][] tutorialMap = {
 			{ 640, 238, 1039, 999, 1039, 238, 511, 637, 650, 919, 1200, 644, 363, 85, 834, 438, 847, 679, 90, 158, 235,
 					341, 651, 879, 529, 120, 529, 962, 1142, 654, 100, 554, 150, 150 },
@@ -64,7 +116,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			{ 3491, 20106, 21952, 22875, 23798, 25645, 27029, 27491, 29337, 30260, 31183, 33029, 33952, 34875, 57029,
 					60722, 62568, 86568, 89337, 89799, 90260, 92106, 93491, 93953, 96722, 97645, 100414, 101337, 104106,
 					105029, 107799, 108722, 112270, 112995 } };
-
+	// map elements (x position, y position, time of placement) of easyMap
 	private int[][] easyMap = {
 			{ 273, 471, 1202, 641, 80, 491, 1222, 992, 411, 1192, 165, 601, 1002, 210, 431, 611, 1152, 1022, 701, 521,
 					160, 601, 1102, 341, 263, 528, 912, 491, 932, 200, 141, 340, 1222, 471, 100, 852, 1092, 521, 130,
@@ -79,7 +131,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					45677, 47026, 48374, 49722, 51071, 52419, 53767, 54778, 55790, 56801, 57812, 59160, 60509, 63205,
 					65902, 67250, 68599, 70284, 70958, 72306, 73992, 75677, 76688, 79385, 82082, 83430, 84778, 88823,
 					90172, 91520, 92868, 94217, 95565, 96913, 98262 } };
-
+	// map elements (x position, y position, time of placement) of mediumMap
 	private int[][] mediumMap = {
 			{ 177, 596, 934, 1154, 1175, 779, 777, 531, 288, 718, 919, 804, 596, 779, 962, 779, 944, 741, 551, 724, 313,
 					478, 253, 113, 293, 524, 644, 867, 1172, 867, 723 },
@@ -88,6 +140,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			{ 433, 1393, 2353, 3313, 4273, 5233, 6193, 8113, 9073, 10033, 10513, 11473, 11953, 13393, 13873, 15313,
 					15793, 16753, 17713, 19153, 20593, 21553, 22513, 23953, 24433, 25393, 26353, 27793, 28273, 29233,
 					30193 } };
+	// map elements (x position, y position, time of placement) of hardMap
 	private int[][] hardMap = {
 			{ 160, 378, 521, 939, 237, 1100, 193, 1060, 746, 559, 491, 849, 180, 1177, 135, 1082, 862, 288, 76, 548,
 					1145, 343, 754, 303, 1072, 105, 381, 577, 223, 391, 766, 90, 378, 518, 1090, 470, 902, 688, 711,
@@ -100,14 +153,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					19834, 20414, 20775, 21167, 21528, 21911, 22272, 22684, 23045, 23407, 23771, 24134, 24541, 25086,
 					25495, 25850, 26441, 26981, 27344, 27753, 28491, 28673, 29131 } };
 
-	private int combo = 0;
+	// tracks combo
+	static int combo = 0;
 
 	// constructor to initialize variables and add initial JButtons
 	public GamePanel() {
 		this.setFocusable(true); // make everything in this class appear on the screen
 		this.addKeyListener(this); // start listening for keyboard input
 
-		// initialize circle and slider objects
+		// initialize circle
 		c1 = new Circle(2000, 2000, 1);
 		c2 = new Circle(2000, 2000, 2);
 		c3 = new Circle(2000, 2000, 3);
@@ -118,6 +172,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		c8 = new Circle(2000, 2000, 8);
 		c9 = new Circle(2000, 2000, 9);
 
+		// initialize sliders
 		s1 = new Slider(2000, 2000, 300, 1, 100);
 		s2 = new Slider(2000, 2000, 300, 2, 100);
 		s3 = new Slider(2000, 2000, 300, 3, 100);
@@ -128,6 +183,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		s8 = new Slider(2000, 2000, 300, 8, 100);
 		s9 = new Slider(2000, 2000, 300, 9, 100);
 
+		// initialize reverse
 		r1 = new Reverse(2000, 2000, 300, 1, 100);
 		r2 = new Reverse(2000, 2000, 300, 2, 100);
 		r3 = new Reverse(2000, 2000, 300, 3, 100);
@@ -138,38 +194,82 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		r8 = new Reverse(2000, 2000, 300, 8, 100);
 		r9 = new Reverse(2000, 2000, 300, 9, 100);
 
+		// set the preferred size
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+
+		// play Menu music
 		playMenu();
+
+		// remove layouts
 		this.setLayout(null);
 
+		// load the leaderboards onto the arraylists
+		loadLeaderboards();
+		// open title screen
 		isTitleScreen = true;
+
+		// add title background
 		titleLabel = new JLabel();
 		titleLabel.setBounds(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-		title = loadImage("Images/titleBackground.jpg");
+		title = loadImage("Images/titleBackground.png");
 		titleLabel.setIcon(new ImageIcon(title));
 
+		// add osu logo
 		osuLabel = new JLabel();
 		osuLabel.setBounds(GAME_WIDTH / 2 - 225, GAME_HEIGHT / 2 - 225, 450, 450);
+		osu = loadImage("Images/Logo.png");
+		osuLabel.setIcon(new ImageIcon(osu));
 		this.add(osuLabel);
 		this.add(titleLabel);
 
-		logo = loadImage("Images/Logo.jpg");
-
-		osuLabel.setIcon(new ImageIcon(logo));
-
+		// call showGameOptions if osu logo clicked
 		osuLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// move osuLabel if isClicked
 				osuLabel.setBounds(GAME_WIDTH / 2 - 275, GAME_HEIGHT / 2 - 225, 450, 450);
 				playClicks("Music/MARUClick.wav");
 				showGameOptions();
 			}
 		});
 
-		this.setVisible(true);
+		// Create a new JLabel instance for the leaderboard title.
+		lTitle = new JLabel();
+		lTitle.setFont(new Font("Arial", Font.BOLD, 30));
 
-		// add PLAY button
+		// Create a new JLabel instance for the people
+		person1 = new JLabel();
+		person1.setFont(new Font("Arial", Font.BOLD, 20));
+
+		person2 = new JLabel();
+		person2.setFont(new Font("Arial", Font.BOLD, 20));
+
+		person3 = new JLabel();
+		person3.setFont(new Font("Arial", Font.BOLD, 20));
+
+		person4 = new JLabel();
+		person4.setFont(new Font("Arial", Font.BOLD, 20));
+
+		person5 = new JLabel();
+		person5.setFont(new Font("Arial", Font.BOLD, 20));
+
+		// Create a new JLabel instance for the score
+		score1 = new JLabel();
+		score1.setFont(new Font("Arial", Font.BOLD, 20));
+
+		score2 = new JLabel();
+		score2.setFont(new Font("Arial", Font.BOLD, 20));
+
+		score3 = new JLabel();
+		score3.setFont(new Font("Arial", Font.BOLD, 20));
+
+		score4 = new JLabel();
+		score4.setFont(new Font("Arial", Font.BOLD, 20));
+
+		score5 = new JLabel();
+		score5.setFont(new Font("Arial", Font.BOLD, 20));
+
+		// add PLAY button, call showLevels when pressed
 		playButton = new JButton("PLAY");
 		playButton.setFont(new Font("Arial", Font.PLAIN, 24));
 		playButton.setBorderPainted(false);
@@ -177,8 +277,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		playButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// if button is clicked, playSound and show levels
 				playClicks("Music/PlayClick.wav");
-				showLevels(); // calls startGame when pressed
+				showLevels();
 			}
 		});
 
@@ -188,18 +289,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		exitButton.setFocusPainted(false);
 		exitButton.setBorderPainted(false);
 
-
 		exitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0); // exits when pressed
 			}
 		});
-		play = new JButton("PLAY!");
-		play.setFont(new Font("Arial", Font.PLAIN, 24));
-		play.setFocusPainted(false);
-		play.setBorderPainted(false);
-		play.setContentAreaFilled(false);
+
 		// add Tutorial button
 		tutorial = new JButton("Tutorial");
 		tutorial.setFont(new Font("Arial", Font.PLAIN, 24));
@@ -210,9 +306,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
+				// set level variable
 				level = 0;
-				addPlayButton();
 
+				// display Tutorial Leaderboard
+				lTitle.setText("Tutorial Leaderboard");
+				person1.setText(tutorialLeaderboard.get(0).playerName);
+				person2.setText(tutorialLeaderboard.get(1).playerName);
+				person3.setText(tutorialLeaderboard.get(2).playerName);
+				person4.setText(tutorialLeaderboard.get(3).playerName);
+				person5.setText(tutorialLeaderboard.get(4).playerName);
+
+				score1.setText(Integer.toString(tutorialLeaderboard.get(0).score));
+				score2.setText(Integer.toString(tutorialLeaderboard.get(1).score));
+				score3.setText(Integer.toString(tutorialLeaderboard.get(2).score));
+				score4.setText(Integer.toString(tutorialLeaderboard.get(3).score));
+				score5.setText(Integer.toString(tutorialLeaderboard.get(4).score));
+
+				// add the play button
+				addPlayButton();
 			}
 		});
 
@@ -225,10 +337,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		easy.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				// set level variable
 				level = 1;
-				addPlayButton();
 
+				// display easy Leaderboard
+				lTitle.setText("Easy Leaderboard");
+				person1.setText(easyLeaderboard.get(0).playerName);
+				person2.setText(easyLeaderboard.get(1).playerName);
+				person3.setText(easyLeaderboard.get(2).playerName);
+				person4.setText(easyLeaderboard.get(3).playerName);
+				person5.setText(easyLeaderboard.get(4).playerName);
+
+				score1.setText(Integer.toString(easyLeaderboard.get(0).score));
+				score2.setText(Integer.toString(easyLeaderboard.get(1).score));
+				score3.setText(Integer.toString(easyLeaderboard.get(2).score));
+				score4.setText(Integer.toString(easyLeaderboard.get(3).score));
+				score5.setText(Integer.toString(easyLeaderboard.get(4).score));
+
+				// add play button
+				addPlayButton();
 			}
 		});
 
@@ -241,10 +368,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		medium.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				// set level variable
 				level = 2;
-				addPlayButton();
+				// display medium Leaderboard
+				lTitle.setText("Medium Leaderboard");
+				person1.setText(mediumLeaderboard.get(0).playerName);
+				person2.setText(mediumLeaderboard.get(1).playerName);
+				person3.setText(mediumLeaderboard.get(2).playerName);
+				person4.setText(mediumLeaderboard.get(3).playerName);
+				person5.setText(mediumLeaderboard.get(4).playerName);
 
+				score1.setText(Integer.toString(mediumLeaderboard.get(0).score));
+				score2.setText(Integer.toString(mediumLeaderboard.get(1).score));
+				score3.setText(Integer.toString(mediumLeaderboard.get(2).score));
+				score4.setText(Integer.toString(mediumLeaderboard.get(3).score));
+				score5.setText(Integer.toString(mediumLeaderboard.get(4).score));
+
+				// add play button
+				addPlayButton();
 			}
 		});
 
@@ -257,26 +398,44 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// set level variable
 				level = 3;
-				addPlayButton();
+				// display hard Leaderboard
+				lTitle.setText("Hard Leaderboard");
+				person1.setText(hardLeaderboard.get(0).playerName);
+				person2.setText(hardLeaderboard.get(1).playerName);
+				person3.setText(hardLeaderboard.get(2).playerName);
+				person4.setText(hardLeaderboard.get(3).playerName);
+				person5.setText(hardLeaderboard.get(4).playerName);
 
+				score1.setText(Integer.toString(hardLeaderboard.get(0).score));
+				score2.setText(Integer.toString(hardLeaderboard.get(1).score));
+				score3.setText(Integer.toString(hardLeaderboard.get(2).score));
+				score4.setText(Integer.toString(hardLeaderboard.get(3).score));
+				score5.setText(Integer.toString(hardLeaderboard.get(4).score));
+				// add play button
+				addPlayButton();
 			}
 		});
 
+		// add back button
 		backLabel = new JLabel();
-		back = loadImage("Images/back.jpg");
-
+		back = loadImage("Images/back.png");
 		backLabel.setIcon(new ImageIcon(back));
-
 		backLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				backLabel.setBounds(50, GAME_HEIGHT - 100, 200, 50);
+				// go back to game options if clicked
 				playClicks("Music/MARUClick.wav");
 				showGameOptions();
 			}
 		});
 
+		// initialize JLabels
+		playLabel = new JLabel();
+		overLabel = new JLabel();
+
+		this.setVisible(true);
 		// Start game thread
 		gameThread = new Thread(this);
 		gameThread.start();
@@ -302,64 +461,250 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public void showLevels() {
 		this.removeAll();
 
+		// set bounds for buttons
 		tutorial.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 - 50, 200, 50);
 		easy.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 + 50, 200, 50);
 		medium.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 - 50, 200, 50);
 		hard.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 2 + 50, 200, 50);
-		play.setBounds(GAME_WIDTH - 250, GAME_HEIGHT - 100, 200, 50);
-		play.setVisible(false);
+		playLabel.setBounds(GAME_WIDTH - 225, GAME_HEIGHT - 225, 175, 175);
 		backLabel.setBounds(50, GAME_HEIGHT - 340, 450, 450);
+		overLabel.setBounds(GAME_WIDTH - 500, GAME_HEIGHT - 500, 125, 125);
 
+		if (level == 0) {
+			pos = 430;
+		} else if (level == 1) {
+			pos = 415;
+		} else if (level == 2) {
+			pos = 430;
+		} else if (level == 3) {
+			pos = 415;
+		}
+
+		// set bounds for leaderboard title
+		lTitle.setBounds(150, 50, 500, 70);
+
+		// set bounds for leaderboard person
+		person1.setBounds(100, 110, 500, 70);
+		person2.setBounds(100, 160, 500, 70);
+		person3.setBounds(100, 210, 500, 70);
+		person4.setBounds(100, 260, 500, 70);
+		person5.setBounds(100, 310, 500, 70);
+
+		// set bounds for leaderboard score
+		score1.setBounds(pos, 110, 500, 70);
+		score2.setBounds(pos, 160, 500, 70);
+		score3.setBounds(pos, 210, 500, 70);
+		score4.setBounds(pos, 260, 500, 70);
+		score5.setBounds(pos, 310, 500, 70);
+
+		// add all lables, background images, and buttons
+		this.add(lTitle);
+		this.add(person1);
+		this.add(person2);
+		this.add(person3);
+		this.add(person4);
+		this.add(person5);
+		this.add(score1);
+		this.add(score2);
+		this.add(score3);
+		this.add(score4);
+		this.add(score5);
 		this.add(tutorial);
 		this.add(easy);
 		this.add(medium);
 		this.add(hard);
-		this.add(play);
+		this.add(playLabel);
 		this.add(backLabel);
 		this.add(titleLabel);
-
-		totalMisses = 0;
-		clicked300 = 0;
-		clicked100 = 0;
-		maxCombo = 0;
+		this.add(overLabel);
 
 		this.repaint();
 	}
 
 	public void addPlayButton() {
-	    play.setVisible(true);
-	    
-	    // Remove any existing ActionListeners
-	    ActionListener[] listeners = play.getActionListeners();
-	    for (ActionListener listener : listeners) {
-	        play.removeActionListener(listener);
-	    }
-	    
-	    // Add the new ActionListener
-	    play.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            playClicks("Music/PlayClick.wav");
-	            isTitleScreen = false;
+		// Remove all existing MouseListeners from playLabel
+		for (MouseListener listener : playLabel.getMouseListeners()) {
+			playLabel.removeMouseListener(listener);
+		}
 
-	            stopMenu();
-	            if (level == 0) {
-	                playTutorial = true;
-	                tutorial();
-	            } else if (level == 1) {
-	                playEasy = true;
-	                easy();
-	            } else if (level == 2) {
-	                playMedium = true;
-	                medium();
-	            } else if (level == 3) {
-	                playHard = true;
-	                hard();
-	            }
-	        }
-	    });
+		// Add a new MouseAdapter to handle mouseClicked event
+		playLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// This method is currently empty, no action specified yet
+			}
+		});
+
+		// Load the image "play.png" and assign it to play variable
+		play = loadImage("Images/play.png");
+		// Set the loaded image as an icon for playLabel
+		playLabel.setIcon(new ImageIcon(play));
+		// Set bounds for playLabel within the game window
+		playLabel.setBounds(GAME_WIDTH - 225, GAME_HEIGHT - 225, 175, 175);
+
+		// Add another MouseAdapter to handle mouseClicked event with specific actions
+		playLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// Play a click sound effect
+				playClicks("Music/PlayClick.wav");
+				// Update isTitleScreen to false
+				isTitleScreen = false;
+				// Stop the menu (assumed method stopMenu() stops the menu-related
+				// functionality)
+				stopMenu();
+
+				// Depending on the value of 'level', perform different actions
+				if (level == 0) {
+					// Set playTutorial to true and reset various game statistics
+					playTutorial = true;
+					totalMisses = 0;
+					clicked300 = 0;
+					clicked100 = 0;
+					maxCombo = 0;
+					totalButtons = 0;
+					Score.score = 0;
+					// Call tutorial() method to start the tutorial gameplay
+					tutorial();
+				} else if (level == 1) {
+					// Set playEasy to true and reset various game statistics
+					playEasy = true;
+					totalMisses = 0;
+					clicked300 = 0;
+					clicked100 = 0;
+					maxCombo = 0;
+					totalButtons = 0;
+					Score.score = 0;
+					// Call easy() method to start the easy difficulty gameplay
+					easy();
+				} else if (level == 2) {
+					// Set playMedium to true and reset various game statistics
+					playMedium = true;
+					totalMisses = 0;
+					clicked300 = 0;
+					clicked100 = 0;
+					maxCombo = 0;
+					totalButtons = 0;
+					Score.score = 0;
+					// Call medium() method to start the medium difficulty gameplay
+					medium();
+				} else if (level == 3) {
+					// Set playHard to true and reset various game statistics
+					playHard = true;
+					totalMisses = 0;
+					clicked300 = 0;
+					clicked100 = 0;
+					maxCombo = 0;
+					totalButtons = 0;
+					Score.score = 0;
+					// Call hard() method to start the hard difficulty gameplay
+					hard();
+				}
+			}
+		});
 	}
 
+	public void endScreen() {
+		// Create a new Timer instance
+		Timer timer = new Timer();
+
+		// Define a TimerTask to set isTitleScreen to false after a delay
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				isTitleScreen = false;
+			}
+		};
+
+		// Schedule the task to run repeatedly every 4000 milliseconds (4 seconds)
+		timer.scheduleAtFixedRate(task, 0, 4000);
+
+		// Schedule another TimerTask to cancel the timer and set isTitleScreen to true
+		// after 4000 milliseconds (4 seconds)
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				timer.cancel(); // Cancel the timer to stop further executions
+				isTitleScreen = true;
+			}
+		}, 4000);
+
+		// Create UI components: textField, submitButton, statusLabel
+		textField = new JTextField(20);
+		submitButton = new JButton("Submit");
+		statusLabel = new JLabel("Enter username and click Submit");
+		submittedText = null; // Initialize submittedText as null
+
+		// Set bounds for textField, statusLabel, and submitButton
+		textField.setBounds(GAME_WIDTH / 2 - 150, GAME_HEIGHT / 2 - 20, 300, 40);
+		statusLabel.setBounds(GAME_WIDTH / 2 - 150, GAME_HEIGHT / 2 - 50, 400, 40);
+		submitButton.setBounds(GAME_WIDTH / 2 - 50, GAME_HEIGHT / 2 + 40, 100, 40);
+
+		// Customize submitButton appearance
+		submitButton.setBorderPainted(false);
+		submitButton.setFocusPainted(false);
+
+		// Create usernameLabel and set its properties
+		JLabel usernameLabel = new JLabel();
+		usernameLabel.setBounds(0, 0, GAME_WIDTH, GAME_HEIGHT);
+		usernameLabel.setIcon(new ImageIcon(loadImage("Images/username.jpg")));
+		usernameLabel.setForeground(Color.white); // Set text color to white
+		statusLabel.setForeground(Color.WHITE); // Set text color to white
+
+		// ActionListener for submitButton to handle username submission
+		submitButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (submittedText == null) {
+					String username = textField.getText().trim();
+					if (!username.isEmpty()) {
+						submittedText = username;
+						statusLabel.setText("Username '" + submittedText + "' submitted successfully.");
+
+						// Update leaderboard based on 'level'
+						if (level == 0) {
+							updateLeaderboard("tutorial", submittedText, Score.score);
+						} else if (level == 1) {
+							updateLeaderboard("easy", submittedText, Score.score);
+						} else if (level == 2) {
+							updateLeaderboard("medium", submittedText, Score.score);
+						} else if (level == 3) {
+							updateLeaderboard("hard", submittedText, Score.score);
+						}
+
+						saveLeaderboards(); // Save leaderboard after updating
+					} else {
+						statusLabel.setText("Please enter a username.");
+					}
+				} else {
+					statusLabel.setText("You have already submitted. No more submissions allowed.");
+				}
+			}
+		});
+
+		// Load and set image for 'overLabel'
+		over = loadImage("Images/back.png");
+		overLabel.setIcon(new ImageIcon(over));
+		overLabel.setBounds(GAME_WIDTH - 175, GAME_HEIGHT - 175, 125, 125);
+
+		// Add a mouseClicked listener to 'overLabel' to handle transition to levels
+		// screen
+		this.overLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				playClicks("Music/MARUClick.wav"); // Play click sound effect
+				endScreen = false; // Set endScreen to false
+				showLevels(); // Transition to levels screen
+			}
+		});
+
+		// Add components to the current panel
+		this.add(overLabel);
+		this.add(textField);
+		this.add(submitButton);
+		this.add(statusLabel);
+		this.add(usernameLabel);
+	}
 
 	// paints images off the screen and moves them onto the screen to prevent lag
 	public void paint(Graphics g) {
@@ -378,7 +723,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// draws each of the individual circles, sliders and spinners as well as the
 	// score
 	public void draw(Graphics g) {
-
+		// Check if playTutorial is true
 		if (playTutorial) {
 			setBackgroundImage("Images/tutorial.jpg");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
@@ -388,7 +733,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			Slider.moveC = Color.yellow;
 			Reverse.moveC = Color.yellow;
 		} else if (playEasy) {
-			setBackgroundImage("Images/easy.jpg");
+			// Check if playEasy is true
+			setBackgroundImage("Images/easy.png");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 			Circle.c = Color.pink;
 			Slider.c = Color.pink;
@@ -396,7 +742,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			Slider.moveC = Color.yellow;
 			Reverse.moveC = Color.yellow;
 		} else if (playMedium) {
-			setBackgroundImage("Images/medium.jpg");
+			// Check if playMedium is true
+			setBackgroundImage("Images/medium.png");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 			Circle.c = Color.blue;
 			Slider.c = Color.blue;
@@ -404,7 +751,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			Slider.moveC = Color.yellow;
 			Reverse.moveC = Color.yellow;
 		} else if (playHard) {
-			setBackgroundImage("Images/hard.jpg");
+			// Check if playHard is true
+			setBackgroundImage("Images/hard.png");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 			Circle.c = Color.magenta;
 			Slider.c = Color.magenta;
@@ -412,14 +760,29 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			Slider.moveC = Color.yellow;
 			Reverse.moveC = Color.yellow;
 		} else if (endScreen) {
-			setBackgroundImage("Images/easy.jpg");
+			// Check if endScreen is true
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
-		}
-		if (isTitleScreen) {
-			setBackgroundImage("Images/titleBackground.jpg");
+			setBackgroundImage("Images/end.png");
+			g.setColor(Color.white);
+			g.setFont(new Font("Arial", Font.BOLD, 70));
+
+			// Draw score and other statistics on the end screen
+			g.drawString(Long.toString(Score.score), 320, 90);
+			g.drawString(Integer.toString(clicked300), 200, 250);
+			g.drawString(Integer.toString(clicked100), 200, 400);
+			g.drawString(Integer.toString(totalMisses), 200, 550);
+			g.setFont(new Font("Arial", Font.BOLD, 55));
+			g.drawString(Score.p.format((clicked300 * 300 + clicked100 * 100) * 100.0 / (totalButtons)) + "%", 35, 715);
+			g.drawString(Integer.toString(maxCombo) + "X", 350, 715);
+
+			g.setFont(new Font("Arial", Font.BOLD, 20));
+		} else if (isTitleScreen) {
+			// Check if isTitleScreen is true
+			setBackgroundImage("Images/titleBackground.png");
 			g.drawImage(backgroundImage, 0, 0, GamePanel.GAME_WIDTH, GamePanel.GAME_HEIGHT, null);
 		}
 
+		// Draw all circles (c1 to c9), sliders (s1 to s9), and reverses (r1 to r9)
 		c1.draw(g);
 		c2.draw(g);
 		c3.draw(g);
@@ -450,11 +813,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		r8.draw(g);
 		r9.draw(g);
 
-		Score.draw(g);
-		g.setColor(Color.white);
-		g.setFont(new Font("Arial", Font.BOLD, 20));
+		// If any gameplay mode is active (playTutorial, playEasy, playMedium,
+		// playHard), draw the score
+		if (playTutorial || playEasy || playMedium || playHard) {
+			Score.draw(g);
+		}
 
-		g.drawString(combo + "X", 20, GamePanel.GAME_HEIGHT - 30);
+		g.setColor(Color.white);
+
+		// if circle 1 is one screen
 		if (appearC[1]) {
 			if (c1.scoreState == 3) {
 				Timer timer = new Timer();
@@ -462,7 +829,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c1.initialX, c1.initialY, 200, 200, null);
+						g.drawImage(score300, c1.initialX, c1.initialY, 200, 200, null);
 					}
 				};
 
@@ -483,9 +850,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				Timer timer = new Timer();
 
 				TimerTask task = new TimerTask() {
+
 					@Override
 					public void run() {
-						g.drawImage(Score100, c1.initialX, c1.initialY, 200, 200, null);
+						g.drawImage(score100, c1.initialX, c1.initialY, 200, 200, null);
 					}
 				};
 
@@ -503,14 +871,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}, 200);
 			}
 		}
+		// if circle 2 is one screen
 		if (appearC[2]) {
 			if (c2.scoreState == 3) {
+
 				Timer timer = new Timer();
 
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c2.initialX, c2.initialY, 200, 200, null);
+						g.drawImage(score300, c2.initialX, c2.initialY, 200, 200, null);
 					}
 				};
 
@@ -522,7 +892,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c2.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
@@ -533,7 +904,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score100, c2.initialX, c2.initialY, 200, 200, null);
+						g.drawImage(score100, c2.initialX, c2.initialY, 200, 200, null);
 					}
 				};
 
@@ -545,12 +916,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c2.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
 			}
 		}
+		// if circle 3 is one screen
 		if (appearC[3]) {
 			if (c3.scoreState == 3) {
 				Timer timer = new Timer();
@@ -558,7 +931,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c3.initialX, c3.initialY, 200, 200, null);
+						g.drawImage(score300, c3.initialX, c3.initialY, 200, 200, null);
 					}
 				};
 
@@ -570,7 +943,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c3.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
@@ -581,7 +955,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score100, c3.initialX, c3.initialY, 200, 200, null);
+						g.drawImage(score100, c3.initialX, c3.initialY, 200, 200, null);
 					}
 				};
 
@@ -593,13 +967,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c3.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
 			}
 		}
-
+		// if circle 4 is one screen
 		if (appearC[4]) {
 
 			if (c4.scoreState == 3) {
@@ -608,7 +983,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c4.initialX, c4.initialY, 200, 200, null);
+						g.drawImage(score300, c4.initialX, c4.initialY, 200, 200, null);
 					}
 				};
 
@@ -620,7 +995,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c4.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
@@ -631,7 +1007,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score100, c4.initialX, c4.initialY, 200, 200, null);
+						g.drawImage(score100, c4.initialX, c4.initialY, 200, 200, null);
 					}
 				};
 
@@ -643,12 +1019,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c4.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
 			}
 		}
+		// if circle 5 is one screen
 		if (appearC[5]) {
 			if (c5.scoreState == 3) {
 				Timer timer = new Timer();
@@ -656,7 +1034,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c5.initialX, c5.initialY, 200, 200, null);
+						g.drawImage(score300, c5.initialX, c5.initialY, 200, 200, null);
 					}
 				};
 
@@ -668,7 +1046,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c5.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
@@ -679,7 +1058,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score100, c5.initialX, c5.initialY, 200, 200, null);
+						g.drawImage(score100, c5.initialX, c5.initialY, 200, 200, null);
 					}
 				};
 
@@ -691,12 +1070,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c5.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
 			}
 		}
+		// if circle 6 is one screen
 		if (appearC[6]) {
 			if (c6.scoreState == 3) {
 				Timer timer = new Timer();
@@ -704,7 +1085,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c6.initialX, c6.initialY, 200, 200, null);
+						g.drawImage(score300, c6.initialX, c6.initialY, 200, 200, null);
 					}
 				};
 
@@ -716,7 +1097,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c6.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
@@ -727,7 +1109,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score100, c6.initialX, c6.initialY, 200, 200, null);
+						g.drawImage(score100, c6.initialX, c6.initialY, 200, 200, null);
 					}
 				};
 
@@ -739,12 +1121,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c6.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
 			}
 		}
+		// if circle 7 is one screen
 		if (appearC[7]) {
 			if (c7.scoreState == 3) {
 				Timer timer = new Timer();
@@ -752,7 +1136,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c7.initialX, c7.initialY, 200, 200, null);
+						g.drawImage(score300, c7.initialX, c7.initialY, 200, 200, null);
 					}
 				};
 
@@ -764,7 +1148,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c7.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
@@ -775,7 +1160,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score100, c7.initialX, c7.initialY, 200, 200, null);
+						g.drawImage(score100, c7.initialX, c7.initialY, 200, 200, null);
 					}
 				};
 
@@ -787,12 +1172,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c7.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
 			}
 		}
+		// if circle 8 is one screen
 		if (appearC[8]) {
 
 			if (c8.scoreState == 3) {
@@ -801,7 +1188,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c8.initialX, c8.initialY, 200, 200, null);
+						g.drawImage(score300, c8.initialX, c8.initialY, 200, 200, null);
 					}
 				};
 
@@ -813,7 +1200,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c8.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
@@ -824,7 +1212,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score100, c8.initialX, c8.initialY, 200, 200, null);
+						g.drawImage(score100, c8.initialX, c8.initialY, 200, 200, null);
 					}
 				};
 
@@ -836,12 +1224,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c8.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
 			}
 		}
+
+		// if circle 9 is one screen
 		if (appearC[9]) {
 			if (c9.scoreState == 3) {
 				Timer timer = new Timer();
@@ -849,7 +1240,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score300, c9.initialX, c9.initialY, 200, 200, null);
+						g.drawImage(score300, c9.initialX, c9.initialY, 200, 200, null);
 					}
 				};
 
@@ -861,7 +1252,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c9.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
@@ -872,7 +1264,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				TimerTask task = new TimerTask() {
 					@Override
 					public void run() {
-						g.drawImage(Score100, c9.initialX, c9.initialY, 200, 200, null);
+						g.drawImage(score100, c9.initialX, c9.initialY, 200, 200, null);
 					}
 				};
 
@@ -884,13 +1276,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						timer.cancel(); // Cancel the timer to stop further executions
+						timer.cancel(); // Cancel the timer to stop further
+										// executions
 						c9.scoreState = 0; // Reset scoreState after starting the timer
 					}
 				}, 200);
 			}
 		}
-
+		// if slider score 300 points
 		if (s1.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -899,7 +1292,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s1.scoreX - 100, s1.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s1.scoreX - 100, s1.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -911,18 +1304,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s1.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s1.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s1.scoreX - 100, s1.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s1.scoreX - 100, s1.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -934,12 +1328,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s1.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if slider score 300 points
 		if (s2.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -948,7 +1343,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s2.scoreX - 100, s2.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s2.scoreX - 100, s2.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -960,18 +1355,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s2.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s2.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s2.scoreX - 100, s2.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s2.scoreX - 100, s2.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -983,12 +1379,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s2.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if slider score 300 points
 		if (s3.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -997,7 +1394,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s3.scoreX - 100, s3.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s3.scoreX - 100, s3.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1009,18 +1406,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s3.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s3.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s3.scoreX - 100, s3.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s3.scoreX - 100, s3.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1032,12 +1430,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s3.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if slider score 300 points
 		if (s4.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1046,7 +1445,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s4.scoreX - 100, s4.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s4.scoreX - 100, s4.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1058,18 +1457,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s4.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s4.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s4.scoreX - 100, s4.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s4.scoreX - 100, s4.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1081,12 +1481,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s4.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if slider score 300 points
 		if (s5.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1095,7 +1496,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s5.scoreX - 100, s5.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s5.scoreX - 100, s5.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1107,18 +1508,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s5.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s5.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s5.scoreX - 100, s5.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s5.scoreX - 100, s5.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1130,12 +1532,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s5.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if slider score 300 points
 		if (s6.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1144,7 +1547,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s6.scoreX - 100, s6.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s6.scoreX - 100, s6.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1156,18 +1559,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s6.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s6.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s6.scoreX - 100, s6.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s6.scoreX - 100, s6.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1179,12 +1583,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s6.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if slider score 300 points
 		if (s7.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1193,7 +1598,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s7.scoreX - 100, s7.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s7.scoreX - 100, s7.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1205,18 +1610,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s7.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s7.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s7.scoreX - 100, s7.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s7.scoreX - 100, s7.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1228,12 +1634,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s7.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if slider score 300 points
 		if (s8.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1242,7 +1649,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s8.scoreX - 100, s8.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s8.scoreX - 100, s8.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1254,18 +1661,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s8.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s8.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s8.scoreX - 100, s8.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s8.scoreX - 100, s8.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1277,12 +1685,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s8.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if slider score 300 points
 		if (s9.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1291,7 +1700,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, s9.scoreX - 100, s9.scoreY - 150, 200, 200, null);
+					g.drawImage(score300, s9.scoreX - 100, s9.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1303,18 +1712,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s9.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if slider score 100 points
 		} else if (s9.scoreState == 1) {
 			Timer timer = new Timer();
 
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
-					g.drawImage(Score100, s9.scoreX - 100, s9.scoreY - 150, 200, 200, null);
+					g.drawImage(score100, s9.scoreX - 100, s9.scoreY - 150, 200, 200, null);
 				}
 			};
 
@@ -1326,12 +1736,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					s9.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if reverse score 300
 		if (r1.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1340,7 +1751,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r1.scoreX - 100, r1.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r1.scoreX - 100, r1.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1353,11 +1764,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r1.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r1.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1365,7 +1777,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r1.scoreX - 100, r1.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r1.scoreX - 100, r1.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1378,12 +1790,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r1.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if reverse score 300
 		if (r2.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1392,7 +1805,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r2.scoreX - 100, r2.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r2.scoreX - 100, r2.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1405,11 +1818,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r2.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r2.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1417,7 +1831,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r2.scoreX - 100, r2.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r2.scoreX - 100, r2.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1430,12 +1844,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r2.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if reverse score 300
 		if (r3.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1444,7 +1859,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r3.scoreX - 100, r3.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r3.scoreX - 100, r3.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1457,11 +1872,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r3.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r3.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1469,7 +1885,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r3.scoreX - 100, r3.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r3.scoreX - 100, r3.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1482,12 +1898,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r3.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if reverse score 300
 		if (r4.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1496,7 +1913,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r4.scoreX - 100, r4.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r4.scoreX - 100, r4.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1509,11 +1926,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r4.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r4.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1521,7 +1939,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r4.scoreX - 100, r4.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r4.scoreX - 100, r4.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1534,12 +1952,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r4.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if reverse score 300
 		if (r5.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1548,7 +1967,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r5.scoreX - 100, r5.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r5.scoreX - 100, r5.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1561,11 +1980,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r5.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r5.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1573,7 +1993,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r5.scoreX - 100, r5.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r5.scoreX - 100, r5.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1586,12 +2006,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r5.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if reverse score 300
 		if (r6.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1600,7 +2021,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r6.scoreX - 100, r6.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r6.scoreX - 100, r6.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1613,11 +2034,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r6.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r6.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1625,7 +2047,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r6.scoreX - 100, r6.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r6.scoreX - 100, r6.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1638,12 +2060,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r6.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if reverse score 300
 		if (r7.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1652,7 +2075,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r7.scoreX - 100, r7.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r7.scoreX - 100, r7.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1665,11 +2088,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r7.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r7.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1677,7 +2101,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r7.scoreX - 100, r7.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r7.scoreX - 100, r7.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1690,11 +2114,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r7.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-		}
+		} // if reverse score 300
 
 		if (r8.scoreState == 3) {
 
@@ -1704,7 +2129,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r8.scoreX - 100, r8.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r8.scoreX - 100, r8.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1717,11 +2142,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r8.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r8.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1729,7 +2155,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r8.scoreX - 100, r8.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r8.scoreX - 100, r8.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1742,12 +2168,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r8.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
 		}
-
+		// if reverse score 300
 		if (r9.scoreState == 3) {
 
 			Timer timer = new Timer();
@@ -1756,7 +2183,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score300, r9.scoreX - 100, r9.scoreY - 200, 200, 200, null);
+					g.drawImage(score300, r9.scoreX - 100, r9.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1769,11 +2196,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					timer.cancel(); // Cancel the timer to stop further executions
+					timer.cancel(); // Cancel the timer to stop further
+									// executions
 					r9.scoreState = 0; // Reset scoreState after starting the timer
 				}
 			}, 400);
-
+			// if reverse score 100
 		} else if (r9.scoreState == 1) {
 			Timer timer = new Timer();
 
@@ -1781,7 +2209,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void run() {
 
-					g.drawImage(Score100, r9.scoreX - 100, r9.scoreY - 200, 200, 200, null);
+					g.drawImage(score100, r9.scoreX - 100, r9.scoreY - 200, 200, 200, null);
 
 				}
 			};
@@ -1802,159 +2230,174 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	}
 
-	// ensures smooth movement of closing circle
+	// Ensures smooth movement of closing circle
 	public void moveCircle(Circle c) {
 		if (c.getRadius() > Circle.MIN_RADIUS) {
+			// Decrease radius of the circle
 			c.setRadius(c.getRadius() - 1);
 
+			// Adjust position based on reduced radius
 			c.setPosition(c.x0 - c.moveRadius / 2, c.y0 - c.moveRadius / 2);
 
 		} else {
-			appearC[c.id] = false;
-			c.setRadius(80);
+			// Circle has reached minimum radius
+			appearC[c.id] = false; // Mark circle as no longer appearing
+			c.setRadius(80); // Reset radius to default
 
+			// Move circle off-screen
 			c.setPosition(2000, 2000);
 			c.x0 = 2000;
 			c.y0 = 2000;
 			c.initialX = 2000;
 			c.initialY = 2000;
+
+			// Update total buttons count
+			totalButtons += 300;
 		}
 	}
 
 	// Method to move the slider
 	public void moveSlider(Slider s) {
 		if (!s.movingAlongPath) {
-
+			// If slider is not moving along the path
 			if (s.getRadius() > Slider.MIN_RADIUS) {
+				// Decrease radius of the slider
 				s.setRadius(s.getRadius() - 1);
+
+				// Adjust position based on reduced radius
 				s.setPosition(s.moveX - s.moveRadius / 2, s.moveY - s.moveRadius / 2);
 
 			} else {
+				// Slider is ready to move along the path
 				s.movingAlongPath = true; // Start moving along the path
-
 			}
-
 		} else {
-			// Move along the path of the rounded rectangle
-			double steps = s.moveTime * 60; // Number of steps to reach the right circle
-			double dx = (s.finalX - s.initialX) / (double) steps;
+			// Slider is already moving along the path
+			double steps = s.moveTime * 60; // Number of steps to reach the end position
+			double dx = (s.finalX - s.initialX) / steps; // Incremental change in x position per step
 
-			// Update the position of the circle along the path
-
+			// Update x position of the slider along the path
 			s.moveX += dx;
 
-			// Check if the circle has reached the right circle
+			// Check if slider has reached the end position
 			if (s.moveX >= s.initialX + s.length) {
-				s.moveX = s.initialX + s.length;
+				s.moveX = s.initialX + s.length; // Ensure exact end position
 
-				s.moveY = s.initialY;
-				s.movingAlongPath = false; // Reset the state for next move
+				s.moveY = s.initialY; // Reset y position
+				s.movingAlongPath = false; // Reset moving state for next move
 
+				// Evaluate scoring and combo based on slider performance
 				if (s.goodSlide && s.goodClick) {
 					combo++;
-					Score.score += 300 * combo;
-					s.scoreState = 3;
-					clicked300++;
-					maxCombo = Math.max(combo, maxCombo);
+					Score.score += 300 * combo; // Add score based on combo and accuracy
+					s.scoreState = 3; // Set scoring state for feedback
+					clicked300++; // Increment count of 300-clicks
+					maxCombo = Math.max(combo, maxCombo); // Update maximum combo achieved
 
-				} else if (s.goodClick == true) {
+				} else if (s.goodClick) {
 					combo++;
-					Score.score += 100 * combo;
-					s.scoreState = 1;
-					clicked100++;
-					maxCombo = Math.max(combo, maxCombo);
+					Score.score += 100 * combo; // Add score based on combo and accuracy
+					s.scoreState = 1; // Set scoring state for feedback
+					clicked100++; // Increment count of 100-clicks
+					maxCombo = Math.max(combo, maxCombo); // Update maximum combo achieved
 
 				} else {
-					combo = 0;
-					totalMisses++;
-
+					combo = 0; // Reset combo if no good click
+					totalMisses++; // Increment count of misses
 				}
-				appearS[s.id] = false;
-				s.scoreX = s.initialX;
-				s.scoreY = s.initialY;
 
+				appearS[s.id] = false; // Mark slider as no longer appearing
+				s.scoreX = s.initialX; // Reset score x position
+				s.scoreY = s.initialY; // Reset score y position
+
+				// Move slider off-screen
 				s.initialX = 2000;
 				s.initialY = 2000;
-
 				s.moveX = 2000;
 				s.moveY = 2000;
+
+				// Update total buttons count
+				totalButtons += 300;
 			}
-
 		}
-
 	}
 
 	// Method to move the reverse slider
 	public void moveReverse(Reverse r) {
+		// Check if the reverse slider is not moving along the path
 		if (!r.movingAlongPath) {
 
+			// If radius of the reverse slider is greater than minimum radius
 			if (r.getRadius() > Reverse.MIN_RADIUS) {
+				// Decrease radius of the reverse slider
 				r.setRadius(r.getRadius() - 1);
+				// Adjust position based on reduced radius
 				r.setPosition(r.moveX - r.moveRadius / 2, r.moveY - r.moveRadius / 2);
 
 			} else {
-				r.movingAlongPath = true; // Start moving along the path
-
+				// Start moving along the path
+				r.movingAlongPath = true;
 			}
 
 		} else {
-			// Move along the path of the rounded rectangle
-			double steps = r.moveTime * 60; // Number of steps to reach the right circle
+			// Moving along the path of the rounded rectangle
+			double steps = r.moveTime * 60; // Number of steps to reach the end position
 			double dx = (r.finalX - r.initialX) / (double) steps;
+
+			// Check if it's not a reverse path
 			if (!r.reversePath) {
-
-				// Update the position of the circle along the path
-
+				// Update position along the path
 				r.moveX += dx;
 
-				// Check if the circle has reached the right circle
+				// Check if reached the end of the path
 				if (r.moveX >= r.initialX + r.length) {
-					r.reversePath = true;
+					r.reversePath = true; // Switch to reverse path
 				}
 			} else {
-
+				// Moving in the reverse path
 				r.moveX -= dx;
-				// Check if the circle has reached the right circle
+
+				// Check if reached the starting point
 				if (r.moveX <= r.initialX) {
-					r.moveX = r.initialX;
+					r.moveX = r.initialX; // Ensure exact starting point
 
-					r.moveY = r.initialY;
-					r.movingAlongPath = false; // Reset the state for next move
+					r.moveY = r.initialY; // Reset y position
+					r.movingAlongPath = false; // Reset moving state for next move
 
+					// Evaluate scoring and combo based on reverse slider performance
 					if (r.goodSlide && r.goodClick) {
 						combo++;
-						Score.score += 300 * combo;
-						r.scoreState = 3;
-						clicked300++;
-						maxCombo = Math.max(combo, maxCombo);
+						Score.score += 300 * combo; // Add score based on combo and accuracy
+						r.scoreState = 3; // Set scoring state for feedback
+						clicked300++; // Increment count of 300-clicks
+						maxCombo = Math.max(combo, maxCombo); // Update maximum combo achieved
 
-					} else if (r.goodClick == true) {
+					} else if (r.goodClick) {
 						combo++;
-						Score.score += 100 * combo;
-						r.scoreState = 1;
-						clicked100++;
-						maxCombo = Math.max(combo, maxCombo);
+						Score.score += 100 * combo; // Add score based on combo and accuracy
+						r.scoreState = 1; // Set scoring state for feedback
+						clicked100++; // Increment count of 100-clicks
+						maxCombo = Math.max(combo, maxCombo); // Update maximum combo achieved
 
 					} else {
-						combo = 0;
-						totalMisses++;
-
+						combo = 0; // Reset combo if no good click
+						totalMisses++; // Increment count of misses
 					}
-					appearR[r.id] = false;
-					r.scoreX = r.initialX;
-					r.scoreY = r.initialY;
 
+					appearR[r.id] = false; // Mark reverse slider as no longer appearing
+					r.scoreX = r.initialX; // Reset score x position
+					r.scoreY = r.initialY; // Reset score y position
+
+					// Move reverse slider off-screen
 					r.initialX = 2000;
 					r.initialY = 2000;
-
 					r.moveX = 2000;
 					r.moveY = 2000;
-					r.reversePath = false;
+					r.reversePath = false; // Reset reverse path state
+					totalButtons += 300; // Update total buttons count
 				}
 			}
-
 		}
-
 	}
 
 	// checks if slider objects are clicked at the correct time and moving along
@@ -1980,10 +2423,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// Check if the click falls inside the circle
 					if (s.isMouseClickedInside(mX, mY) && !s.isClicked) {
 						s.isClicked = true;
-
 						if (s.moveRadius <= 130) {
 							s.goodClick = true;
-							playClicks("Music/clickSound.wav");
+							playClicks("Music/clickSound.wav"); // Play click sound on successful click
 						} else {
 							s.goodClick = false;
 						}
@@ -2007,25 +2449,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// Get the coordinates of the mouse
 					mX = e.getX();
 					mY = e.getY();
-
 				}
 			});
 
-			// checks for 'z' or 'x' keys
+			// check for 'z' or 'x' keys
 			addKeyListener(new KeyAdapter() {
 				@Override
-
 				public void keyPressed(KeyEvent e) {
-
 					if (e.getKeyCode() == KeyEvent.VK_Z) {
 						s.zPressed = true;
-
 						if (s.isMouseClickedInside(mX, mY) && !s.isClicked) {
 							s.isClicked = true;
-
 							if (s.moveRadius <= 130) {
 								s.goodClick = true;
-								playClicks("Music/clickSound.wav");
+								playClicks("Music/clickSound.wav"); // Play click sound on successful click
 							} else {
 								s.goodClick = false;
 							}
@@ -2034,10 +2471,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						s.xPressed = true;
 						if (s.isMouseClickedInside(mX, mY) && !s.isClicked) {
 							s.isClicked = true;
-
 							if (s.moveRadius <= 130) {
 								s.goodClick = true;
-								playClicks("Music/clickSound.wav");
+								playClicks("Music/clickSound.wav"); // Play click sound on successful click
 							} else {
 								s.goodClick = false;
 							}
@@ -2056,19 +2492,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			});
 
 		} else {
-
-			s.moveRadius = 150;
-
-			addMouseListener(new MouseAdapter() {
-
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					s.mousePressed = false;
-				}
-			});
+			s.moveRadius = 150; // Set move radius for slider
 
 			addKeyListener(new KeyAdapter() {
-
 				@Override
 				public void keyReleased(KeyEvent e) {
 					if (e.getKeyCode() == KeyEvent.VK_Z) {
@@ -2082,38 +2508,41 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			addMouseMotionListener(new MouseMotionAdapter() {
 				@Override
 				public void mouseMoved(MouseEvent e) {
-					// Get the coordinates of the mouse
+					// Get mouse coordinates when mouse is moved
 					mX = e.getX();
 					mY = e.getY();
-
-					// Transform the mouse coordinates to the rotated coordinate system
-					AffineTransform at = new AffineTransform();
-					at.rotate(-Math.toRadians(s.angle), s.initialX, s.initialY);
-					Point transformedPoint = new Point(mX, mY);
-					at.transform(transformedPoint, transformedPoint);
-
-					// Check if the transformed mouse coordinates are within the circle
-					double distance = Math.sqrt(
-							Math.pow(transformedPoint.x - s.moveX, 2) + Math.pow(transformedPoint.y - s.moveY, 2));
-
-					if (distance > s.moveRadius / 2) {
-						s.goodSlide = false;
-
-					}
-
-					// Check if the mouse button, z, or x key is pressed
-					else if (!s.mousePressed && !s.zPressed && !s.xPressed) {
-						s.goodSlide = false;
-
-					}
 				}
 			});
+
+			// Transform the mouse coordinates to the rotated coordinate system
+			AffineTransform at = new AffineTransform();
+			at.rotate(-Math.toRadians(s.angle), s.initialX, s.initialY);
+			Point transformedPoint = new Point(mX, mY);
+			at.transform(transformedPoint, transformedPoint);
+
+			// Check if the transformed mouse coordinates are within the circle
+			double distance = Math
+					.sqrt(Math.pow(transformedPoint.x - s.moveX, 2) + Math.pow(transformedPoint.y - s.moveY, 2));
+			if (distance > s.moveRadius / 2) {
+				s.goodSlide = false; // Set slide as not good if outside circle
+			} else {
+				// Check if mouse button, 'z', or 'x' key is pressed
+				if (!s.mousePressed && !s.zPressed && !s.xPressed) {
+					s.goodSlide = false; // Set slide as not good if none are pressed
+				}
+			}
+
+			if (!s.zPressed && !s.xPressed) {
+				s.goodSlide = false; // Set slide as not good if 'z' or 'x' keys are not pressed
+			}
 		}
 
-		setFocusable(true);
-		requestFocusInWindow();
+		setFocusable(true); // Set focusable for receiving keyboard events
+		requestFocusInWindow(); // Request focus in the window
 	}
 
+	// checks if reverse slider objects are clicked at the correct time and moving
+	// along their path
 	public void checkCollision(Reverse r) {
 		// Remove existing listeners to avoid duplicates
 		for (MouseListener listener : getMouseListeners()) {
@@ -2137,8 +2566,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						r.isClicked = true;
 						if (r.moveRadius <= 130) {
 							r.goodClick = true;
-
-							playClicks("Music/clickSound.wav");
+							playClicks("Music/clickSound.wav"); // Play click sound on successful click
 						} else {
 							r.goodClick = false;
 						}
@@ -2162,24 +2590,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// Get the coordinates of the mouse
 					mX = e.getX();
 					mY = e.getY();
-
 				}
 			});
 
 			// checks for 'z' or 'x' keys
 			addKeyListener(new KeyAdapter() {
 				@Override
-
 				public void keyPressed(KeyEvent e) {
-
 					if (e.getKeyCode() == KeyEvent.VK_Z) {
 						r.zPressed = true;
 						if (r.isMouseClickedInside(mX, mY) && !r.isClicked) {
 							r.isClicked = true;
-
 							if (r.moveRadius <= 130) {
 								r.goodClick = true;
-								playClicks("Music/clickSound.wav");
+								playClicks("Music/clickSound.wav"); // Play click sound on successful click
 							} else {
 								r.goodClick = false;
 							}
@@ -2188,10 +2612,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						r.xPressed = true;
 						if (r.isMouseClickedInside(mX, mY) && !r.isClicked) {
 							r.isClicked = true;
-
 							if (r.moveRadius <= 130) {
 								r.goodClick = true;
-								playClicks("Music/clickSound.wav");
+								playClicks("Music/clickSound.wav"); // Play click sound on successful click
 							} else {
 								r.goodClick = false;
 							}
@@ -2200,6 +2623,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 
 				@Override
+				//check when key is released
 				public void keyReleased(KeyEvent e) {
 					if (e.getKeyCode() == KeyEvent.VK_Z) {
 						r.zPressed = false;
@@ -2210,9 +2634,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			});
 
 		} else {
-			r.moveRadius = 150;
-			addMouseListener(new MouseAdapter() {
+			r.moveRadius = 150; // Set move radius for reverse slider
 
+			addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					r.mousePressed = false;
@@ -2220,7 +2644,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			});
 
 			addKeyListener(new KeyAdapter() {
-
 				@Override
 				public void keyReleased(KeyEvent e) {
 					if (e.getKeyCode() == KeyEvent.VK_Z) {
@@ -2248,20 +2671,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					double distance = Math.sqrt(
 							Math.pow(transformedPoint.x - r.moveX, 2) + Math.pow(transformedPoint.y - r.moveY, 2));
 					if (distance > r.moveRadius / 2) {
-						r.goodSlide = false;
+						r.goodSlide = false; // Set slide as not good if outside circle
 					}
 
 					// Check if the mouse button, z, or x key is pressed
 					else if (!r.mousePressed && !r.zPressed && !r.xPressed) {
-						r.goodSlide = false;
-
+						r.goodSlide = false; // Set slide as not good if none are pressed
 					}
 				}
 			});
 		}
 
-		setFocusable(true);
-		requestFocusInWindow();
+		setFocusable(true); // Set focusable for receiving keyboard events
+		requestFocusInWindow(); // Request focus in the window
 	}
 
 	// checks for clicks inside of the circle objects
@@ -2274,7 +2696,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				mY = e.getY();
 
 				// Check if the click falls inside the circle
-				if (c.isMouseClickedInside(mX, mY) && c.isClicked == false) {
+				if (c.isMouseClickedInside(mX, mY) && !c.isClicked) {
 					c.isClicked = true;
 					if (c.moveRadius <= 120) {
 						combo++;
@@ -2282,30 +2704,27 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						c.scoreState = 3;
 						clicked300++;
 						maxCombo = Math.max(combo, maxCombo);
-						repaint();
-						playClicks("Music/clickSound.wav");
+						playClicks("Music/clickSound.wav"); // Play click sound on successful click
 					} else if (c.moveRadius <= 130) {
 						combo++;
 						Score.score += 100 * combo;
-						playClicks("Music/clickSound.wav");
+						playClicks("Music/clickSound.wav"); // Play click sound on successful click
 						clicked100++;
 						maxCombo = Math.max(combo, maxCombo);
-						repaint();
 						c.scoreState = 1;
-					}
-
-					else {
+					} else {
 						c.moveRadius = 80;
 						combo = 0;
 						totalMisses++;
 					}
 				}
 			}
-
 		});
 
-		if (c.moveRadius == 80 && c.isClicked == false) {
+		// Check if circle is not clicked and move radius is 80
+		if (c.moveRadius == 80 && !c.isClicked) {
 			combo = 0;
+			totalMisses++;
 		}
 
 		addKeyListener(new KeyAdapter() {
@@ -2322,261 +2741,262 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					mX -= componentLocation.x;
 					mY -= componentLocation.y;
 
-					if (c.isMouseClickedInside(mX, mY) && c.isClicked == false) {
+					// Check if the click falls inside the circle
+					if (c.isMouseClickedInside(mX, mY) && !c.isClicked) {
 						c.isClicked = true;
 						if (c.moveRadius <= 120) {
+
+							// update score
 							combo++;
 							Score.score += 300 * combo;
 							c.scoreState = 3;
-
-							repaint();
-							playClicks("Music/clickSound.wav");
+							clicked300++;
+							maxCombo = Math.max(combo, maxCombo);
+							playClicks("Music/clickSound.wav"); // Play click sound on successful click
 						} else if (c.moveRadius <= 130) {
+							// update score
 							combo++;
 							Score.score += 100 * combo;
-							playClicks("Music/clickSound.wav");
-							repaint();
+							playClicks("Music/clickSound.wav"); // Play click sound on successful click
+							clicked100++;
+							maxCombo = Math.max(combo, maxCombo);
 							c.scoreState = 1;
-						}
-
-						else {
+						} else {
+							// update score
 							c.moveRadius = 80;
 							combo = 0;
+							totalMisses++;
 						}
 					}
 				}
 			}
 		});
-		setFocusable(true);
-		requestFocusInWindow();
+
+		setFocusable(true); // Set focusable for receiving keyboard events
+		requestFocusInWindow(); // Request focus in the window
 	}
 
-	// adds the Circles to the screen and the coordinates when needed
+	// adds the Circles to the screen and sets initial coordinates and attributes after a delay
 	public void add(Circle c, int x, int y, long t, int n) {
-		Timer timer = new Timer();
-		c.isClicked = false;
+	    Timer timer = new Timer();
+	    c.isClicked = false;
 
-		TimerTask task = new TimerTask() {
-			@Override
-			public void run() {
-				c.x0 = x;
-				c.y0 = y;
+	    TimerTask task = new TimerTask() {
+	        @Override
+	        public void run() {
+	            c.x0 = x; // Set initial x coordinate
+	            c.y0 = y; // Set initial y coordinate
 
-				c.initialX = c.x0 - 100 / 2;
-				c.initialY = c.y0 - 100 / 2;
+	            c.initialX = c.x0 - 100 / 2; // Calculate initial x position for drawing
+	            c.initialY = c.y0 - 100 / 2; // Calculate initial y position for drawing
 
-				c.moveRadius = Circle.MAX_RADIUS;
+	            c.moveRadius = Circle.MAX_RADIUS; // Set the maximum radius for movement
 
-				appearC[c.id] = true;
-				c.isClicked = false;
-				c.num = n;
-
-			}
-		};
-		timer.schedule(task, t);
+	            appearC[c.id] = true; // Mark the circle as appearing
+	            c.isClicked = false; // Reset clicked state
+	            c.num = n; // Set additional identifier (num)
+	        }
+	    };
+	    timer.schedule(task, t); // Schedule the task to run after a delay (t milliseconds)
 	}
 
-	// method to add slider objects with correct coordinates, time, length, angle
-	// and speed
+	// method to add slider objects with correct coordinates, time, length, angle, and speed
 	public void add(Slider s, int x, int y, long t, int l, int a, double mT, int n) {
-		Timer timer = new Timer();
+	    Timer timer = new Timer();
 
-		TimerTask task = new TimerTask() {
-			@Override
-			public void run() {
-				s.length = l;
-				s.initialX = x;
-				s.initialY = y;
-				s.angle = a;
-				s.moveX = x;
-				s.moveY = y;
-				s.moveRadius = Slider.MAX_RADIUS;
-				s.xPressed = false;
-				s.zPressed = false;
-				s.mousePressed = false;
-				s.moveTime = mT;
-				appearS[s.id] = true;
-				s.isClicked = false;
-				s.num = n;
-			}
-		};
-		timer.schedule(task, t);
-
+	    TimerTask task = new TimerTask() {
+	        @Override
+	        public void run() {
+	            s.length = l; // Set the length of the slider
+	            s.initialX = x; // Set initial x coordinate
+	            s.initialY = y; // Set initial y coordinate
+	            s.angle = a; // Set the angle of rotation
+	            s.moveX = x; // Set initial x position for movement
+	            s.moveY = y; // Set initial y position for movement
+	            s.moveRadius = Slider.MAX_RADIUS; // Set the maximum radius for movement
+	            s.xPressed = false; // Reset state for 'x' key press
+	            s.zPressed = false; // Reset state for 'z' key press
+	            s.mousePressed = false; // Reset state for mouse press
+	            s.moveTime = mT; // Set the movement time
+	            appearS[s.id] = true; // Mark the slider as appearing
+	            s.isClicked = false; // Reset clicked state
+	            s.num = n; // Set additional identifier (num)
+	        }
+	    };
+	    timer.schedule(task, t); // Schedule the task to run after a delay (t milliseconds)
 	}
 
+	// method to add reverse slider objects with correct coordinates, time, length, angle, and speed
 	public void add(Reverse r, int x, int y, long t, int l, int a, double mT, int n) {
-		Timer timer = new Timer();
+	    Timer timer = new Timer();
 
-		TimerTask task = new TimerTask() {
-			@Override
-			public void run() {
-				r.length = l;
-				r.initialX = x;
-				r.initialY = y;
-				r.angle = a;
-				r.moveX = x;
-				r.moveY = y;
-				r.moveRadius = Slider.MAX_RADIUS;
-				r.xPressed = false;
-				r.zPressed = false;
-				r.mousePressed = false;
-				r.moveTime = mT;
-				appearR[r.id] = true;
-				r.isClicked = false;
-				r.num = n;
-			}
-		};
-		timer.schedule(task, t);
-
+	    TimerTask task = new TimerTask() {
+	        @Override
+	        public void run() {
+	            r.length = l; // Set the length of the reverse slider
+	            r.initialX = x; // Set initial x coordinate
+	            r.initialY = y; // Set initial y coordinate
+	            r.angle = a; // Set the angle of rotation
+	            r.moveX = x; // Set initial x position for movement
+	            r.moveY = y; // Set initial y position for movement
+	            r.moveRadius = Slider.MAX_RADIUS; // Set the maximum radius for movement
+	            r.xPressed = false; // Reset state for 'x' key press
+	            r.zPressed = false; // Reset state for 'z' key press
+	            r.mousePressed = false; // Reset state for mouse press
+	            r.moveTime = mT; // Set the movement time
+	            appearR[r.id] = true; // Mark the reverse slider as appearing
+	            r.isClicked = false; // Reset clicked state
+	            r.num = n; // Set additional identifier (num)
+	        }
+	    };
+	    timer.schedule(task, t); // Schedule the task to run after a delay (t milliseconds)
 	}
 
-	// ensures smooth movement of the approaching circle
+
+	// Method to move all appearing circles, sliders, and reverse sliders
 	public void move() {
-		if (appearC[1]) {
-			moveCircle(c1);
-			checkCollision(c1);
-		}
-		if (appearC[2]) {
-			moveCircle(c2);
-			checkCollision(c2);
-		}
-		if (appearC[3]) {
-			moveCircle(c3);
-			checkCollision(c3);
-		}
-		if (appearC[4]) {
-			moveCircle(c4);
-			checkCollision(c4);
-		}
-		if (appearC[5]) {
-			moveCircle(c5);
-			checkCollision(c5);
-		}
-		if (appearC[6]) {
-			moveCircle(c6);
-			checkCollision(c6);
-		}
-		if (appearC[7]) {
-			moveCircle(c7);
-			checkCollision(c7);
-		}
-		if (appearC[8]) {
-			moveCircle(c8);
-			checkCollision(c8);
-		}
-		if (appearC[9]) {
-			moveCircle(c9);
-			checkCollision(c9);
-		}
+	    // Move each circle if it is set to appear
+	    if (appearC[1]) {
+	        moveCircle(c1); // Move circle c1
+	        checkCollision(c1); // Check collision for circle c1
+	    }
+	    if (appearC[2]) {
+	        moveCircle(c2); // Move circle c2
+	        checkCollision(c2); // Check collision for circle c2
+	    }
+	    if (appearC[3]) {
+	        moveCircle(c3); // Move circle c3
+	        checkCollision(c3); // Check collision for circle c3
+	    }
+	    if (appearC[4]) {
+	        moveCircle(c4); // Move circle c4
+	        checkCollision(c4); // Check collision for circle c4
+	    }
+	    if (appearC[5]) {
+	        moveCircle(c5); // Move circle c5
+	        checkCollision(c5); // Check collision for circle c5
+	    }
+	    if (appearC[6]) {
+	        moveCircle(c6); // Move circle c6
+	        checkCollision(c6); // Check collision for circle c6
+	    }
+	    if (appearC[7]) {
+	        moveCircle(c7); // Move circle c7
+	        checkCollision(c7); // Check collision for circle c7
+	    }
+	    if (appearC[8]) {
+	        moveCircle(c8); // Move circle c8
+	        checkCollision(c8); // Check collision for circle c8
+	    }
+	    if (appearC[9]) {
+	        moveCircle(c9); // Move circle c9
+	        checkCollision(c9); // Check collision for circle c9
+	    }
 
-		if (appearS[1]) {
-			moveSlider(s1);
-			checkCollision(s1);
-		}
-		if (appearS[2]) {
-			moveSlider(s2);
-			checkCollision(s2);
-		}
-		if (appearS[3]) {
-			moveSlider(s3);
-			checkCollision(s3);
-		}
-		if (appearS[4]) {
-			moveSlider(s4);
-			checkCollision(s4);
-		}
-		if (appearS[5]) {
-			moveSlider(s5);
-			checkCollision(s5);
-		}
-		if (appearS[6]) {
-			moveSlider(s6);
-			checkCollision(s6);
-		}
-		if (appearS[7]) {
-			moveSlider(s7);
-			checkCollision(s7);
-		}
-		if (appearS[8]) {
-			moveSlider(s8);
-			checkCollision(s8);
-		}
-		if (appearS[9]) {
-			moveSlider(s9);
-			checkCollision(s9);
-		}
-		if (appearR[1]) {
-			moveReverse(r1);
-			checkCollision(r1);
-		}
-		if (appearR[2]) {
-			moveReverse(r2);
-			checkCollision(r2);
-		}
-		if (appearR[3]) {
-			moveReverse(r3);
-			checkCollision(r3);
-		}
-		if (appearR[4]) {
-			moveReverse(r4);
-			checkCollision(r4);
-		}
-		if (appearR[5]) {
-			moveReverse(r5);
-			checkCollision(r5);
-		}
-		if (appearR[6]) {
-			moveReverse(r6);
-			checkCollision(r6);
-		}
-		if (appearR[7]) {
-			moveReverse(r7);
-			checkCollision(r7);
-		}
-		if (appearR[8]) {
-			moveReverse(r8);
-			checkCollision(r8);
-		}
-		if (appearR[9]) {
-			moveReverse(r9);
-			checkCollision(r9);
-		}
+	    // Move each slider if it is set to appear
+	    if (appearS[1]) {
+	        moveSlider(s1); // Move slider s1
+	        checkCollision(s1); // Check collision for slider s1
+	    }
+	    if (appearS[2]) {
+	        moveSlider(s2); // Move slider s2
+	        checkCollision(s2); // Check collision for slider s2
+	    }
+	    if (appearS[3]) {
+	        moveSlider(s3); // Move slider s3
+	        checkCollision(s3); // Check collision for slider s3
+	    }
+	    if (appearS[4]) {
+	        moveSlider(s4); // Move slider s4
+	        checkCollision(s4); // Check collision for slider s4
+	    }
+	    if (appearS[5]) {
+	        moveSlider(s5); // Move slider s5
+	        checkCollision(s5); // Check collision for slider s5
+	    }
+	    if (appearS[6]) {
+	        moveSlider(s6); // Move slider s6
+	        checkCollision(s6); // Check collision for slider s6
+	    }
+	    if (appearS[7]) {
+	        moveSlider(s7); // Move slider s7
+	        checkCollision(s7); // Check collision for slider s7
+	    }
+	    if (appearS[8]) {
+	        moveSlider(s8); // Move slider s8
+	        checkCollision(s8); // Check collision for slider s8
+	    }
+	    if (appearS[9]) {
+	        moveSlider(s9); // Move slider s9
+	        checkCollision(s9); // Check collision for slider s9
+	    }
 
+	    // Move each reverse slider if it is set to appear
+	    if (appearR[1]) {
+	        moveReverse(r1); // Move reverse slider r1
+	        checkCollision(r1); // Check collision for reverse slider r1
+	    }
+	    if (appearR[2]) {
+	        moveReverse(r2); // Move reverse slider r2
+	        checkCollision(r2); // Check collision for reverse slider r2
+	    }
+	    if (appearR[3]) {
+	        moveReverse(r3); // Move reverse slider r3
+	        checkCollision(r3); // Check collision for reverse slider r3
+	    }
+	    if (appearR[4]) {
+	        moveReverse(r4); // Move reverse slider r4
+	        checkCollision(r4); // Check collision for reverse slider r4
+	    }
+	    if (appearR[5]) {
+	        moveReverse(r5); // Move reverse slider r5
+	        checkCollision(r5); // Check collision for reverse slider r5
+	    }
+	    if (appearR[6]) {
+	        moveReverse(r6); // Move reverse slider r6
+	        checkCollision(r6); // Check collision for reverse slider r6
+	    }
+	    if (appearR[7]) {
+	        moveReverse(r7); // Move reverse slider r7
+	        checkCollision(r7); // Check collision for reverse slider r7
+	    }
+	    if (appearR[8]) {
+	        moveReverse(r8); // Move reverse slider r8
+	        checkCollision(r8); // Check collision for reverse slider r8
+	    }
+	    if (appearR[9]) {
+	        moveReverse(r9); // Move reverse slider r9
+	        checkCollision(r9); // Check collision for reverse slider r9
+	    }
 	}
 
-	// infinite game loop
+	// Infinite game loop
 	public void run() {
-		long lastTime = System.nanoTime();
-		double amountOfTicks = 60;
-		double ns = 1000000000 / amountOfTicks;
-		double delta = 0;
-		long now;
+	    long lastTime = System.nanoTime(); // Record the current time in nanoseconds
+	    double amountOfTicks = 60; // Desired number of game ticks per second
+	    double ns = 1000000000 / amountOfTicks; // Calculate nanoseconds per tick
+	    double delta = 0; // Initialize delta time accumulator
+	    long now; // Variable to store current time
 
-		while (true) {
+	    // Main game loop
+	    while (true) {
+	        now = System.nanoTime(); // Get current time in nanoseconds
+	        delta = delta + (now - lastTime) / ns; // Calculate elapsed ticks since last update
+	        lastTime = now; // Update last time to current time
 
-			now = System.nanoTime();
-			delta = delta + (now - lastTime) / ns;
-			lastTime = now;
-
-			if (delta >= 1) {
-				move();
-				repaint();
-				delta--;
-			}
-		}
+	        if (delta >= 1) {
+	            move(); // Execute game logic and update object positions
+	            repaint(); // Request repaint to update the screen
+	            delta--; // Decrease delta by 1 to account for processed tick
+	        }
+	    }
 	}
+
 
 	// Implementation for tutorial
 	private void tutorial() {
-
-		// remove all buttons onscreen
-		this.remove(playButton);
-		this.remove(exitButton);
-		this.remove(tutorial);
-		this.remove(easy);
-		this.remove(medium);
-		this.remove(hard);
-		this.remove(backLabel);
+		//remove all elements
+		this.removeAll();
 
 		// begin tutorial soundtrack
 		playSound("Music/tutorial.wav");
@@ -2621,17 +3041,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// code to run the Easy game mode
 	private void easy() {
-		// Implementation for medium
-		this.remove(playButton);
-		this.remove(exitButton);
-		this.remove(tutorial);
-		this.remove(easy);
-		this.remove(medium);
-		this.remove(hard);
-		this.remove(backLabel);
-
+		//remove all elements
+		this.removeAll();
+		//play easy soundtrack
 		playSound("Music/easy.wav");
-
+		
+		//make buttons appear
 		add(s1, easyMap[0][0], easyMap[1][0], easyMap[2][0], 250, 270, 0.900, 1);
 		add(s2, easyMap[0][1], easyMap[1][1], easyMap[2][1], 250, 0, 0.800, 2);
 		add(c1, easyMap[0][2], easyMap[1][2], easyMap[2][2], 3);
@@ -2694,7 +3109,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		add(s1, easyMap[0][59], easyMap[1][59], easyMap[2][59], 300, 180, 0.700, 6);
 		add(s2, easyMap[0][60], easyMap[1][60], easyMap[2][60], 200, 270, 0.700, 7);
 		add(s3, easyMap[0][61], easyMap[1][61], easyMap[2][61], 300, 350, 0.700, 8);
-		add(s4, easyMap[0][62], easyMap[1][62], easyMap[2][62], 300, 110, 0.700, 9);
 		add(s5, easyMap[0][63], easyMap[1][63], easyMap[2][63], 400, 180, 0.700, 1);
 		add(s6, easyMap[0][64], easyMap[1][64], easyMap[2][64], 600, 0, 2.500, 2);
 
@@ -2702,17 +3116,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// code to run the Medium game mode
 	private void medium() {
-
-		this.remove(playButton);
-		this.remove(exitButton);
-		this.remove(tutorial);
-		this.remove(easy);
-		this.remove(medium);
-		this.remove(hard);
-		this.remove(backLabel);
-
+		//remove all elements
+		this.removeAll();
+		//plau Soundtrack
 		playSound("Music/medium.wav");
-
+		//make buttons appear
 		add(s1, mediumMap[0][0], mediumMap[1][0], mediumMap[2][0], 150, 0, 0.600, 1);
 		add(s2, mediumMap[0][1], mediumMap[1][1], mediumMap[2][1], 150, 0, 0.600, 2);
 		add(s3, mediumMap[0][2], mediumMap[1][2], mediumMap[2][2], 150, 310, 0.600, 3);
@@ -2749,17 +3157,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// code to run the Hard game mode
 	private void hard() {
-		// Implementation for hard
-		this.remove(playButton);
-		this.remove(exitButton);
-		this.remove(tutorial);
-		this.remove(easy);
-		this.remove(medium);
-		this.remove(hard);
-		this.remove(backLabel);
-
+		// remove all elements
+		this.removeAll();
+		//play Soundtrack
 		playSound("Music/hard.wav");
-
+		//make buttons appear
 		add(c1, hardMap[0][0], hardMap[1][0], hardMap[2][0], 1);
 		add(c2, hardMap[0][1], hardMap[1][1], hardMap[2][1], 2);
 		add(c3, hardMap[0][2], hardMap[1][2], hardMap[2][2], 3);
@@ -2836,8 +3238,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				@Override
 				public void update(LineEvent event) {
 					if (event.getType() == LineEvent.Type.STOP) {
+						playTutorial = false;
+						playEasy = false;
+						playMedium = false;
 						playHard = false;
 						endScreen = true;
+
+						endScreen();
 						clip.close();
 					}
 				}
@@ -2848,7 +3255,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			e.printStackTrace();
 		}
 	}
-
+	//play click sound
 	private void playClicks(String soundFile) {
 		File file;
 		AudioInputStream audioStream;
@@ -2905,26 +3312,129 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 	}
 
+	// Method to set background image using the provided image path
 	public void setBackgroundImage(String imagePath) {
-
-		try {
-			backgroundImage = ImageIO.read(new File(imagePath));
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
+	    try {
+	        backgroundImage = ImageIO.read(new File(imagePath)); // Read the image file and set as background
+	    } catch (IOException e) {
+	        e.printStackTrace(); // Print stack trace if image loading fails
+	    }
 	}
 
+	// Method to load an image from file given its path
 	private static BufferedImage loadImage(String imagePath) {
-		BufferedImage image = null;
-		try {
-			image = ImageIO.read(new File(imagePath));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return image;
+	    BufferedImage image = null;
+	    try {
+	        image = ImageIO.read(new File(imagePath)); // Read the image file and load into BufferedImage
+	    } catch (IOException e) {
+	        e.printStackTrace(); // Print stack trace if image loading fails
+	    }
+	    return image; // Return the loaded image
 	}
+
+	// Class to represent player score data
+	public static class PlayerScore {
+	    String playerName;
+	    int score;
+
+	    // Constructor to initialize playerName and score
+	    PlayerScore(String name, int score) {
+	        this.playerName = name;
+	        this.score = score;
+	    }
+
+	    // Getter for player's score
+	    public int getScore() {
+	        return score;
+	    }
+
+	    // Getter for player's name
+	    public String getPlayerName() {
+	        return playerName;
+	    }
+	}
+
+	// Method to load leaderboard data for each game mode from files
+	public static void loadLeaderboards() {
+	    loadLeaderboardFromFile(TUTORIAL_LEADERBOARD, tutorialLeaderboard);
+	    loadLeaderboardFromFile(EASY_LEADERBOARD, easyLeaderboard);
+	    loadLeaderboardFromFile(MEDIUM_LEADERBOARD, mediumLeaderboard);
+	    loadLeaderboardFromFile(HARD_LEADERBOARD, hardLeaderboard);
+	}
+
+	// Method to load leaderboard data from a file into an ArrayList
+	private static void loadLeaderboardFromFile(String filename, ArrayList<PlayerScore> leaderboard) {
+	    leaderboard.clear(); // Clear the current leaderboard before loading
+
+	    try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+	        String line;
+	        // Read each line of the file
+	        while ((line = reader.readLine()) != null) {
+	            // Split the line into parts using semicolon as delimiter, limit to 2 parts
+	            String[] parts = line.split(";", 2);
+	            int score = Integer.parseInt(parts[0].trim()); // Extract player score
+	            String playerName = parts[1].trim(); // Extract player name
+	            leaderboard.add(new PlayerScore(playerName, score)); // Add player to the leaderboard
+	        }
+	    } catch (IOException | NumberFormatException e) {
+	        // Handle file IO or number format exception
+	        e.printStackTrace();
+	    }
+
+	    // Sort leaderboard based on score in descending order
+	    leaderboard.sort(Comparator.comparingInt(PlayerScore::getScore).reversed());
+	}
+
+	// Method to update the leaderboard for a specific game mode with a new player score
+	public static void updateLeaderboard(String gameMode, String playerName, int score) {
+	    switch (gameMode) {
+	        case "tutorial":
+	            updateLeaderboardForMode(playerName, score, tutorialLeaderboard);
+	            break;
+	        case "easy":
+	            updateLeaderboardForMode(playerName, score, easyLeaderboard);
+	            break;
+	        case "medium":
+	            updateLeaderboardForMode(playerName, score, mediumLeaderboard);
+	            break;
+	        case "hard":
+	            updateLeaderboardForMode(playerName, score, hardLeaderboard);
+	            break;
+	    }
+	}
+
+	// Method to update the leaderboard for a specific game mode with a new player score
+	private static void updateLeaderboardForMode(String playerName, int score, ArrayList<PlayerScore> leaderboard) {
+	    leaderboard.add(new PlayerScore(playerName, score)); // Add new player to the leaderboard
+	    leaderboard.sort(Comparator.comparingInt(PlayerScore::getScore).reversed()); // Sort the leaderboard based on score in descending order
+
+	    // Keep only the top 5 scores
+	    if (leaderboard.size() > 5) {
+	        leaderboard.subList(0, 5); // Trim the leaderboard to top 5 scores
+	    }
+	}
+
+	// Method to save the leaderboard data for each game mode to files
+	public static void saveLeaderboards() {
+	    saveLeaderboardToFile(TUTORIAL_LEADERBOARD, tutorialLeaderboard);
+	    saveLeaderboardToFile(EASY_LEADERBOARD, easyLeaderboard);
+	    saveLeaderboardToFile(MEDIUM_LEADERBOARD, mediumLeaderboard);
+	    saveLeaderboardToFile(HARD_LEADERBOARD, hardLeaderboard);
+	}
+
+	// Method to save leaderboard data from an ArrayList to a file
+	private static void saveLeaderboardToFile(String filename, ArrayList<PlayerScore> leaderboard) {
+	    try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+	        // Write each player's score and name to the file
+	        for (PlayerScore player : leaderboard) {
+	            writer.println(player.getScore() + ";" + player.getPlayerName());
+	        }
+	    } catch (IOException e) {
+	        // Handle file IO exception
+	        e.printStackTrace();
+	    }
+	}
+
 
 	@Override
 	public void keyTyped(KeyEvent e) {

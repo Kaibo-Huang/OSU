@@ -1,3 +1,6 @@
+// Don Tran and Kaibo Huang
+// June 17, 2024
+// This class draws the circle button.
 import java.awt.*;
 
 public class Circle extends Rectangle {

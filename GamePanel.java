@@ -460,6 +460,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// adds the buttons to show the level
 	public void showLevels() {
 		this.removeAll();
+		
+		//replay music
+		stopMenu();
+		playMenu();
 
 		// set bounds for buttons
 		tutorial.setBounds(GAME_WIDTH / 2 + 200, GAME_HEIGHT / 4 - 50, 200, 50);
